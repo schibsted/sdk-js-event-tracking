@@ -92,7 +92,7 @@ function trackCommentEvent(commentId, content, inReplyTo, targetType, targetName
             target: {
                 objectType: targetType || 'article',
                 displayName: targetName || document.title,
-                uri: document.URL,
+                url: document.URL,
             }
         },
     ];
@@ -145,7 +145,7 @@ function trackPollEvent(pollId, question, element, options, answer){
         target: {
             objectType: 'article',
             displayName: document.title,
-            uri: document.URL,
+            url: document.URL,
         }
     };
     activities.push(activityObject);
@@ -181,7 +181,7 @@ function clickEventTracker(verb, type, id, name, target, targetType, targetId, t
     var targetObjData = {
         objectType: targetType || 'service',
         displayName: targetName || document.title,
-        uri: document.URL,
+        url: document.URL,
         id: targetId || null,
     };
     var targetObject = {};
@@ -234,7 +234,7 @@ function socialEventTracker(verb, type, target, name, targetType, targetId, targ
     var targetObjData = {
         objectType: targetType || 'service',
         displayName: targetName || '',
-        uri: targetUrl || '',
+        url: targetUrl || '',
         id: targetId || null,
     };
     var targetObject = {};
@@ -267,7 +267,7 @@ function mediaStateTracker(verb, type, name, mediaId){
     var targetObjData = {
         objectType: targetType || 'service',
         displayName: targetName || '',
-        uri: targetUrl || '',
+        url: targetUrl || '',
         id: targetId || null,
     };
 
