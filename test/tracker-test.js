@@ -123,11 +123,34 @@ buster.testCase('A comment form event', {
 
         var result = trackCommentEvent(1234, 'First comment!', 'http://vg.no', 'page', 'VG.no');
         assert.match(activityValidator(result), true);
+
+        var result = trackCommentEvent(1234, 'First comment!', 'http://vg.no', undefined, 'VG.no');
+        assert.match(activityValidator(result), true);
+    },
+
+});
+buster.testCase('A poll answered event', {
+    'Data is returned as a array of objects': function(){
+
+        var result = trackPollEvent();
+        assert.match(activityValidator(result), true);
+
+        var result = trackPollEvent(1234, 'question')
+        assert.match(activityValidator(result), true);
+
+        var result = trackPollEvent(1234, 'question', undefined, ['yes', 'no'], ['yes']);
+        assert.match(activityValidator(result), true);
+
+        // TODO: Figure out how to make a fake DOM and pass as an element
+        /*var result = trackPollEvent(1234, 'question', )
+        assert.match(activityValidator(result), true);*/
     },
 
 });
 
 function activityValidator(obj){
+
+    // TODO: Create validation of object values.
 
     // The activity array has one or more items
     if(obj.length < 1){
@@ -148,10 +171,19 @@ function activityValidator(obj){
         }
     }
 
-    //Check if all objects has objectType/type and id or displayName
+    //Check if all objects has objectType/type (critical) and id or displayName (warning)
     for(var i =0; i < obj.length; i++){
+        currentObj = obj[i][Object.keys(obj[i])[0]]
 
-        
+        var keys = Object.keys(currentObj);
+
+        if(!(keys.indexOf('objectType') < 0 || keys.indexOf('type') < 0 )){
+            console.log('Object type missing in ' + currentObj);
+            return false;
+        }
+        if(!(keys.indexOf('id') < 0 || keys.indexOf('displayName') < 0 || keys.indexOf('name') < 0)){
+            console.log('No displayName or id present in ' + currentObj);
+        }
     }
 
     return true;
