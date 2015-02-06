@@ -5,7 +5,7 @@
 // TODO: Automatic twitter tracking? https://developers.google.com/analytics/devguides/collection/gajs/gaTrackingSocial
 // TODO: Search tracking, could be done with only one parameter
 // TODO: Create test/debug mode that doesn't send data but console logs it!
-// TODO: Determine if uri/url should be used and change
+// TODO: Determine if uri/url should be used. Using url now.
 // TODO: Prettify!
 // TODO: Set up Grunt to change return types in functions on build.
 
