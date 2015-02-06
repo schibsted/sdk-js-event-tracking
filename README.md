@@ -1,8 +1,11 @@
 # sdk-js-event-tracking
 
-Get up and running:
-npm install
-grunt
+## Get up and running:
 
-When developing:
-./run-watch.sh
+`npm install`
+
+`grunt`
+
+## When developing:
+
+`./run-watch.sh`
