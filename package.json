@@ -1,0 +1,23 @@
+{
+  "name": "node-api",
+  "main": "server.js",
+  "dependencies": {
+    "express": "~4.0.0",
+    "mongoose": "~3.6.13",
+    "body-parser": "~1.0.1"
+  },
+  "devDependencies": {
+    "buster": "~0.7.8",
+    "buster-amd": "^0.3.1",
+    "buster-istanbul": "^0.1.10",
+    "grunt": "~0.4.1",
+    "grunt-buster": "~0.3.1",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-nodeunit": "^0.4.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-jsdoc": "^0.5.7",
+    "grunt-shell": "^1.1.1",
+    "jshint": "^2.6.0",
+    "phantomjs": "^1.9.13"
+  }
+}
