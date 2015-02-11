@@ -147,6 +147,20 @@ buster.testCase('A poll answered event', {
     },
 
 });
+buster.testCase('A click event is tracked', {
+    'Data is returned as a array of objects': function(){
+
+        // clickEventTracker(verb, type, id, name, target, targetType, targetId, targetName)
+
+        var result = clickEventTracker();
+        assert.match(activityValidator(result), true);
+
+        var result = clickEventTracker('submit');
+        assert.match(activityValidator(result), true);
+
+    },
+
+});
 
 function activityValidator(obj){
 
