@@ -16,7 +16,9 @@ buster.testCase('A page load ', {
         // trackPageLoadEvent(type, content, title)
 
         // Should be true
-        var result = trackPageLoadEvent();
+        var result = trackPageLoadEvent('article', 'Testtitle', 'Stoler du på at alle norske medaljevinnere');
+        assert.match(result, true);
+        /*var result = trackPageLoadEvent();
         assert.match(result, true);
         var result = trackPageLoadEvent('page');
         assert.match(result, true);
@@ -36,7 +38,7 @@ buster.testCase('A page load ', {
         _opt.clientId = undefined;
         var result = trackPageLoadEvent('page');
         refute.match(result, true);
-        _opt.clientId = 'sp-34534';
+        _opt.clientId = 'sp-34534';*/
 
     }
 });

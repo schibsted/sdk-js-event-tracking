@@ -1,24 +1,14 @@
 function processActivityQueue(){
 
-    // TODO: Extend this function to enable bulk sending and manual sending of data.
+    var result = sendData(activityQueue);
+    activityQueue.shift();
 
-    var errCount = 0;
-
-    while(activityQueue.length > 0 && errCount <5){
-        if(sendData(activityQueue[0], /*'http://127.0.0.1:1337/api'*/'http://127.0.0.1:8002/api/v1/track')){
-            activityQueue.shift();
-        }
-        else {
-            errCount++;
-        }
+    if(errorCount >= 5){
+        // TODO: Report to server
+        console.log('data was not sent in ' + errorCount + ' tries');
     }
-    if(errCount >= 5){
-        // TODO: Create alert call to server here!
-        return false;
-    }
-    return true;
 }
-function sendData(data, serverUri, callback) {
+function sendData(data) {
 
     //console.log(data);
 
@@ -30,15 +20,18 @@ function sendData(data, serverUri, callback) {
     xhr.send(data);
     console.log(data);
 
-    var response = 0;
-
     xhr.onreadystatechange = function(){
         if(xhr.readyState===4){
-            callback(xhr.status, )
+            if(response === 200) {
+                errorCount = 0;
+                return true;
+            }
+            else {
+                activityQueue = activityQueue.concat(data);
+                errorCount++;
+                return false;
+            }
         }
     };
 
-}
-function dataSentCallback(response, data){
-    
 }

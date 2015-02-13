@@ -12,3 +12,5 @@
 
 var _opt = _opt || {};
 var activityQueue = [];
+var errorCount = 0;
+var serverUri = 'http://127.0.0.1:8002/api/v1/track';

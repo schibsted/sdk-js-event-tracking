@@ -2,6 +2,7 @@
 
 window.onload = function(){
     if(_opt.allowAutomaticTracking !== false){
+        console.log('autotrack happend');
         trackPageLoadEvent('page');
     }
 }

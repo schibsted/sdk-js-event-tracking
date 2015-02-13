@@ -8,18 +8,22 @@
 // TODO: Set up Grunt to change return types in functions on build.
 // TODO: Figure out how IPs should be handled.
 // TODO: Should timestamp have millisecond resolution?
+// TODO: Split in to several files and let grunt combine in to one.
 
 var _opt = _opt || {};
 var activityQueue = [];
-
-// Track event on page load if automatic tracking is not prohibited
+var errorCount = 0;
+var serverUri = 'http://127.0.0.1:8002/api/v1/track';
+;// Track event on page load if automatic tracking is not prohibited
 
 window.onload = function(){
     if(_opt.allowAutomaticTracking !== false){
+        console.log('autotrack happend');
         trackPageLoadEvent('page');
     }
 }
 // TODO: Should page load include tags?
+// FIXME: Add origin object when a referer is known.
 /**
  * A function for tracking events to html-forms.
  * @param {string | object} type - The type of page that is loaded. E.g 'article', 'page', 'service'. Default: 'page'
@@ -48,11 +52,11 @@ function trackPageLoadEvent(type, title, content){
 }
 
 /**
- * A function for tracking events to html-forms.
+ * A function for tracking events to html-forms. Default verb is respond.
  * @param {string} elementId - A unique identifier for the element where the event originated. Function will not track without this parameter.
  * @param {string} type - The type of object the form represents (e.g content, email). Default: 'content'
- * @param {string} name - The display name for the form e.g 'Send email'. Default: ''
- * @param {string} content - The conentent that is added to the form. Default: ''
+ * @param {string} title - The display name or title for the form e.g 'Send email'. Default: ''
+ * @param {string | object} content - The conentent that is added to the form. Default: ''
  */
 function trackFormEvent(elementId, type, title, content){
 
@@ -61,9 +65,13 @@ function trackFormEvent(elementId, type, title, content){
     }
     var pageId = _opt.pageId;
 
+    if(elementId === undefined || elementId === '' || elementId === null){
+        return false;
+    }
+
     var activities = [
         {
-            'object': {
+            'thisisnotworking': {
                 '@type': 'link',
                 '@id': pageId || '',
                 'href': document.URL,
@@ -86,6 +94,7 @@ function trackFormEvent(elementId, type, title, content){
     return createTrackerProcessData(activities, 'Respond');
 }
 
+// FIXME: Add origin
 /**
  * Function for tracking comment fields. Will generate an activities object and send it to data collector
  * @param {string} pageId - A unique identifier for the current page. Default: ''
@@ -118,6 +127,7 @@ function trackCommentEvent(pageId, commentId, content, inReplyTo){
     return activities;
 }
 
+// FIXME: Add origin
 /**
  * A function for tracking polls in websites. The function will try to locate the options and answer automatically if not specified
  * @param {string} pageId - A unique ID for the page. Default: null
@@ -351,8 +361,7 @@ function sendActivityObject(activityObject){
 
     // TODO: Make sure return is true || false
 }
-
-function DataTracker(_opt, activityObjectsArray, verb) {
+;function DataTracker(_opt, activityObjectsArray, verb) {
     return {
         siteId:         _opt.clientId || undefined,
         trackingUrl:    _opt.trackingUrl || undefined,
@@ -377,12 +386,15 @@ function DataTracker(_opt, activityObjectsArray, verb) {
             actor['spt:ip'] = ''; // TODO: Find a way to inject this on requesting this resource.
             actor['spt:screenSize'] = window.screen.width + 'x' + window.screen.height;
             actor['spt:viewportSize'] = getViewportDimensions();
+            actor['spt:acceptLanguage'] = this.getDeviceLanguage();
 
             return actor;
 
         },
 
         createProvider: function() {
+
+        // FIXME: Go over this info. ID and URL might need to be fixed
 
             var provider = {};
 
@@ -485,13 +497,51 @@ function DataTracker(_opt, activityObjectsArray, verb) {
             retVal.actor = this.createActor();
             retVal.provider = this.createProvider();
 
+            //console.log(JSON.stringify(retVal));
+
             return JSON.stringify(retVal);
 
         },
     }
 }
+;function processActivityQueue(){
 
-function getTimeStamp(){
+    var result = sendData(activityQueue);
+    activityQueue.shift();
+
+    if(errorCount >= 5){
+        // TODO: Report to server
+        console.log('data was not sent in ' + errorCount + ' tries');
+    }
+}
+function sendData(data) {
+
+    //console.log(data);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', serverUri);
+    //console.log('request sent to ' + serverUri);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+    xhr.send(data);
+    console.log(data);
+
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState===4){
+            if(response === 200) {
+                errorCount = 0;
+                return true;
+            }
+            else {
+                activityQueue = activityQueue.concat(data);
+                errorCount++;
+                return false;
+            }
+        }
+    };
+
+}
+;function getTimeStamp(){
     var now = new Date(),
     timezoneOffset = -now.getTimezoneOffset(),
     diff = timezoneOffset >= 0 ? '+' : '-',
@@ -518,50 +568,7 @@ function getParameter(name) {
     results = regex.exec(location.search);
     return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-function processActivityQueue(){
 
-    // TODO: Extend this function to enable bulk sending and manual sending of data.
-
-    var errCount = 0;
-
-    while(activityQueue.length > 0 && errCount <5){
-        if(sendData(activityQueue[0], /*'http://127.0.0.1:1337/api'*/'http://127.0.0.1:8002/api/v1/track')){
-            activityQueue.shift();
-        }
-        else {
-            errCount++;
-        }
-    }
-    if(errCount >= 5){
-        // TODO: Create alert call to server here!
-        return false;
-    }
-    return true;
-}
-function sendData(data, serverUri) {
-
-    //console.log(data);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', serverUri);
-    //console.log('request sent to ' + serverUri);
-    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-
-    xhr.send(data);
-
-    var response = 0;
-
-    xhr.onreadystatechange = function(){
-        if(xhr.readyState===4){
-            response = xhr.status;
-            console.log(xhr.responseText);
-        }
-    };
-    if(response < 300 || response >= 200){
-        return true;
-    }
-    return false;
-}
 
 function getDataAttributes(element, dataContainer){
 
