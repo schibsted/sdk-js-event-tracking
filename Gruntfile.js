@@ -20,8 +20,8 @@ module.exports = function (grunt) {
         },
         watch: {
             all: {
-                files: ['app/**/*.js', 'lib/**/*.js', 'test/**/*.js', 'config/*.js', 'tracker.js'],
-                tasks: ['jshint', 'buster:unit', 'jsdoc']
+                files: ['src/**/*.js', 'lib/**/*.js', 'test/**/*.js', 'config/*.js', 'tracker.js'],
+                tasks: ['concat', 'jshint', 'buster:unit', 'jsdoc']
             }
         },
         jsdoc : {
@@ -36,9 +36,19 @@ module.exports = function (grunt) {
             unit: {
             }
         },
+        concat: {
+            options: {
+                separator: ';',
+            },
+            dist: {
+                src: ['src/variables.js', 'src/events.js', 'src/dataTracker.js', 'src/sendData.js', 'src/utilities.js'],
+                dest: 'tracker.js',
+            },
+        },
     });
 
     // These plugins provide necessary tasks.
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -46,7 +56,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-jsdoc');
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'buster:unit', 'jsdoc']);
+    grunt.registerTask('default', ['concat', 'jshint', 'buster:unit', 'jsdoc']);
     grunt.registerTask('test', 'buster:unit');
     grunt.registerTask('check', ['watch']);
     grunt.registerTask('run', ['buster:unit']);
