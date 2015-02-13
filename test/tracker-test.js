@@ -4,11 +4,11 @@ var assert = buster.assert;
 var refute = buster.refute;
 
 var _opt = {};
-_opt.siteId = 'sp-34534';
+_opt.clientId = 'sp-34534';
 _opt.trackingUrl = '127.0.0.1:8080';
 _opt.language = 'no';
-
-var tracker = new DataTracker(_opt, [], 'post');
+_opt.allowAutomaticTracking = false;
+_opt.pageId = 'urn:test.no:objecttest01';
 
 var testObjects = [
     {
@@ -28,9 +28,11 @@ var testObjects = [
     }
 ];
 
+var tracker = new DataTracker(_opt, [], 'post');
+
 buster.testCase('A tracker object', {
     'siteId was set': function(){
-        assert.match(tracker.siteId, _opt.siteId);
+        assert.match(tracker.siteId, _opt.clientId);
     },
     'trackingUrl was set': function(){
         assert.match(tracker.trackingUrl, _opt.trackingUrl);
@@ -53,114 +55,6 @@ buster.testCase('A tracker object', {
     },
 });
 
-buster.testCase('A comment event', {
-    'default values are set': function(){
-        var test = trackCommentEvent();
-        assert.match(test[0].object.id, null);
-        assert.match(test[0].object.content, '');
-        assert.match(test[0].object.inReplyTo, document.title);
-        assert.match(test[1].target.objectType, 'article');
-        assert.match(test[1].target.displayName, document.title);
-    },
-    'set values are set': function(){
-        var test = trackCommentEvent(1234, 'Some text', 'http://test.no', 'page', 'Test Page');
-        assert.match(test[0].object.id, 1234);
-        assert.match(test[0].object.content, 'Some text');
-        assert.match(test[0].object.inReplyTo, 'http://test.no');
-        assert.match(test[1].target.objectType, 'page');
-        assert.match(test[1].target.displayName, 'Test Page');
-    },
-    'some values are set': function(){
-        var test = trackCommentEvent(undefined, 'Some text', undefined, 'page', 'Test Page');
-        assert.match(test[0].object.id, null);
-        assert.match(test[0].object.content, 'Some text');
-        assert.match(test[0].object.inReplyTo, document.title);
-        assert.match(test[1].target.objectType, 'page');
-        assert.match(test[1].target.displayName, 'Test Page');
-    },
-
-});
-buster.testCase('A raw object input', {
-    'data is returned as is': function(){
-        var inputObject = {
-            verb: 'share',
-        };
-        var result = sendActivityObject(inputObject);
-        assert.match(inputObject, result);
-    },
-
-});
-buster.testCase('A custom event input', {
-    'Data is returned as a array of objects': function(){
-        var testArray = [{
-            object: {
-                objectType: 'person',
-                displayName: 'Person Test',
-                id: 1234,
-            },
-        },{
-            target: {
-                objectType: 'service',
-                displayName: 'Test Service',
-                id: 'sb_134213',
-            },
-        }];
-        var result = generalEventTracker('test', 'object', {objectType: 'person', displayName: 'Person Test', id: 1234}, 'target', {objectType: 'service', displayName: 'Test Service', id: 'sb_134213'});
-        assert.match(testArray, result);
-
-        // Should fail if verb is not set.
-        var result = generalEventTracker();
-        assert.match(result, false);
-
-        // Should fail if verb is not set.
-        var result = generalEventTracker(undefined, 'object', {objectType: 'person', displayName: 'Person Test', id: 1234});
-        assert.match(result, false)
-    },
-
-});
-buster.testCase('A comment form event', {
-    'Data is returned as a array of objects': function(){
-
-        var result = trackCommentEvent(1234, 'First comment!', 'http://vg.no', 'page', 'VG.no');
-        assert.match(activityValidator(result), true);
-
-        var result = trackCommentEvent(1234, 'First comment!', 'http://vg.no', undefined, 'VG.no');
-        assert.match(activityValidator(result), true);
-    },
-
-});
-buster.testCase('A poll answered event', {
-    'Data is returned as a array of objects': function(){
-
-        var result = trackPollEvent();
-        assert.match(activityValidator(result), true);
-
-        var result = trackPollEvent(1234, 'question')
-        assert.match(activityValidator(result), true);
-
-        var result = trackPollEvent(1234, 'question', undefined, ['yes', 'no'], ['yes']);
-        assert.match(activityValidator(result), true);
-
-        // TODO: Figure out how to make a fake DOM and pass as an element
-        /*var result = trackPollEvent(1234, 'question', )
-        assert.match(activityValidator(result), true);*/
-    },
-
-});
-buster.testCase('A click event is tracked', {
-    'Data is returned as a array of objects': function(){
-
-        // clickEventTracker(verb, type, id, name, target, targetType, targetId, targetName)
-
-        var result = clickEventTracker();
-        assert.match(activityValidator(result), true);
-
-        var result = clickEventTracker('submit');
-        assert.match(activityValidator(result), true);
-
-    },
-
-});
 
 function activityValidator(obj){
 
@@ -173,7 +67,7 @@ function activityValidator(obj){
     }
 
     // The objects in the array has correct objects
-    var allowedKeys = ['object', 'target', 'to', 'bto'];
+    var allowedKeys = ['object', 'target', 'to', 'bto', 'result'];
     for(var i = 0; i < obj.length; i++){
         if(allowedKeys.indexOf(Object.keys(obj[i])[0].toLowerCase()) < 0){
             console.log('Unsupportet object used');
