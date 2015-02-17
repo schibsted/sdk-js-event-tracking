@@ -13,8 +13,9 @@ window.onload = function(){
  * @param {string | object} type - The type of page that is loaded. E.g 'article', 'page', 'service'. Default: 'page'
  * @param {string | object} title - The title of the page. Default: document.title
  * @param {string | object} content - The content of the page, or a summary. Default: ''
+ * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
-function trackPageLoadEvent(type, title, content){
+function trackPageLoadEvent(type, title, content, callback){
 
     if(!checkMandatoryOptions()){
         return false;
@@ -32,17 +33,19 @@ function trackPageLoadEvent(type, title, content){
         },
     ];
 
-    return createTrackerProcessData(activities, 'Read');
+    createTrackerProcessData(activities, 'Read', callback);
 }
 
 /**
  * A function for tracking events to html-forms. Default verb is respond.
  * @param {string} elementId - A unique identifier for the element where the event originated. Function will not track without this parameter.
- * @param {string} type - The type of object the form represents (e.g content, email). Default: 'content'
+ * @param {string} originType - The type of entity the form originates from (e.g page, article, application). Default 'page'
+ * @param {string} type - The type of object the form represents (e.g content, spn:email). Default: 'content'
  * @param {string} title - The display name or title for the form e.g 'Send email'. Default: ''
  * @param {string | object} content - The conentent that is added to the form. Default: ''
+ * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
-function trackFormEvent(elementId, type, title, content){
+function trackFormEvent(elementId, originType, type, title, content, callback){
 
     if(!checkMandatoryOptions()){
         return false;
@@ -55,10 +58,10 @@ function trackFormEvent(elementId, type, title, content){
 
     var activities = [
         {
-            'thisisnotworking': {
-                '@type': 'link',
+            'object': {
+                '@type': originType || 'page',
                 '@id': pageId || '',
-                'href': document.URL,
+                'url': document.URL,
             }
         },
     ];
@@ -75,7 +78,7 @@ function trackFormEvent(elementId, type, title, content){
     resultObject['result'] = resultData;
     activities.push(resultObject);
 
-    return createTrackerProcessData(activities, 'Respond');
+    return createTrackerProcessData(activities, 'Respond', callback);
 }
 
 // FIXME: Add origin

@@ -9,11 +9,15 @@
 // TODO: Figure out how IPs should be handled.
 // TODO: Should timestamp have millisecond resolution?
 // TODO: Split in to several files and let grunt combine in to one.
+// TODO: Add spt:customId to actor. Can be set via _opt
+// TODO: Change _opt to something more unique.
+// TODO: Define parameters that can be a part of _opt
 
 var _opt = _opt || {};
 var activityQueue = [];
 var errorCount = 0;
-var serverUri = 'http://127.0.0.1:8002/api/v1/track';
+var serverUri = 'http://127.0.0.1:8002/api/v1/track'; // TODO: Put a default in _opt
+var sentDataQueue = [];
 ;// Track event on page load if automatic tracking is not prohibited
 
 window.onload = function(){
@@ -29,8 +33,9 @@ window.onload = function(){
  * @param {string | object} type - The type of page that is loaded. E.g 'article', 'page', 'service'. Default: 'page'
  * @param {string | object} title - The title of the page. Default: document.title
  * @param {string | object} content - The content of the page, or a summary. Default: ''
+ * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
-function trackPageLoadEvent(type, title, content){
+function trackPageLoadEvent(type, title, content, callback){
 
     if(!checkMandatoryOptions()){
         return false;
@@ -48,17 +53,19 @@ function trackPageLoadEvent(type, title, content){
         },
     ];
 
-    return createTrackerProcessData(activities, 'Read');
+    createTrackerProcessData(activities, 'Read', callback);
 }
 
 /**
  * A function for tracking events to html-forms. Default verb is respond.
  * @param {string} elementId - A unique identifier for the element where the event originated. Function will not track without this parameter.
- * @param {string} type - The type of object the form represents (e.g content, email). Default: 'content'
+ * @param {string} originType - The type of entity the form originates from (e.g page, article, application). Default 'page'
+ * @param {string} type - The type of object the form represents (e.g content, spn:email). Default: 'content'
  * @param {string} title - The display name or title for the form e.g 'Send email'. Default: ''
  * @param {string | object} content - The conentent that is added to the form. Default: ''
+ * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
-function trackFormEvent(elementId, type, title, content){
+function trackFormEvent(elementId, originType, type, title, content, callback){
 
     if(!checkMandatoryOptions()){
         return false;
@@ -71,10 +78,10 @@ function trackFormEvent(elementId, type, title, content){
 
     var activities = [
         {
-            'thisisnotworking': {
-                '@type': 'link',
+            'object': {
+                '@type': originType || 'page',
                 '@id': pageId || '',
-                'href': document.URL,
+                'url': document.URL,
             }
         },
     ];
@@ -91,7 +98,7 @@ function trackFormEvent(elementId, type, title, content){
     resultObject['result'] = resultData;
     activities.push(resultObject);
 
-    return createTrackerProcessData(activities, 'Respond');
+    return createTrackerProcessData(activities, 'Respond', callback);
 }
 
 // FIXME: Add origin
@@ -399,8 +406,8 @@ function sendActivityObject(activityObject){
             var provider = {};
 
             provider['@type'] = 'Organization';
-            provider['@id'] = getUserId();
-            provider['spt:client'] = this.siteId;
+            provider['@id'] = 'urn:spt.no:'+this.siteId;
+            //provider['spt:client'] = this.siteId;
             provider['url'] = document.URL;
 
             // TODO: Determin where campaigns should go.
@@ -504,22 +511,29 @@ function sendActivityObject(activityObject){
         },
     }
 }
-;function processActivityQueue(){
+;function createTrackerProcessData(activities, verb, callback){
 
-    var result = sendData(activityQueue);
-    activityQueue.shift();
+    var tracker = new DataTracker(_opt, activities, verb);
+    activityQueue.push(tracker.getActivity());
+    return processActivityQueue(callback);
+}
+function processActivityQueue(callback){
+
+    var result = sendData(activityQueue, callback);
+    activityQueue = [];
 
     if(errorCount >= 5){
         // TODO: Report to server
         console.log('data was not sent in ' + errorCount + ' tries');
     }
+    return result;
 }
-function sendData(data) {
+function sendData(data, callback) {
 
-    //console.log(data);
+    sentDataQueue.push(data);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', serverUri);
+    xhr.open('POST', serverUri, true);
     //console.log('request sent to ' + serverUri);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
@@ -532,18 +546,21 @@ function sendData(data) {
 
     xhr.onreadystatechange = function(){
         if(xhr.readyState===4){
-            if(response === 200) {
+
+            var sentData = sentDataQueue.shift();
+
+            if(xhr.status === 200) {
                 errorCount = 0;
-                return true;
             }
             else {
-                activityQueue = activityQueue.concat(data);
+                activityQueue = activityQueue.concat(sentData);
                 errorCount++;
-                return false;
+            }
+            if(callback !== undefined){
+                callback(xhr, sentData);
             }
         }
     };
-
 }
 ;function getTimeStamp(){
     var now = new Date(),
@@ -586,12 +603,6 @@ function getDataAttributes(element, dataContainer){
         return false;
     }
     return data;
-}
-function createTrackerProcessData(activities, verb){
-    // TODO: Better errror validation
-    var tracker = new DataTracker(_opt, activities, verb);
-    activityQueue.push(tracker.getActivity());
-    return processActivityQueue();
 }
 function findFormElement(element){
 
@@ -651,10 +662,10 @@ function getViewportDimensions() {
     return viewportwidth + 'x' + viewportheight;
 }
 function checkMandatoryOptions(){
-    if(_opt.clientId === undefined){
+    if(_opt.clientId === undefined || _opt.clientId === null || _opt.clientId === ''){
         return false;
     }
-    if(_opt.pageId === undefined){
+    if(_opt.pageId === undefined || _opt.pageId === null || _opt.pageId === ''){
         return false;
     }
     return true;

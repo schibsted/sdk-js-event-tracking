@@ -4,7 +4,7 @@ config["My tests"] = {
     rootPath: "../",
     environment: "browser",
     libs: [
-    "tracker.js"
+    "tracker.js", "test/testlib.js"
     ],
     sources: [
     "tracker.js"

@@ -40,12 +40,6 @@ function getDataAttributes(element, dataContainer){
     }
     return data;
 }
-function createTrackerProcessData(activities, verb){
-    // TODO: Better errror validation
-    var tracker = new DataTracker(_opt, activities, verb);
-    activityQueue.push(tracker.getActivity());
-    return processActivityQueue();
-}
 function findFormElement(element){
 
     if(element.tagName.toLowerCase() !== 'form'){
@@ -104,10 +98,10 @@ function getViewportDimensions() {
     return viewportwidth + 'x' + viewportheight;
 }
 function checkMandatoryOptions(){
-    if(_opt.clientId === undefined){
+    if(_opt.clientId === undefined || _opt.clientId === null || _opt.clientId === ''){
         return false;
     }
-    if(_opt.pageId === undefined){
+    if(_opt.pageId === undefined || _opt.pageId === null || _opt.pageId === ''){
         return false;
     }
     return true;

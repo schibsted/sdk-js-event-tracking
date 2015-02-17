@@ -36,8 +36,8 @@ function DataTracker(_opt, activityObjectsArray, verb) {
             var provider = {};
 
             provider['@type'] = 'Organization';
-            provider['@id'] = getUserId();
-            provider['spt:client'] = this.siteId;
+            provider['@id'] = 'urn:spt.no:'+this.siteId;
+            //provider['spt:client'] = this.siteId;
             provider['url'] = document.URL;
 
             // TODO: Determin where campaigns should go.
