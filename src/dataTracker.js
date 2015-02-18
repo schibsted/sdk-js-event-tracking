@@ -120,9 +120,6 @@ function DataTracker(_opt, activityObjectsArray, verb) {
             if(this.published){
                 retVal['published'] = this.published;
             } else {return 'no timestamp was found'}
-            /*if(this.language){
-                retVal.language = this.language;
-            }*/ // TODO: Is this needed?
 
             for(var i = 0; i < this.activities.length; i++){
                 for(var attrname in this.activities[i]){

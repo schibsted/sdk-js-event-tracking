@@ -19,66 +19,14 @@ function getTimeStamp(){
 function getUserId(){
     return 1337;
 }
-function getParameter(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+function getParameter(name, queryString) {
+    var searchString = queryString || location.search;
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]").toLowerCase();
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-    results = regex.exec(location.search);
+    results = regex.exec(searchString);
     return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-
-function getDataAttributes(element, dataContainer){
-
-    var data = dataContainer || {};
-
-    data.verb = element.getAttribute('data-verb');
-    if(data.verb === null && element.nodeName.toLowerCase() !== 'body'){
-        return getDataAttributes(element.parentNode, {});
-    }
-    if(data.verb === null){
-        return false;
-    }
-    return data;
-}
-function findFormElement(element){
-
-    if(element.tagName.toLowerCase() !== 'form'){
-        return findFormElement(element.parentNode);
-    }
-    else if(element.tagName.toLowerCase() === 'body'){
-        return null;
-    }
-    return element;
-}
-function findOptions(element, optionsObject) {
-
-    var children = element.childNodes;
-
-    for(var i=0; i < children.length; i++){
-
-        if(children[i].nodeName !== "#text"){
-            if(children[i].tagName.toLowerCase() === 'input' && children[i].getAttribute('type').toLowerCase() === 'radio'){
-                optionsObject.options.push(children[i].getAttribute('value').toLowerCase());
-                if(children[i].checked){
-                    optionsObject.answer.push(children[i].getAttribute('value').toLowerCase());
-                }
-            }
-            else if(children[i].tagName.toLowerCase() === 'input' && children[i].getAttribute('type').toLowerCase() === 'checkbox'){
-                optionsObject.options.push(children[i].getAttribute('value').toLowerCase());
-                if(children[i].checked){
-                    optionsObject.answer.push(children[i].getAttribute('value').toLowerCase());
-                }
-            }
-            if(children[i].childElementCount !== undefined && children[i].childElementCount > 0){
-                var optionsObject = findOptions(children[i], optionsObject);
-                if(children.length <= i){
-                    return optionsObject;
-                }
-            }
-        }
-    }
-    return optionsObject;
-}
 function getViewportDimensions() {
     var viewportwidth;
     var viewportheight;

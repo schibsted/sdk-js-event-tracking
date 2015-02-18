@@ -11,57 +11,66 @@ _opt.pageId = 'urn:test.no:pagetest01';
 _opt.language = 'no';
 _opt.allowAutomaticTracking = false;
 
-// function trackFormEvent(elementId, type, title, content, callback)
+// function trackPollEvent(pollId, question, options, answer, callback)
 
 buster.testCase('A form event ', {
     'fails if pageId or clientId is missing': function(){
         _opt.clientId = undefined;
-        var result = trackFormEvent('testElement01', undefined, undefined, undefined, undefined);
+        var result = trackPollEvent('poll:12824212', 'Is this a question?');
         assert.equals(result, false);
 
         _opt.cliendId = null;
-        var result = trackFormEvent('testElement01', undefined, undefined, undefined, undefined);
+        var result = trackPollEvent('poll:12824212', 'Is this i question?');
         assert.equals(result, false);
 
         _opt.clientId = '';
-        var result = trackFormEvent('testElement01', undefined, undefined, undefined, undefined);
+        var result = trackPollEvent('poll:12824212', 'Is this i question?');
         assert.equals(result, false);
 
         _opt.clientId = 'sp-34534';
 
         _opt.pageId = undefined;
-        var result = trackFormEvent('testElement01', undefined, undefined, undefined, undefined);
+        var result = trackPollEvent('poll:12824212', 'Is this i question?');
         assert.equals(result, false);
 
         _opt.pageId = null;
-        var result = trackFormEvent('testElement01', undefined, undefined, undefined, undefined);
+        var result = trackPollEvent('poll:12824212', 'Is this i question?');
         assert.equals(result, false);
 
         _opt.pageId = '';
-        var result = trackFormEvent('testElement01', undefined, undefined, undefined, undefined);
+        var result = trackPollEvent('poll:12824212', 'Is this i question?');
         assert.equals(result, false);
 
         _opt.pageId = 'urn:test.no:pagetest01';
 
-        var result = trackFormEvent(undefined, undefined, undefined, undefined, undefined);
+        var result = trackPollEvent(undefined, undefined, undefined, undefined, undefined);
         assert.equals(result, false);
-        var result = trackFormEvent('', undefined, undefined, undefined, undefined);
+        var result = trackPollEvent('', 'Is this i question?', undefined, undefined, undefined);
         assert.equals(result, false);
-        var result = trackFormEvent(null, undefined, undefined, undefined, undefined);
+        var result = trackPollEvent(null, undefined, undefined, undefined, undefined);
         assert.equals(result, false);
 
     },
     'server response 200': function(done){
 
-        // function trackFormEvent(elementId, type, title, content, callback)
-
-        trackFormEvent('testElement01', 'article', 'note', undefined, undefined, done(function(response, data){
+        trackPollEvent('poll:12824212', 'Is this i question?', ['yes', 'no'], ['yes'], done(function(response, data){
             assert.equals(response.status, 200);
         }));
 
+        // Should fail if URL is not correct
+
+        var oldTrackingUrl = _opt.trackingUrl;
+        _opt.trackingUrl = 'http://128.0.0.1/api/v1/track';
+
+        trackPollEvent('poll:12824212', 'Is this i question?', ['yes', 'no'], ['yes'], done(function(response, data){
+            refute.equals(response.status, 200);
+        }));
+
+        _opt.trackingUrl = oldTrackingUrl;
+
     },
-    'contains all needed info': function(done){
-        trackFormEvent('testElement01', 'application', 'note', 'Test Title', 'Bacon Ipsum æøå', done(function(response, data){
+    /*'contains all needed info': function(done){
+        trackPollEvent('poll:12824212', 'article', 'Bacon Ipsum ���', undefined, done(function(response, data){
             assert.equals(response.status, 200);
             for(var i = 0; i < data.length; i++){
                 var d = JSON.parse(data[i]);
@@ -77,18 +86,18 @@ buster.testCase('A form event ', {
                 assert.match(d['@type'], 'Respond');
 
                 // Object asserts
-                assert.match(d.object['@type'], 'application');
+                assert.match(d.object['@type'], 'article');
                 assert.match(d.object['@id'], _opt.pageId);
 
                 // Result asserts
-                assert.match(d.result.content, 'Bacon Ipsum æøå');
+                assert.match(d.result.content, 'Bacon Ipsum ���');
                 assert.match(d.result['@type'], 'note');
-                assert.match(d.result['@id'], _opt.pageId + ':testElement01');
+                assert.match(d.result['@id'], _opt.pageId + ':poll:12824212');
             }
         }));
     },
     'has default values': function(done){
-        trackFormEvent('testElement01', undefined, undefined, undefined, undefined, done(function(response, data){
+        trackPollEvent('poll:12824212', undefined, undefined, undefined, done(function(response, data){
             assert.equals(response.status, 200);
             for(var i = 0; i < data.length; i++){
                 var d = JSON.parse(data[i]);
@@ -104,9 +113,9 @@ buster.testCase('A form event ', {
                 assert.match(d['@type'], 'Respond');
 
                 // Object asserts
-                assert.match(d.object['@type'], 'page');
+                assert.match(d.object['@type'], 'Is this i question?');
                 assert.match(d.object['@id'], _opt.pageId);
             }
         }));
-    },
+    },*/
 });

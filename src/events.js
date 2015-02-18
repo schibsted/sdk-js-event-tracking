@@ -81,51 +81,68 @@ function trackFormEvent(elementId, originType, type, title, content, callback){
     return createTrackerProcessData(activities, 'Respond', callback);
 }
 
-// FIXME: Add origin
 /**
  * Function for tracking comment fields. Will generate an activities object and send it to data collector
- * @param {string} pageId - A unique identifier for the current page. Default: ''
- * @param {string} commentId - A unique ID for the comment. Default: null
+ * @param {string} commentId - A unique ID for the comment. Must be set
+ * @param {string} originType - The type of entity the form originates from (e.g page, article, application). Default 'page'
  * @param {string} content - The text-body of the comment. Default ''
  * @param {string|object} inReplyTo - A id, title, comment, or an object representing the location of the form or a reference to a parent object. Default: document.URL
- * @returns {object} Activities object.
+ * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
-function trackCommentEvent(pageId, commentId, content, inReplyTo){
+function trackCommentEvent(commentId, originType, content, inReplyTo, callback){
+
+    if(!checkMandatoryOptions()){
+        return false;
+    }
+    var pageId = _opt.pageId;
+
+    if(commentId === undefined || commentId === '' || commentId === null){
+        return false;
+    }
 
     var activities = [
         {
             'result': {
                 '@type': ['Note', {'spt':'Comment'}],
-                '@id': pageId + ':' + commentId || '',
+                '@id': _opt.pageId + ':' + commentId || '',
                 'content': content || '',
                 'inReplyTo': inReplyTo || document.URL,
             }
         },
         {
             'object': {
-                '@type': 'link',
-                '@id': pageId || '',
-                'href': document.URL,
+                '@type': originType || 'page',
+                '@id': _opt.pageId || '',
+                'url': document.URL,
             }
         },
     ];
 
-    var result = createTrackerProcessData(activities, 'Respond');
+    var result = createTrackerProcessData(activities, 'Respond', callback);
     return activities;
 }
 
 // FIXME: Add origin
 /**
  * A function for tracking polls in websites. The function will try to locate the options and answer automatically if not specified
- * @param {string} pageId - A unique ID for the page. Default: null
  * @param {string} pollId - A unique ID for the poll. Default: null
  * @param {string} question - The question asked. Default: ''
- * @param {object} element - if automatic answer/option discovery is wanted, pleas pass the element that triggers the function (e.g this).
- * @param {array} options - The different possible answers to the question. Default: automatic
- * @param {array} answer - The answer(s) the user makes. Default: automatic
+ * @param {array} options - The different possible answers to the question. Default: []
+ * @param {array} answer - The answer(s) the user makes. Default: []
+ * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  * @returns {object} Activities object.
  */
-function trackPollEvent(pageId, pollId, question, element, options, answer){
+function trackPollEvent(pollId, question, options, answer, callback){
+
+    if(!checkMandatoryOptions()){
+        return false;
+    }
+    var pageId = _opt.pageId;
+
+    if(pollId === undefined || pollId === '' || pollId === null){
+        return false;
+    }
+
     var activities = [];
     var activityObject = {
         'object': {
@@ -174,24 +191,10 @@ function trackPollEvent(pageId, pollId, question, element, options, answer){
 
         resultObject.result.replies.items = items;
     }
-    // TODO: Make this work again if it should be here.
-    /*else if (element !== undefined){
-        var foundForm = findFormElement(element);
-        if(foundForm !== null){
-            var optionsObject = {
-                options: [],
-                answer: [],
-            };
-            optionsObject = findOptions(foundForm, optionsObject);
-
-            activityObject.object.options = optionsObject.options;
-            activityObject.object.answer = optionsObject.answer;
-        }
-    }*/
 
     activities.push(activityObject);
     activities.push(resultObject);
-    var result = createTrackerProcessData(activities, 'Respond');
+    var result = createTrackerProcessData(activities, 'Respond', callback);
     return activities;
 
 }

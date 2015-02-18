@@ -1,22 +1,18 @@
 "use strict";
 
 // TODO: Manage IDs from external service and cookies
-// TODO: Create option for bulk sending
 // TODO: Search tracking, could be done with only one parameter
 // TODO: Create test/debug mode that doesn't send data but console logs it!
 // TODO: Prettify!
-// TODO: Set up Grunt to change return types in functions on build.
-// TODO: Figure out how IPs should be handled.
-// TODO: Should timestamp have millisecond resolution?
-// TODO: Split in to several files and let grunt combine in to one.
 // TODO: Add spt:customId to actor. Can be set via _opt
 // TODO: Change _opt to something more unique.
 // TODO: Define parameters that can be a part of _opt
+// TODO: Write function that unset null values in activity objects
 
 var _opt = _opt || {};
 var activityQueue = [];
 var errorCount = 0;
-var serverUri = 'http://127.0.0.1:8002/api/v1/track'; // TODO: Put a default in _opt
+var serverUri = 'http://127.0.0.1:8002/api/v1/track';
 var sentDataQueue = [];
 ;// Track event on page load if automatic tracking is not prohibited
 
@@ -101,51 +97,68 @@ function trackFormEvent(elementId, originType, type, title, content, callback){
     return createTrackerProcessData(activities, 'Respond', callback);
 }
 
-// FIXME: Add origin
 /**
  * Function for tracking comment fields. Will generate an activities object and send it to data collector
- * @param {string} pageId - A unique identifier for the current page. Default: ''
- * @param {string} commentId - A unique ID for the comment. Default: null
+ * @param {string} commentId - A unique ID for the comment. Must be set
+ * @param {string} originType - The type of entity the form originates from (e.g page, article, application). Default 'page'
  * @param {string} content - The text-body of the comment. Default ''
  * @param {string|object} inReplyTo - A id, title, comment, or an object representing the location of the form or a reference to a parent object. Default: document.URL
- * @returns {object} Activities object.
+ * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
-function trackCommentEvent(pageId, commentId, content, inReplyTo){
+function trackCommentEvent(commentId, originType, content, inReplyTo, callback){
+
+    if(!checkMandatoryOptions()){
+        return false;
+    }
+    var pageId = _opt.pageId;
+
+    if(commentId === undefined || commentId === '' || commentId === null){
+        return false;
+    }
 
     var activities = [
         {
             'result': {
                 '@type': ['Note', {'spt':'Comment'}],
-                '@id': pageId + ':' + commentId || '',
+                '@id': _opt.pageId + ':' + commentId || '',
                 'content': content || '',
                 'inReplyTo': inReplyTo || document.URL,
             }
         },
         {
             'object': {
-                '@type': 'link',
-                '@id': pageId || '',
-                'href': document.URL,
+                '@type': originType || 'page',
+                '@id': _opt.pageId || '',
+                'url': document.URL,
             }
         },
     ];
 
-    var result = createTrackerProcessData(activities, 'Respond');
+    var result = createTrackerProcessData(activities, 'Respond', callback);
     return activities;
 }
 
 // FIXME: Add origin
 /**
  * A function for tracking polls in websites. The function will try to locate the options and answer automatically if not specified
- * @param {string} pageId - A unique ID for the page. Default: null
  * @param {string} pollId - A unique ID for the poll. Default: null
  * @param {string} question - The question asked. Default: ''
- * @param {object} element - if automatic answer/option discovery is wanted, pleas pass the element that triggers the function (e.g this).
- * @param {array} options - The different possible answers to the question. Default: automatic
- * @param {array} answer - The answer(s) the user makes. Default: automatic
+ * @param {array} options - The different possible answers to the question. Default: []
+ * @param {array} answer - The answer(s) the user makes. Default: []
+ * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  * @returns {object} Activities object.
  */
-function trackPollEvent(pageId, pollId, question, element, options, answer){
+function trackPollEvent(pollId, question, options, answer, callback){
+
+    if(!checkMandatoryOptions()){
+        return false;
+    }
+    var pageId = _opt.pageId;
+
+    if(pollId === undefined || pollId === '' || pollId === null){
+        return false;
+    }
+
     var activities = [];
     var activityObject = {
         'object': {
@@ -194,24 +207,10 @@ function trackPollEvent(pageId, pollId, question, element, options, answer){
 
         resultObject.result.replies.items = items;
     }
-    // TODO: Make this work again if it should be here.
-    /*else if (element !== undefined){
-        var foundForm = findFormElement(element);
-        if(foundForm !== null){
-            var optionsObject = {
-                options: [],
-                answer: [],
-            };
-            optionsObject = findOptions(foundForm, optionsObject);
-
-            activityObject.object.options = optionsObject.options;
-            activityObject.object.answer = optionsObject.answer;
-        }
-    }*/
 
     activities.push(activityObject);
     activities.push(resultObject);
-    var result = createTrackerProcessData(activities, 'Respond');
+    var result = createTrackerProcessData(activities, 'Respond', callback);
     return activities;
 
 }
@@ -490,9 +489,6 @@ function sendActivityObject(activityObject){
             if(this.published){
                 retVal['published'] = this.published;
             } else {return 'no timestamp was found'}
-            /*if(this.language){
-                retVal.language = this.language;
-            }*/ // TODO: Is this needed?
 
             for(var i = 0; i < this.activities.length; i++){
                 for(var attrname in this.activities[i]){
@@ -530,11 +526,12 @@ function processActivityQueue(callback){
 }
 function sendData(data, callback) {
 
+    var uri = _opt.trackingUrl || serverUri;
+
     sentDataQueue.push(data);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', serverUri, true);
-    //console.log('request sent to ' + serverUri);
+    xhr.open('POST', uri, true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
     try {
@@ -583,66 +580,14 @@ function sendData(data, callback) {
 function getUserId(){
     return 1337;
 }
-function getParameter(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+function getParameter(name, queryString) {
+    var searchString = queryString || location.search;
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]").toLowerCase();
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-    results = regex.exec(location.search);
+    results = regex.exec(searchString);
     return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-
-function getDataAttributes(element, dataContainer){
-
-    var data = dataContainer || {};
-
-    data.verb = element.getAttribute('data-verb');
-    if(data.verb === null && element.nodeName.toLowerCase() !== 'body'){
-        return getDataAttributes(element.parentNode, {});
-    }
-    if(data.verb === null){
-        return false;
-    }
-    return data;
-}
-function findFormElement(element){
-
-    if(element.tagName.toLowerCase() !== 'form'){
-        return findFormElement(element.parentNode);
-    }
-    else if(element.tagName.toLowerCase() === 'body'){
-        return null;
-    }
-    return element;
-}
-function findOptions(element, optionsObject) {
-
-    var children = element.childNodes;
-
-    for(var i=0; i < children.length; i++){
-
-        if(children[i].nodeName !== "#text"){
-            if(children[i].tagName.toLowerCase() === 'input' && children[i].getAttribute('type').toLowerCase() === 'radio'){
-                optionsObject.options.push(children[i].getAttribute('value').toLowerCase());
-                if(children[i].checked){
-                    optionsObject.answer.push(children[i].getAttribute('value').toLowerCase());
-                }
-            }
-            else if(children[i].tagName.toLowerCase() === 'input' && children[i].getAttribute('type').toLowerCase() === 'checkbox'){
-                optionsObject.options.push(children[i].getAttribute('value').toLowerCase());
-                if(children[i].checked){
-                    optionsObject.answer.push(children[i].getAttribute('value').toLowerCase());
-                }
-            }
-            if(children[i].childElementCount !== undefined && children[i].childElementCount > 0){
-                var optionsObject = findOptions(children[i], optionsObject);
-                if(children.length <= i){
-                    return optionsObject;
-                }
-            }
-        }
-    }
-    return optionsObject;
-}
 function getViewportDimensions() {
     var viewportwidth;
     var viewportheight;

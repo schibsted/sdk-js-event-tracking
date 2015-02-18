@@ -17,11 +17,12 @@ function processActivityQueue(callback){
 }
 function sendData(data, callback) {
 
+    var uri = _opt.trackingUrl || serverUri;
+
     sentDataQueue.push(data);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', serverUri, true);
-    //console.log('request sent to ' + serverUri);
+    xhr.open('POST', uri, true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
     try {
