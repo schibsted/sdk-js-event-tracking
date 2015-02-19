@@ -1,3 +1,5 @@
+"use strict";
+
 buster.spec.expose();
 
 var assert = buster.assert;
@@ -14,34 +16,34 @@ buster.testCase('A form event ', {
         assert.equals(result, false);
 
         _opt.cliendId = null;
-        var result = trackPollEvent('poll:12824212', 'Is this i question?');
+        result = trackPollEvent('poll:12824212', 'Is this i question?');
         assert.equals(result, false);
 
         _opt.clientId = '';
-        var result = trackPollEvent('poll:12824212', 'Is this i question?');
+        result = trackPollEvent('poll:12824212', 'Is this i question?');
         assert.equals(result, false);
 
         _opt.clientId = 'sp-34534';
 
         _opt.pageId = undefined;
-        var result = trackPollEvent('poll:12824212', 'Is this i question?');
+        result = trackPollEvent('poll:12824212', 'Is this i question?');
         assert.equals(result, false);
 
         _opt.pageId = null;
-        var result = trackPollEvent('poll:12824212', 'Is this i question?');
+        result = trackPollEvent('poll:12824212', 'Is this i question?');
         assert.equals(result, false);
 
         _opt.pageId = '';
-        var result = trackPollEvent('poll:12824212', 'Is this i question?');
+        result = trackPollEvent('poll:12824212', 'Is this i question?');
         assert.equals(result, false);
 
         _opt.pageId = 'urn:test.no:pagetest01';
 
-        var result = trackPollEvent(undefined, undefined, undefined, undefined, undefined);
+        result = trackPollEvent(undefined, undefined, undefined, undefined, undefined);
         assert.equals(result, false);
-        var result = trackPollEvent('', 'Is this i question?', undefined, undefined, undefined);
+        result = trackPollEvent('', 'Is this i question?', undefined, undefined, undefined);
         assert.equals(result, false);
-        var result = trackPollEvent(null, undefined, undefined, undefined, undefined);
+        result = trackPollEvent(null, undefined, undefined, undefined, undefined);
         assert.equals(result, false);
 
     },
@@ -64,7 +66,7 @@ buster.testCase('A form event ', {
 
     },
     /*'contains all needed info': function(done){
-        trackPollEvent('poll:12824212', 'article', 'Bacon Ipsum ���', undefined, done(function(response, data){
+        trackPollEvent('poll:12824212', 'article', 'Bacon Ipsum', undefined, done(function(response, data){
             assert.equals(response.status, 200);
             for(var i = 0; i < data.length; i++){
                 var d = JSON.parse(data[i]);
@@ -84,7 +86,7 @@ buster.testCase('A form event ', {
                 assert.match(d.object['@id'], _opt.pageId);
 
                 // Result asserts
-                assert.match(d.result.content, 'Bacon Ipsum ���');
+                assert.match(d.result.content, 'Bacon Ipsum');
                 assert.match(d.result['@type'], 'note');
                 assert.match(d.result['@id'], _opt.pageId + ':poll:12824212');
             }
