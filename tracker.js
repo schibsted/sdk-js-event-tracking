@@ -511,6 +511,51 @@ function sendActivityObject(activityObject){
         },
     }
 }
+;"use strict";
+
+function sendData = sendData;
+
+function UserData (){
+    return {
+        userId:         undefined,
+        key:            'DataTrackerUser',
+        idServiceUrl:   'http://127.0.0.1:8003/api/v1/identify',
+
+        getUserId: function(){
+
+            if(this.userId !== undefined){
+                return this.userId;
+            }
+
+            var cookieID = this.getUserIdFromCookie();
+            if(cookieID === false){
+                // FIXME: Need correct format for in
+                this.userId = this.getUserIdFromService(/* cookie object */);
+            }
+            this.userId = this.getUserIdFromService();
+            this.setUserIdInCookie();
+            return this.userId;
+
+        },
+        getUserIdFromCookie: function(){
+            return decodeURIComponent(
+                document.cookie.replace(
+                    new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(this.key).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1"
+                )
+            ) || false;
+        },
+        getUserIdFromService: function(id){
+            sendData(id, this.idServiceUrl, function(response, data){
+                if(response.status === 200){
+                    this.userId = data.anonymousId;
+                }
+            });
+        },
+        setUserIdInCookie: function(){
+            document.cookie = this.key + '=' + this.userId;
+        },
+    };
+}
 ;function createTrackerProcessData(activities, verb, callback){
 
     var tracker = new DataTracker(_opt, activities, verb); // FIXME: This does not have to be created on each run.
@@ -565,7 +610,11 @@ function sendData(data, uri, callback) {
         }
     };
 }
-;function getTimeStamp(){
+;"use strict";
+
+var _opt = _opt || {};
+
+function getTimeStamp(){
     var now = new Date(),
     timezoneOffset = -now.getTimezoneOffset(),
     diff = timezoneOffset >= 0 ? '+' : '-',
@@ -574,14 +623,14 @@ function sendData(data, uri, callback) {
         return (norm < 10 ? '0' : '') + norm;
     };
 
-    return now.getFullYear()
-        + '-' + padding(now.getMonth()+1)
-        + '-' + padding(now.getDate())
-        + 'T' + padding(now.getHours())
-        + ':' + padding(now.getMinutes())
-        + ':' + padding(now.getSeconds())
-        + diff + padding(timezoneOffset / 60)
-        + ':' + padding(timezoneOffset % 60);
+    // Put date in timestamp
+    var timestamp = now.getFullYear() + '-' + padding(now.getMonth()+1) + '-' + padding(now.getDate());
+    // Add time
+    timestamp = timestamp + 'T' + padding(now.getHours()) + ':' + padding(now.getMinutes()) + ':' + padding(now.getSeconds());
+    // Add timezone offset
+    timestamp = timestamp + diff + padding(timezoneOffset / 60) + ':' + padding(timezoneOffset % 60);
+
+    return timestamp;
 }
 function getParameter(name, queryString) {
     var searchString = queryString || location.search;
@@ -595,17 +644,17 @@ function getViewportDimensions() {
     var viewportwidth;
     var viewportheight;
 
-    if (typeof window.innerWidth != 'undefined') {
-        viewportwidth = window.innerWidth,
-        viewportheight = window.innerHeight
+    if (typeof window.innerWidth !== 'undefined') {
+        viewportwidth = window.innerWidth;
+        viewportheight = window.innerHeight;
     }
-    else if (typeof document.documentElement != 'undefined' && typeof document.documentElement.clientWidth !='undefined' && document.documentElement.clientWidth != 0){
-        viewportwidth = document.documentElement.clientWidth,
-        viewportheight = document.documentElement.clientHeight
+    else if (typeof document.documentElement !== 'undefined' && typeof document.documentElement.clientWidth !=='undefined' && document.documentElement.clientWidth !== 0){
+        viewportwidth = document.documentElement.clientWidth;
+        viewportheight = document.documentElement.clientHeight;
     }
     else {
-        viewportwidth = document.getElementsByTagName('body')[0].clientWidth,
-        viewportheight = document.getElementsByTagName('body')[0].clientHeight
+        viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
+        viewportheight = document.getElementsByTagName('body')[0].clientHeight;
     }
     return viewportwidth + 'x' + viewportheight;
 }
