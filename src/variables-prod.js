@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // TODO: Manage IDs from external service and cookies
 // TODO: Search tracking, could be done with only one parameter
