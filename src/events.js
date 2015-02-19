@@ -12,9 +12,9 @@ window.onload = function() {
 // FIXME: Add origin object when a referer is known.
 /**
  * A function for tracking events to html-forms.
- * @param {string | object} type - The type of page that is loaded. E.g 'article', 'page', 'service'. Default: 'page'
- * @param {string | object} title - The title of the page. Default: document.title
- * @param {string | object} content - The content of the page, or a summary. Default: ''
+ * @param {string | object} [type='page'] - The type of page that is loaded. E.g 'article', 'page', 'service'.
+ * @param {string | object} [title=document.title] - The title of the page.
+ * @param {string | object} [content=''] - The content of the page, or a summary.
  * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
 // TODO: Custom data in all event functions
@@ -41,10 +41,10 @@ function trackPageLoadEvent(type, title, content, callback) {
 /**
  * A function for tracking events to html-forms. Default verb is respond.
  * @param {string} elementId - A unique identifier for the element where the event originated. Will fail if omitted.
- * @param {string} [originType=page] - The type of entity the form originates from (e.g page, article, application).
- * @param {string} type - The type of object the form represents (e.g content, spn:email). Default: 'content'
- * @param {string} title - The display name or title for the form e.g 'Send email'. Default: ''
- * @param {string | object} content - The conentent that is added to the form. Default: ''
+ * @param {string} [originType='page'] - The type of entity the form originates from (e.g page, article, application).
+ * @param {string} [type='content'] - The type of object the form represents (e.g content, spn:email).
+ * @param {string} [title=''] - The display name or title for the form e.g 'Send email'.
+ * @param {string | object} [content=''] - The conentent that is added to the form.
  * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
 function trackFormEvent(elementId, originType, type, title, content, callback) {
@@ -87,10 +87,10 @@ function trackFormEvent(elementId, originType, type, title, content, callback) {
 /**
  * Function for tracking comment fields. Will generate an activities object and send it to data collector
  * @param {string} commentId - A unique ID for the comment. Must be set
- * @param {string} [originType=page] - The type of entity the form originates from (e.g page, article, application).
- * @param {string} content - The text-body of the comment. Default ''
- * @param {string|object} inReplyTo - A id, title, comment, or an object representing the location
- *                                    of the form or a reference to a parent object. Default: document.URL
+ * @param {string} [originType='page'] - The type of entity the form originates from (e.g page, article, application).
+ * @param {string} [content=''] - The text-body of the comment.
+ * @param {string|object} [inReplyTo=document.URL] - A id, title, comment, or an object representing the location
+ * of the form or a reference to a parent object.
  * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
 function trackCommentEvent(commentId, originType, content, inReplyTo, callback) {
@@ -131,10 +131,10 @@ function trackCommentEvent(commentId, originType, content, inReplyTo, callback) 
 /**
  * A function for tracking polls in websites. The function will try to locate the
  * options and answer automatically if not specified
- * @param {string} pollId - A unique ID for the poll. Default: null
- * @param {string} question - The question asked. Default: ''
- * @param {array} options - The different possible answers to the question. Default: []
- * @param {array} answer - The answer(s) the user makes. Default: []
+ * @param {string} [pollId=null] - A unique ID for the poll.
+ * @param {string} [question=''] - The question asked.
+ * @param {array} [options=[]] - The different possible answers to the question.
+ * @param {array} [answer=[]] - The answer(s) the user makes.
  * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  * @returns {object} Activities object.
  */
@@ -213,13 +213,13 @@ function trackPollEvent(pollId, question, options, answer, callback) {
 * A function for tracking events to html-forms.
 * @param {string} pageId - A unique identifier for the page.
 * @param {string} elementId - A unique identifier for the element.
-* @param {string} verb - An Activitystram 2.0 verb describing the tracked action/event. Default: 'complete'
-* @param {string} type - The type of object the form represents (e.g content, email). Default: 'process'
-* @param {string} name - The display name for the object e.g 'Send email'. Default: ''
+* @param {string} [verb='complete'] - An Activitystram 2.0 verb describing the tracked action/event.
+* @param {string} [type='process'] - The type of object the form represents (e.g content, email).
+* @param {string} [name=''] - The display name for the object e.g 'Send email'.
 * @param {string} [target=target] - Activity stream 2.0 reciving object ('to', 'bto', 'target' are currently supported).
-* @param {string} targetType - Similar to type, but for the receiving object. Default: 'service'
-* @param {string} targetId - Similar to id, but for the receiving object. Default: pageId
-* @param {string} targetName - Similar to name but for the receiving object. Default: document.title
+* @param {string} [targetType='service'] - Similar to type, but for the receiving object.
+* @param {string} [targetId=pageId] - Similar to id, but for the receiving object.
+* @param {string} [targetName=document.title] - Similar to name but for the receiving object.
 * @returns {object} Activities object.
 */
 function clickEventTracker(pageId, elementId, verb, type, name, target, targetType, targetId, targetName) {
@@ -296,9 +296,9 @@ function socialEventTracker(pageId, elementId, verb, type, target, name, targetT
 * A function for tracking play/pause and other state changes to video/sound etc.
 * @param {string} [verb=watch] - The action performed as an ActivityStream 2.0 verb.
 * Suggestions: watch, listen, complete, stop(?)
-* @param {string} type - The type of media that the user interacts with. Default: 'video'
-* @param {string} name - The name of the video/audi. Default: document.title
-* @param {string} mediaId - A unique identifier for the media object. Default: null
+* @param {string} [type='video'] - The type of media that the user interacts with.
+* @param {string} [name=document.title] - The name of the video/audi.
+* @param {string} [mediaId=null] - A unique identifier for the media object.
 * @returns {object} Activities object.
 */
 function mediaStateTracker(verb, type, name, mediaId) {
