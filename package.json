@@ -19,6 +19,11 @@
     "grunt-jsdoc": "^0.5.7",
     "grunt-shell": "^1.1.1",
     "jshint": "^2.6.0",
-    "phantomjs": "^1.9.13"
+    "phantomjs": "^1.9.13",
+    "jscs": "^1.11.3",
+    "jshint": "^2.6.0"
+  },
+  "scripts": {
+    "lint": "jshint . && jscs ."
   }
 }
