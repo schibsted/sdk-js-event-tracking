@@ -1,3 +1,7 @@
+"use strict";
+
+var _opt = _opt || {};
+
 function getTimeStamp(){
     var now = new Date(),
     timezoneOffset = -now.getTimezoneOffset(),
@@ -7,14 +11,14 @@ function getTimeStamp(){
         return (norm < 10 ? '0' : '') + norm;
     };
 
-    return now.getFullYear()
-        + '-' + padding(now.getMonth()+1)
-        + '-' + padding(now.getDate())
-        + 'T' + padding(now.getHours())
-        + ':' + padding(now.getMinutes())
-        + ':' + padding(now.getSeconds())
-        + diff + padding(timezoneOffset / 60)
-        + ':' + padding(timezoneOffset % 60);
+    // Put date in timestamp
+    var timestamp = now.getFullYear() + '-' + padding(now.getMonth()+1) + '-' + padding(now.getDate());
+    // Add time
+    timestamp = timestamp + 'T' + padding(now.getHours()) + ':' + padding(now.getMinutes()) + ':' + padding(now.getSeconds());
+    // Add timezone offset
+    timestamp = timestamp + diff + padding(timezoneOffset / 60) + ':' + padding(timezoneOffset % 60);
+
+    return timestamp;
 }
 function getParameter(name, queryString) {
     var searchString = queryString || location.search;
@@ -28,17 +32,17 @@ function getViewportDimensions() {
     var viewportwidth;
     var viewportheight;
 
-    if (typeof window.innerWidth != 'undefined') {
-        viewportwidth = window.innerWidth,
-        viewportheight = window.innerHeight
+    if (typeof window.innerWidth !== 'undefined') {
+        viewportwidth = window.innerWidth;
+        viewportheight = window.innerHeight;
     }
-    else if (typeof document.documentElement != 'undefined' && typeof document.documentElement.clientWidth !='undefined' && document.documentElement.clientWidth != 0){
-        viewportwidth = document.documentElement.clientWidth,
-        viewportheight = document.documentElement.clientHeight
+    else if (typeof document.documentElement !== 'undefined' && typeof document.documentElement.clientWidth !=='undefined' && document.documentElement.clientWidth !== 0){
+        viewportwidth = document.documentElement.clientWidth;
+        viewportheight = document.documentElement.clientHeight;
     }
     else {
-        viewportwidth = document.getElementsByTagName('body')[0].clientWidth,
-        viewportheight = document.getElementsByTagName('body')[0].clientHeight
+        viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
+        viewportheight = document.getElementsByTagName('body')[0].clientHeight;
     }
     return viewportwidth + 'x' + viewportheight;
 }

@@ -1,3 +1,7 @@
+"use strict";
+
+function sendData = sendData;
+
 function UserData (){
     return {
         userId:         undefined,
@@ -21,7 +25,11 @@ function UserData (){
 
         },
         getUserIdFromCookie: function(){
-            return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(this.key).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || false;
+            return decodeURIComponent(
+                document.cookie.replace(
+                    new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(this.key).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1"
+                )
+            ) || false;
         },
         getUserIdFromService: function(id){
             sendData(id, this.idServiceUrl, function(response, data){
@@ -33,5 +41,5 @@ function UserData (){
         setUserIdInCookie: function(){
             document.cookie = this.key + '=' + this.userId;
         },
-    }
+    };
 }

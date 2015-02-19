@@ -19,4 +19,4 @@ config["My tests"] = {
     extensions: [
     require('buster-istanbul')
     ]
-}
+};
