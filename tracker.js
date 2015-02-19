@@ -564,6 +564,12 @@ function UserData (){
 }
 ;'use strict';
 
+var _opt = _opt || {};
+var DataTracker = DataTracker || {};
+var activityQueue = activityQueue || [];
+var errorCount = errorCount || 0;
+var sendDataQueue = sendDataQueue || [];
+
 function createTrackerProcessData(activities, verb, callback){
 
     var tracker = new DataTracker(_opt, activities, verb); // FIXME: This does not have to be created on each run.
