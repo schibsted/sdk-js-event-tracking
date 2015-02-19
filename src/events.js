@@ -239,7 +239,7 @@ function clickEventTracker(pageId, elementId, verb, type, name, target, targetTy
         '@type': targetType || 'page',
         displayName: targetName || document.title,
         url: document.URL,
-        '@id': targetId || pageId,
+        '@id': targetId || pageId
     };
     var targetObject = {};
     targetObject[target] = targetObjData;
