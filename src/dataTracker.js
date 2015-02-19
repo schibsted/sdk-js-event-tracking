@@ -1,3 +1,5 @@
+'use strict';
+
 function DataTracker(_opt, activityObjectsArray, verb) {
     return {
         siteId:         _opt.clientId || undefined,
@@ -117,14 +119,16 @@ function DataTracker(_opt, activityObjectsArray, verb) {
 
             if(this.verb && this.verb !== undefined && this.verb !== null){
                 retVal['@type'] = this.verb;
-            } else {return 'no verb found'}
+            } else {return 'no verb found';}
             if(this.published){
                 retVal['published'] = this.published;
-            } else {return 'no timestamp was found'}
+            } else {return 'no timestamp was found';}
 
             for(var i = 0; i < this.activities.length; i++){
                 for(var attrname in this.activities[i]){
-                    retVal[attrname] = this.activities[i][attrname];
+                    if (this.activities[i].hasOwnProperty(attrname)) {
+                        retVal[attrname] = this.activities[i][attrname];
+                    }
                 }
             }
 
@@ -137,5 +141,5 @@ function DataTracker(_opt, activityObjectsArray, verb) {
             return JSON.stringify(retVal);
 
         },
-    }
+    };
 }
