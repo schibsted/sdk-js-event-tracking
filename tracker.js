@@ -15,14 +15,16 @@ var activityQueue = [];
 var errorCount = 0;
 var serverUri = 'http://127.0.0.1:8002/api/v1/track';
 var sentDataQueue = [];
-;// Track event on page load if automatic tracking is not prohibited
+;'use strict';
+
+// Track event on page load if automatic tracking is not prohibited
 
 window.onload = function(){
     if(_opt.allowAutomaticTracking !== false){
         console.log('autotrack happend');
         trackPageLoadEvent('page');
     }
-}
+};
 // TODO: Should page load include tags?
 // FIXME: Add origin object when a referer is known.
 /**
@@ -186,10 +188,12 @@ function trackPollEvent(pollId, question, options, answer, callback){
         }
     };
 
+    var items, itemsObject, i;
+
     if(options !== undefined){
-        var items = [];
-        for(var i=0; i<options.length; i++) {
-            var itemsObject = {
+        items = [];
+        for(i=0; i<options.length; i++) {
+            itemsObject = {
                 '@type': 'PossibleAnswer',
                 '@id': pageId + ':' + pollId + ':' + options[i],
             };
@@ -199,9 +203,9 @@ function trackPollEvent(pollId, question, options, answer, callback){
         activityObject.object.oneOf.items = items;
     }
     if(answer !== undefined){
-        var items = [];
-        for(var i=0; i<answer.length; i++) {
-            var itemsObject = {
+        items = [];
+        for(i=0; i<answer.length; i++) {
+            itemsObject = {
                 '@type': ['PossibleAnswer', {'spt':'Answer'}],
                 '@id': pageId + ':' + pollId + ':' + answer[i],
             };
@@ -232,8 +236,8 @@ function trackPollEvent(pollId, question, options, answer, callback){
 * @returns {object} Activities object.
 */
 function clickEventTracker(pageId, elementId, verb, type, name, target, targetType, targetId, targetName){
-    var verb = verb || 'complete';
-    var target = target || 'target';
+    verb = verb || 'complete';
+    target = target || 'target';
     var activities = [{
         'object': {
             '@type': type || 'process',
@@ -285,8 +289,8 @@ if(_opt.allowAutomaticTracking !== false){
 * @returns {object} Activities object.
 */
 function socialEventTracker(pageId, elementId, verb, type, target, name, targetType, targetId, targetName){
-    var verb = verb || 'like';
-    var target = target || 'target';
+    verb = verb || 'like';
+    target = target || 'target';
     var activities = [{
         'object': {
             '@type': type || 'page',
@@ -319,7 +323,7 @@ function socialEventTracker(pageId, elementId, verb, type, target, name, targetT
 * @returns {object} Activities object.
 */
 function mediaStateTracker(verb, type, name, mediaId){
-    var verb = verb || 'watch';
+    verb = verb || 'watch';
     var activities = [{
         'object': {
             '@type': type || 'video',
@@ -340,13 +344,13 @@ function mediaStateTracker(verb, type, name, mediaId){
 * @returns {object | bool} Activities object or false if no verb is set.
 */
 function generalEventTracker(verb, objectType, objectData, targetType, targetData){
-    var verb = verb || '';
+    verb = verb || '';
     if(verb === ''){
         return false;
     }
     var activities = [];
-    var objectType = objectType || 'object';
-    var targetType = targetType || 'target';
+    objectType = objectType || 'object';
+    targetType = targetType || 'target';
 
     var fromObj = {};
     var toObj = {};
@@ -370,7 +374,9 @@ function sendActivityObject(activityObject){
 
     // TODO: Make sure return is true || false
 }
-;function DataTracker(_opt, activityObjectsArray, verb) {
+;'use strict';
+
+function DataTracker(_opt, activityObjectsArray, verb) {
     return {
         siteId:         _opt.clientId || undefined,
         trackingUrl:    _opt.trackingUrl || undefined,
@@ -489,14 +495,16 @@ function sendActivityObject(activityObject){
 
             if(this.verb && this.verb !== undefined && this.verb !== null){
                 retVal['@type'] = this.verb;
-            } else {return 'no verb found'}
+            } else {return 'no verb found';}
             if(this.published){
                 retVal['published'] = this.published;
-            } else {return 'no timestamp was found'}
+            } else {return 'no timestamp was found';}
 
             for(var i = 0; i < this.activities.length; i++){
                 for(var attrname in this.activities[i]){
-                    retVal[attrname] = this.activities[i][attrname];
+                    if (this.activities[i].hasOwnProperty(attrname)) {
+                        retVal[attrname] = this.activities[i][attrname];
+                    }
                 }
             }
 
@@ -509,11 +517,9 @@ function sendActivityObject(activityObject){
             return JSON.stringify(retVal);
 
         },
-    }
+    };
 }
 ;"use strict";
-
-function sendData = sendData;
 
 function UserData (){
     return {
@@ -556,7 +562,9 @@ function UserData (){
         },
     };
 }
-;function createTrackerProcessData(activities, verb, callback){
+;'use strict';
+
+function createTrackerProcessData(activities, verb, callback){
 
     var tracker = new DataTracker(_opt, activities, verb); // FIXME: This does not have to be created on each run.
     activityQueue.push(tracker.getActivity());

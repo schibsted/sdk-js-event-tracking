@@ -1,7 +1,5 @@
 "use strict";
 
-function sendData = sendData;
-
 function UserData (){
     return {
         userId:         undefined,
