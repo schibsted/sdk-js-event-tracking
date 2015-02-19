@@ -579,27 +579,30 @@ var activityQueue = activityQueue || [];
 var errorCount = errorCount || 0;
 var sendDataQueue = sendDataQueue || [];
 
-function createTrackerProcessData(activities, verb, callback){
+function createTrackerProcessData(activities, verb, callback) {
+    // FIXME: This does not have to be created on each run.
+    var tracker = new DataTracker(_opt, activities, verb);
 
-    var tracker = new DataTracker(_opt, activities, verb); // FIXME: This does not have to be created on each run.
     activityQueue.push(tracker.getActivity());
+
     return processActivityQueue(callback);
 }
-function processActivityQueue(callback){
 
+function processActivityQueue(callback) {
     var uri = _opt.trackingUrl || serverUri;
 
     var result = sendData(activityQueue, uri, callback);
     activityQueue = [];
 
-    if(errorCount >= 5){
+    if (errorCount >= 5) {
         // TODO: Report to server
         console.log('data was not sent in ' + errorCount + ' tries');
     }
+
     return result;
 }
-function sendData(data, uri, callback) {
 
+function sendData(data, uri, callback) {
     var async = _opt.sendDataAsync || true;
 
     sentDataQueue.push(data);
@@ -610,35 +613,33 @@ function sendData(data, uri, callback) {
 
     try {
         xhr.send(data);
-    }
-    catch(err){
+    } catch (err) {
         errorCount++;
     }
 
-    xhr.onreadystatechange = function(){
-        if(xhr.readyState===4){
-
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
             var sentData = sentDataQueue.shift();
 
-            if(xhr.status === 200) {
+            if (xhr.status === 200) {
                 errorCount = 0;
-            }
-            else {
+            } else {
                 activityQueue = activityQueue.concat(sentData);
                 errorCount++;
             }
-            if(callback !== undefined){
+
+            if (callback !== undefined) {
                 callback(xhr, sentData);
             }
         }
     };
 }
 
-"use strict";
+'use strict';
 
 var _opt = _opt || {};
 
-function getTimeStamp(){
+function getTimeStamp() {
     var now = new Date(),
     timezoneOffset = -now.getTimezoneOffset(),
     diff = timezoneOffset >= 0 ? '+' : '-',
@@ -648,9 +649,10 @@ function getTimeStamp(){
     };
 
     // Put date in timestamp
-    var timestamp = now.getFullYear() + '-' + padding(now.getMonth()+1) + '-' + padding(now.getDate());
+    var timestamp = now.getFullYear() + '-' + padding(now.getMonth() + 1) + '-' + padding(now.getDate());
     // Add time
-    timestamp = timestamp + 'T' + padding(now.getHours()) + ':' + padding(now.getMinutes()) + ':' + padding(now.getSeconds());
+    timestamp = timestamp + 'T' + padding(now.getHours()) + ':' + padding(now.getMinutes())
+    timestamp = timestamp + ':' + padding(now.getSeconds());
     // Add timezone offset
     timestamp = timestamp + diff + padding(timezoneOffset / 60) + ':' + padding(timezoneOffset % 60);
 
@@ -658,10 +660,10 @@ function getTimeStamp(){
 }
 function getParameter(name, queryString) {
     var searchString = queryString || location.search;
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]").toLowerCase();
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]').toLowerCase();
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
     results = regex.exec(searchString);
-    return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
+    return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
 function getViewportDimensions() {
@@ -671,22 +673,22 @@ function getViewportDimensions() {
     if (typeof window.innerWidth !== 'undefined') {
         viewportwidth = window.innerWidth;
         viewportheight = window.innerHeight;
-    }
-    else if (typeof document.documentElement !== 'undefined' && typeof document.documentElement.clientWidth !=='undefined' && document.documentElement.clientWidth !== 0){
+    } else if (
+        typeof document.documentElement.clientWidth !== 'undefined'
+        && document.documentElement.clientWidth !== 0) {
         viewportwidth = document.documentElement.clientWidth;
         viewportheight = document.documentElement.clientHeight;
-    }
-    else {
+    } else {
         viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
         viewportheight = document.getElementsByTagName('body')[0].clientHeight;
     }
     return viewportwidth + 'x' + viewportheight;
 }
-function checkMandatoryOptions(){
-    if(_opt.clientId === undefined || _opt.clientId === null || _opt.clientId === ''){
+function checkMandatoryOptions() {
+    if (_opt.clientId === undefined || _opt.clientId === null || _opt.clientId === '') {
         return false;
     }
-    if(_opt.pageId === undefined || _opt.pageId === null || _opt.pageId === ''){
+    if (_opt.pageId === undefined || _opt.pageId === null || _opt.pageId === '') {
         return false;
     }
     return true;
