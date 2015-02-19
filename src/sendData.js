@@ -1,3 +1,5 @@
+'use strict';
+
 function createTrackerProcessData(activities, verb, callback){
 
     var tracker = new DataTracker(_opt, activities, verb); // FIXME: This does not have to be created on each run.

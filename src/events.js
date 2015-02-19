@@ -1,3 +1,5 @@
+'use strict';
+
 // Track event on page load if automatic tracking is not prohibited
 
 window.onload = function(){
@@ -5,7 +7,7 @@ window.onload = function(){
         console.log('autotrack happend');
         trackPageLoadEvent('page');
     }
-}
+};
 // TODO: Should page load include tags?
 // FIXME: Add origin object when a referer is known.
 /**
@@ -169,10 +171,12 @@ function trackPollEvent(pollId, question, options, answer, callback){
         }
     };
 
+    var items, itemsObject, i;
+
     if(options !== undefined){
-        var items = [];
-        for(var i=0; i<options.length; i++) {
-            var itemsObject = {
+        items = [];
+        for(i=0; i<options.length; i++) {
+            itemsObject = {
                 '@type': 'PossibleAnswer',
                 '@id': pageId + ':' + pollId + ':' + options[i],
             };
@@ -182,9 +186,9 @@ function trackPollEvent(pollId, question, options, answer, callback){
         activityObject.object.oneOf.items = items;
     }
     if(answer !== undefined){
-        var items = [];
-        for(var i=0; i<answer.length; i++) {
-            var itemsObject = {
+        items = [];
+        for(i=0; i<answer.length; i++) {
+            itemsObject = {
                 '@type': ['PossibleAnswer', {'spt':'Answer'}],
                 '@id': pageId + ':' + pollId + ':' + answer[i],
             };
@@ -215,8 +219,8 @@ function trackPollEvent(pollId, question, options, answer, callback){
 * @returns {object} Activities object.
 */
 function clickEventTracker(pageId, elementId, verb, type, name, target, targetType, targetId, targetName){
-    var verb = verb || 'complete';
-    var target = target || 'target';
+    verb = verb || 'complete';
+    target = target || 'target';
     var activities = [{
         'object': {
             '@type': type || 'process',
@@ -268,8 +272,8 @@ if(_opt.allowAutomaticTracking !== false){
 * @returns {object} Activities object.
 */
 function socialEventTracker(pageId, elementId, verb, type, target, name, targetType, targetId, targetName){
-    var verb = verb || 'like';
-    var target = target || 'target';
+    verb = verb || 'like';
+    target = target || 'target';
     var activities = [{
         'object': {
             '@type': type || 'page',
@@ -302,7 +306,7 @@ function socialEventTracker(pageId, elementId, verb, type, target, name, targetT
 * @returns {object} Activities object.
 */
 function mediaStateTracker(verb, type, name, mediaId){
-    var verb = verb || 'watch';
+    verb = verb || 'watch';
     var activities = [{
         'object': {
             '@type': type || 'video',
@@ -323,13 +327,13 @@ function mediaStateTracker(verb, type, name, mediaId){
 * @returns {object | bool} Activities object or false if no verb is set.
 */
 function generalEventTracker(verb, objectType, objectData, targetType, targetData){
-    var verb = verb || '';
+    verb = verb || '';
     if(verb === ''){
         return false;
     }
     var activities = [];
-    var objectType = objectType || 'object';
-    var targetType = targetType || 'target';
+    objectType = objectType || 'object';
+    targetType = targetType || 'target';
 
     var fromObj = {};
     var toObj = {};
