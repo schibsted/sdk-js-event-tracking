@@ -3,13 +3,7 @@ buster.spec.expose();
 var assert = buster.assert;
 var refute = buster.refute;
 
-var _opt = {};
-_opt.clientId = 'sp-34534';
-_opt,clientDomain = 'vg.no'; // FIXME: This needs to go places
-_opt.trackingUrl = 'http://127.0.0.1:8002/api/v1/track';
-_opt.pageId = 'urn:test.no:pagetest01';
-_opt.language = 'no';
-_opt.allowAutomaticTracking = false;
+var _opt = _opt || {};
 
 // function trackPollEvent(pollId, question, options, answer, callback)
 
