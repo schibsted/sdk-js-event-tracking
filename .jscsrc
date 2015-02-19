@@ -97,5 +97,7 @@
     "disallowTrailingWhitespace": true,
     "validateLineBreaks": "LF",
 
+    "disallowTrailingComma": true,
+
     "excludeFiles": ["node_modules/**"]
 }
