@@ -1,3 +1,5 @@
+"use strict";
+
 buster.spec.expose();
 
 var assert = buster.assert;
@@ -16,25 +18,25 @@ buster.testCase('A page load ', {
         assert.equals(result, false);
 
         _opt.cliendId = null;
-        var result = trackPageLoadEvent(undefined, undefined, undefined);
+        result = trackPageLoadEvent(undefined, undefined, undefined);
         assert.equals(result, false);
 
         _opt.clientId = '';
-        var result = trackPageLoadEvent(undefined, undefined, undefined);
+        result = trackPageLoadEvent(undefined, undefined, undefined);
         assert.equals(result, false);
 
         _opt.clientId = 'sp-34534';
 
         _opt.pageId = undefined;
-        var result = trackPageLoadEvent(undefined, undefined, undefined);
+        result = trackPageLoadEvent(undefined, undefined, undefined);
         assert.equals(result, false);
 
         _opt.pageId = null;
-        var result = trackPageLoadEvent(undefined, undefined, undefined);
+        result = trackPageLoadEvent(undefined, undefined, undefined);
         assert.equals(result, false);
 
         _opt.pageId = '';
-        var result = trackPageLoadEvent(undefined, undefined, undefined);
+        result = trackPageLoadEvent(undefined, undefined, undefined);
         assert.equals(result, false);
 
         _opt.pageId = 'urn:test.no:pagetest01';

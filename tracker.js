@@ -15,7 +15,8 @@ var activityQueue = [];
 var errorCount = 0;
 var serverUri = 'http://127.0.0.1:8002/api/v1/track';
 var sentDataQueue = [];
-;'use strict';
+
+'use strict';
 
 // Track event on page load if automatic tracking is not prohibited
 
@@ -374,7 +375,8 @@ function sendActivityObject(activityObject){
 
     // TODO: Make sure return is true || false
 }
-;'use strict';
+
+'use strict';
 
 function DataTracker(_opt, activityObjectsArray, verb) {
     return {
@@ -519,7 +521,8 @@ function DataTracker(_opt, activityObjectsArray, verb) {
         },
     };
 }
-;"use strict";
+
+"use strict";
 
 function UserData (){
     return {
@@ -562,7 +565,8 @@ function UserData (){
         },
     };
 }
-;'use strict';
+
+'use strict';
 
 var _opt = _opt || {};
 var DataTracker = DataTracker || {};
@@ -624,7 +628,8 @@ function sendData(data, uri, callback) {
         }
     };
 }
-;"use strict";
+
+"use strict";
 
 var _opt = _opt || {};
 

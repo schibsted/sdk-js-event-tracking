@@ -38,7 +38,9 @@ module.exports = function (grunt) {
         },
         concat: {
             options: {
-                separator: ';',
+                stripBanners: {
+                    line: true,
+                }
             },
             dist: {
                 src: ['src/variables.js', 'src/events.js', 'src/dataTracker.js', 'src/users.js', 'src/sendData.js', 'src/utilities.js'],
