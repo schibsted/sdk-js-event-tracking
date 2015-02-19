@@ -1,3 +1,5 @@
+"use strict";
+
 buster.spec.expose();
 
 var assert = buster.assert;
@@ -14,7 +16,7 @@ buster.testCase('Utilities functions ', {
         assert.match(getParameter('utm_medium', testParameters), 'social');
         assert.match(getParameter('utm_campaign', testParameters), 'testcampaign');
 
-        var testParameters = '?data_source=email%20campaign&data_medium=email&data_campaign=email%20offer';
+        testParameters = '?data_source=email%20campaign&data_medium=email&data_campaign=email%20offer';
 
         assert.equals(getParameter('data_source', testParameters), 'email campaign');
         assert.equals(getParameter('data_medium', testParameters), 'email');
@@ -24,7 +26,7 @@ buster.testCase('Utilities functions ', {
         assert.equals(getParameter('Data_medium', testParameters), 'email');
         assert.equals(getParameter('Data_campaign', testParameters), 'email offer');
 
-        var testParameters = '';
+        testParameters = '';
 
         assert.equals(getParameter('Data_source', testParameters), null);
         assert.equals(getParameter('Data_medium', testParameters), null);

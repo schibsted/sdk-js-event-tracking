@@ -1,3 +1,5 @@
+"use strict";
+
 buster.spec.expose();
 
 var assert = buster.assert;
@@ -80,8 +82,8 @@ function activityValidator(obj){
     }
 
     //Check if all objects has objectType/type (critical) and id or displayName (warning)
-    for(var i =0; i < obj.length; i++){
-        currentObj = obj[i][Object.keys(obj[i])[0]]
+    for(i=0; i < obj.length; i++){
+        var currentObj = obj[i][Object.keys(obj[i])[0]];
 
         var keys = Object.keys(currentObj);
 
