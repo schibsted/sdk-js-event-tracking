@@ -15,6 +15,8 @@ window.onload = function(){
  * @param {string | object} content - The content of the page, or a summary. Default: ''
  * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
+
+// TODO: Custom data in all event functions
 function trackPageLoadEvent(type, title, content, callback){
 
     if(!checkMandatoryOptions()){

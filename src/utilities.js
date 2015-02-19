@@ -16,9 +16,6 @@ function getTimeStamp(){
         + diff + padding(timezoneOffset / 60)
         + ':' + padding(timezoneOffset % 60);
 }
-function getUserId(){
-    return 1337;
-}
 function getParameter(name, queryString) {
     var searchString = queryString || location.search;
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]").toLowerCase();

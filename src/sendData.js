@@ -1,12 +1,14 @@
 function createTrackerProcessData(activities, verb, callback){
 
-    var tracker = new DataTracker(_opt, activities, verb);
+    var tracker = new DataTracker(_opt, activities, verb); // FIXME: This does not have to be created on each run.
     activityQueue.push(tracker.getActivity());
     return processActivityQueue(callback);
 }
 function processActivityQueue(callback){
 
-    var result = sendData(activityQueue, callback);
+    var uri = _opt.trackingUrl || serverUri;
+
+    var result = sendData(activityQueue, uri, callback);
     activityQueue = [];
 
     if(errorCount >= 5){
@@ -15,14 +17,14 @@ function processActivityQueue(callback){
     }
     return result;
 }
-function sendData(data, callback) {
+function sendData(data, uri, callback) {
 
-    var uri = _opt.trackingUrl || serverUri;
+    var async = _opt.sendDataAsync || true;
 
     sentDataQueue.push(data);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', uri, true);
+    xhr.open('POST', uri, async);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
     try {

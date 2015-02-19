@@ -8,6 +8,7 @@
 // TODO: Change _opt to something more unique.
 // TODO: Define parameters that can be a part of _opt
 // TODO: Write function that unset null values in activity objects
+// TODO: Make config files for local and prod versions
 
 var _opt = _opt || {};
 var activityQueue = [];
@@ -31,6 +32,8 @@ window.onload = function(){
  * @param {string | object} content - The content of the page, or a summary. Default: ''
  * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
+
+// TODO: Custom data in all event functions
 function trackPageLoadEvent(type, title, content, callback){
 
     if(!checkMandatoryOptions()){
@@ -371,7 +374,7 @@ function sendActivityObject(activityObject){
     return {
         siteId:         _opt.clientId || undefined,
         trackingUrl:    _opt.trackingUrl || undefined,
-        anonymousId:    getUserId(),
+        userObject:     new UserData(),
         published:      getTimeStamp(),
         language:       _opt.language || 'en',
         doNottrack:     _opt.doNotTrack || false,
@@ -385,8 +388,10 @@ function sendActivityObject(activityObject){
 
             actor['@type'] = 'Person';
 
-            if(this.anonymousId){
-                actor['@id'] = this.anonymousId;
+            var anonymousId = userObject.userId;
+
+            if(anonymousId){
+                actor['@id'] = anonymousId;
             }
             actor['spt:userAgent'] = navigator.userAgent;
             actor['spt:ip'] = ''; // TODO: Find a way to inject this on requesting this resource.
@@ -395,7 +400,6 @@ function sendActivityObject(activityObject){
             actor['spt:acceptLanguage'] = this.getDeviceLanguage();
 
             return actor;
-
         },
 
         createProvider: function() {
@@ -509,13 +513,15 @@ function sendActivityObject(activityObject){
 }
 ;function createTrackerProcessData(activities, verb, callback){
 
-    var tracker = new DataTracker(_opt, activities, verb);
+    var tracker = new DataTracker(_opt, activities, verb); // FIXME: This does not have to be created on each run.
     activityQueue.push(tracker.getActivity());
     return processActivityQueue(callback);
 }
 function processActivityQueue(callback){
 
-    var result = sendData(activityQueue, callback);
+    var uri = _opt.trackingUrl || serverUri;
+
+    var result = sendData(activityQueue, uri, callback);
     activityQueue = [];
 
     if(errorCount >= 5){
@@ -524,14 +530,14 @@ function processActivityQueue(callback){
     }
     return result;
 }
-function sendData(data, callback) {
+function sendData(data, uri, callback) {
 
-    var uri = _opt.trackingUrl || serverUri;
+    var async = _opt.sendDataAsync || true;
 
     sentDataQueue.push(data);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', uri, true);
+    xhr.open('POST', uri, async);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
     try {
@@ -576,9 +582,6 @@ function sendData(data, callback) {
         + ':' + padding(now.getSeconds())
         + diff + padding(timezoneOffset / 60)
         + ':' + padding(timezoneOffset % 60);
-}
-function getUserId(){
-    return 1337;
 }
 function getParameter(name, queryString) {
     var searchString = queryString || location.search;

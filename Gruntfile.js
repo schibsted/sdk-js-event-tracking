@@ -41,7 +41,7 @@ module.exports = function (grunt) {
                 separator: ';',
             },
             dist: {
-                src: ['src/variables.js', 'src/events.js', 'src/dataTracker.js', 'src/sendData.js', 'src/utilities.js'],
+                src: ['src/variables.js', 'src/events.js', 'src/dataTracker.js', 'src/users.js', 'src/sendData.js', 'src/utilities.js'],
                 dest: 'tracker.js',
             },
         },

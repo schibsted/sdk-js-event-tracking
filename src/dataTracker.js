@@ -2,7 +2,7 @@ function DataTracker(_opt, activityObjectsArray, verb) {
     return {
         siteId:         _opt.clientId || undefined,
         trackingUrl:    _opt.trackingUrl || undefined,
-        anonymousId:    getUserId(),
+        userObject:     new UserData(),
         published:      getTimeStamp(),
         language:       _opt.language || 'en',
         doNottrack:     _opt.doNotTrack || false,
@@ -16,8 +16,10 @@ function DataTracker(_opt, activityObjectsArray, verb) {
 
             actor['@type'] = 'Person';
 
-            if(this.anonymousId){
-                actor['@id'] = this.anonymousId;
+            var anonymousId = userObject.userId;
+
+            if(anonymousId){
+                actor['@id'] = anonymousId;
             }
             actor['spt:userAgent'] = navigator.userAgent;
             actor['spt:ip'] = ''; // TODO: Find a way to inject this on requesting this resource.
@@ -26,7 +28,6 @@ function DataTracker(_opt, activityObjectsArray, verb) {
             actor['spt:acceptLanguage'] = this.getDeviceLanguage();
 
             return actor;
-
         },
 
         createProvider: function() {
