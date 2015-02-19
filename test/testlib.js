@@ -1,3 +1,15 @@
+"use strict";
+
+var assert = buster.assert;
+var refute = buster.refute;
+
+var _opt = {};
+_opt.clientId = 'sp-34534';
+_opt.trackingUrl = 'http://127.0.0.1:8002/api/v1/track';
+_opt.language = 'no';
+_opt.allowAutomaticTracking = false;
+_opt.pageId = 'urn:test.no:objecttest01';
+
 function providerAsserts(d){
     // Provider asserts
     assert.match(d.provider['@id'], 'urn:spt.no:'+_opt.clientId);
@@ -28,7 +40,14 @@ function objectAsserts(d){
 }
 function headerTypes(type){
     var testType;
-    var allowedHeaderTypes = ["accept", "achieve", "add", "announce", "arrive", "assign", "block", "claim", "complete", "confirm", "connect", "create", "delete", "dislike", "experience", "favorite", "flag", "follow", "friendrequest", "give", "ignore", "invite", "join", "leave", "like", "listen", "move", "offer", "post", "question", "reject", "read", "remove", "reservation", "respond", "review", "save", "share", "tentativeReject", "tentativeAccept", "travel", "undo", "update", "view", "watch"];
+    var allowedHeaderTypes = [
+        "accept", "achieve", "add", "announce", "arrive", "assign", "block", "claim",
+        "complete", "confirm", "connect", "create", "delete", "dislike", "experience",
+        "favorite", "flag", "follow", "friendrequest", "give", "ignore", "invite", "join",
+        "leave", "like", "listen", "move", "offer", "post", "question", "reject",
+        "read", "remove", "reservation", "respond", "review", "save", "share", "tentativeReject",
+        "tentativeAccept", "travel", "undo", "update", "view", "watch"
+    ];
 
     // Check if array if so, use only first item
 
@@ -51,7 +70,12 @@ function headerTypes(type){
 }
 function objectTypes(type){
     var testType;
-    var allowedObjectTypes = ["album", "application", "article", "audio", "community", "content", "device", "document", "event", "folder", "group", "identity", "image", "mention", "note", "organization", "page", "person", "place", "possibleAnswer", "process", "question", "reservation", "role", "service", "story", "video"];
+    var allowedObjectTypes = [
+        "album", "application", "article", "audio", "community", "content", "device",
+        "document", "event", "folder", "group", "identity", "image", "mention",
+        "note", "organization", "page", "person", "place", "possibleAnswer",
+        "process", "question", "reservation", "role", "service", "story", "video"
+    ];
 
     // Check if array if so, use only first item
 

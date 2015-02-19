@@ -5,12 +5,7 @@ buster.spec.expose();
 var assert = buster.assert;
 var refute = buster.refute;
 
-var _opt = {};
-_opt.clientId = 'sp-34534';
-_opt.trackingUrl = 'http://127.0.0.1:8002/api/v1/track';
-_opt.language = 'no';
-_opt.allowAutomaticTracking = false;
-_opt.pageId = 'urn:test.no:objecttest01';
+var _opt = _opt || {};
 
 var testObjects = [
     {
