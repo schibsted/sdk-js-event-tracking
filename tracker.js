@@ -19,40 +19,38 @@ var sentDataQueue = [];
 'use strict';
 
 // Track event on page load if automatic tracking is not prohibited
-
-window.onload = function(){
-    if(_opt.allowAutomaticTracking !== false){
+window.onload = function() {
+    if (_opt.allowAutomaticTracking !== false) {
         console.log('autotrack happend');
         trackPageLoadEvent('page');
     }
 };
+
 // TODO: Should page load include tags?
 // FIXME: Add origin object when a referer is known.
 /**
  * A function for tracking events to html-forms.
- * @param {string | object} type - The type of page that is loaded. E.g 'article', 'page', 'service'. Default: 'page'
- * @param {string | object} title - The title of the page. Default: document.title
- * @param {string | object} content - The content of the page, or a summary. Default: ''
+ * @param {string | object} [type='page'] - The type of page that is loaded. E.g 'article', 'page', 'service'.
+ * @param {string | object} [title=document.title] - The title of the page.
+ * @param {string | object} [content=''] - The content of the page, or a summary.
  * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
-
 // TODO: Custom data in all event functions
-function trackPageLoadEvent(type, title, content, callback){
-
-    if(!checkMandatoryOptions()){
+function trackPageLoadEvent(type, title, content, callback) {
+    if (!checkMandatoryOptions()) {
         return false;
     }
 
     var activities = [
         {
-            'object': {
+            object: {
                 '@type':          type || 'page',
                 '@id':            _opt.pageId,
-                'url':            document.URL,
-                'displayName':    title || document.title,
-                'content':        content || '',
-            },
-        },
+                url:            document.URL,
+                displayName:    title || document.title,
+                content:        content || ''
+            }
+        }
     ];
 
     createTrackerProcessData(activities, 'Read', callback);
@@ -60,32 +58,32 @@ function trackPageLoadEvent(type, title, content, callback){
 
 /**
  * A function for tracking events to html-forms. Default verb is respond.
- * @param {string} elementId - A unique identifier for the element where the event originated. Function will not track without this parameter.
- * @param {string} originType - The type of entity the form originates from (e.g page, article, application). Default 'page'
- * @param {string} type - The type of object the form represents (e.g content, spn:email). Default: 'content'
- * @param {string} title - The display name or title for the form e.g 'Send email'. Default: ''
- * @param {string | object} content - The conentent that is added to the form. Default: ''
+ * @param {string} elementId - A unique identifier for the element where the event originated. Will fail if omitted.
+ * @param {string} [originType='page'] - The type of entity the form originates from (e.g page, article, application).
+ * @param {string} [type='content'] - The type of object the form represents (e.g content, spn:email).
+ * @param {string} [title=''] - The display name or title for the form e.g 'Send email'.
+ * @param {string | object} [content=''] - The conentent that is added to the form.
  * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
-function trackFormEvent(elementId, originType, type, title, content, callback){
-
-    if(!checkMandatoryOptions()){
+function trackFormEvent(elementId, originType, type, title, content, callback) {
+    if (!checkMandatoryOptions()) {
         return false;
     }
+
     var pageId = _opt.pageId;
 
-    if(elementId === undefined || elementId === '' || elementId === null){
+    if (elementId === undefined || elementId === '' || elementId === null) {
         return false;
     }
 
     var activities = [
         {
-            'object': {
+            object: {
                 '@type': originType || 'page',
                 '@id': pageId || '',
-                'url': document.URL,
+                url: document.URL
             }
-        },
+        }
     ];
 
     var resultObject = {};
@@ -93,11 +91,12 @@ function trackFormEvent(elementId, originType, type, title, content, callback){
     var resultData = {
         '@type': type || 'content',
         '@id': pageId + ':' + elementId || '',
-        'displayName': title || '',
-        'content': content || '',
-        'inReplyTo': document.URL,
+        displayName: title || '',
+        content: content || '',
+        inReplyTo: document.URL
     };
-    resultObject['result'] = resultData;
+
+    resultObject.result = resultData;
     activities.push(resultObject);
 
     return createTrackerProcessData(activities, 'Respond', callback);
@@ -106,110 +105,114 @@ function trackFormEvent(elementId, originType, type, title, content, callback){
 /**
  * Function for tracking comment fields. Will generate an activities object and send it to data collector
  * @param {string} commentId - A unique ID for the comment. Must be set
- * @param {string} originType - The type of entity the form originates from (e.g page, article, application). Default 'page'
- * @param {string} content - The text-body of the comment. Default ''
- * @param {string|object} inReplyTo - A id, title, comment, or an object representing the location of the form or a reference to a parent object. Default: document.URL
+ * @param {string} [originType='page'] - The type of entity the form originates from (e.g page, article, application).
+ * @param {string} [content=''] - The text-body of the comment.
+ * @param {string|object} [inReplyTo=document.URL] - A id, title, comment, or an object representing the location
+ * of the form or a reference to a parent object.
  * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  */
-function trackCommentEvent(commentId, originType, content, inReplyTo, callback){
-
-    if(!checkMandatoryOptions()){
+function trackCommentEvent(commentId, originType, content, inReplyTo, callback) {
+    if (!checkMandatoryOptions()) {
         return false;
     }
+
     var pageId = _opt.pageId;
 
-    if(commentId === undefined || commentId === '' || commentId === null){
+    if (commentId === undefined || commentId === '' || commentId === null) {
         return false;
     }
 
     var activities = [
         {
-            'result': {
-                '@type': ['Note', {'spt':'Comment'}],
+            result: {
+                '@type': ['Note', {spt:'Comment'}],
                 '@id': _opt.pageId + ':' + commentId || '',
-                'content': content || '',
-                'inReplyTo': inReplyTo || document.URL,
+                content: content || '',
+                inReplyTo: inReplyTo || document.URL
             }
         },
         {
-            'object': {
+            object: {
                 '@type': originType || 'page',
                 '@id': _opt.pageId || '',
-                'url': document.URL,
+                url: document.URL
             }
-        },
+        }
     ];
 
     var result = createTrackerProcessData(activities, 'Respond', callback);
+
     return activities;
 }
 
 // FIXME: Add origin
 /**
- * A function for tracking polls in websites. The function will try to locate the options and answer automatically if not specified
- * @param {string} pollId - A unique ID for the poll. Default: null
- * @param {string} question - The question asked. Default: ''
- * @param {array} options - The different possible answers to the question. Default: []
- * @param {array} answer - The answer(s) the user makes. Default: []
+ * A function for tracking polls in websites. The function will try to locate the
+ * options and answer automatically if not specified
+ * @param {string} [pollId=null] - A unique ID for the poll.
+ * @param {string} [question=''] - The question asked.
+ * @param {array} [options=[]] - The different possible answers to the question.
+ * @param {array} [answer=[]] - The answer(s) the user makes.
  * @param {function} callback - A callback function that will fire when the event has been tracked or if it failed.
  * @returns {object} Activities object.
  */
-function trackPollEvent(pollId, question, options, answer, callback){
-
-    if(!checkMandatoryOptions()){
+function trackPollEvent(pollId, question, options, answer, callback) {
+    if (!checkMandatoryOptions()) {
         return false;
     }
+
     var pageId = _opt.pageId;
 
-    if(pollId === undefined || pollId === '' || pollId === null){
+    if (pollId === undefined || pollId === '' || pollId === null) {
         return false;
     }
 
     var activities = [];
     var activityObject = {
-        'object': {
+        object: {
             '@type': 'Question',
             '@id': pageId + ':' + pollId || '',
-            'displayName': question || '',
-            'url': document.URL,
-            'oneOf': {
-                '@type':'Collection',
-                'items':[],
+            displayName: question || '',
+            url: document.URL,
+            oneOf: {
+                '@type': 'Collection',
+                items: []
             }
         }
     };
     var resultObject = {
-        'result': {
+        result: {
             '@type': 'Question',
-            'displayName': question || '',
-            'replies': {
-                '@type':'Collection',
-                'items':[],
-            },
+            displayName: question || '',
+            replies: {
+                '@type': 'Collection',
+                items: []
+            }
         }
     };
 
     var items, itemsObject, i;
 
-    if(options !== undefined){
+    if (options !== undefined) {
         items = [];
-        for(i=0; i<options.length; i++) {
+        for (i = 0; i < options.length; i++) {
             itemsObject = {
                 '@type': 'PossibleAnswer',
-                '@id': pageId + ':' + pollId + ':' + options[i],
+                '@id': pageId + ':' + pollId + ':' + options[i]
             };
             items.push(itemsObject);
         }
 
         activityObject.object.oneOf.items = items;
     }
-    if(answer !== undefined){
+    if (answer !== undefined) {
         items = [];
-        for(i=0; i<answer.length; i++) {
+        for (i = 0; i < answer.length; i++) {
             itemsObject = {
-                '@type': ['PossibleAnswer', {'spt':'Answer'}],
-                '@id': pageId + ':' + pollId + ':' + answer[i],
+                '@type': ['PossibleAnswer', {spt: 'Answer'}],
+                '@id': pageId + ':' + pollId + ':' + answer[i]
             };
+
             items.push(itemsObject);
         }
 
@@ -218,40 +221,42 @@ function trackPollEvent(pollId, question, options, answer, callback){
 
     activities.push(activityObject);
     activities.push(resultObject);
-    var result = createTrackerProcessData(activities, 'Respond', callback);
-    return activities;
 
+    var result = createTrackerProcessData(activities, 'Respond', callback);
+
+    return activities;
 }
 
 /**
 * A function for tracking events to html-forms.
 * @param {string} pageId - A unique identifier for the page.
 * @param {string} elementId - A unique identifier for the element.
-* @param {string} verb - An Activitystram 2.0 verb describing the tracked action/event. Default: 'complete'
-* @param {string} type - The type of object the form represents (e.g content, email). Default: 'process'
-* @param {string} name - The display name for the object e.g 'Send email'. Default: ''
-* @param {string} target - A activity stream 2.0 reciving object ('to', 'bto', 'target' are supported at the moment). Default: 'target'
-* @param {string} targetType - Similar to type, but for the receiving object. Default: 'service'
-* @param {string} targetId - Similar to id, but for the receiving object. Default: pageId
-* @param {string} targetName - Similar to name but for the receiving object. Default: document.title
+* @param {string} [verb='complete'] - An Activitystram 2.0 verb describing the tracked action/event.
+* @param {string} [type='process'] - The type of object the form represents (e.g content, email).
+* @param {string} [name=''] - The display name for the object e.g 'Send email'.
+* @param {string} [target=target] - Activity stream 2.0 reciving object ('to', 'bto', 'target' are currently supported).
+* @param {string} [targetType='service'] - Similar to type, but for the receiving object.
+* @param {string} [targetId=pageId] - Similar to id, but for the receiving object.
+* @param {string} [targetName=document.title] - Similar to name but for the receiving object.
 * @returns {object} Activities object.
 */
-function clickEventTracker(pageId, elementId, verb, type, name, target, targetType, targetId, targetName){
+function clickEventTracker(pageId, elementId, verb, type, name, target, targetType, targetId, targetName) {
     verb = verb || 'complete';
     target = target || 'target';
+
     var activities = [{
-        'object': {
+        object: {
             '@type': type || 'process',
-            'displayName': name || '',
-            'url': document.URL,
-            '@id': pageId + ':' + elementId || '',
+            displayName: name || '',
+            url: document.URL,
+            '@id': pageId + ':' + elementId || ''
         }
-    },];
+    }];
 
     var targetObjData = {
         '@type': targetType || 'page',
-        'displayName': targetName || document.title,
-        'url': document.URL,
+        displayName: targetName || document.title,
+        url: document.URL,
         '@id': targetId || pageId,
     };
     var targetObject = {};
@@ -263,7 +268,7 @@ function clickEventTracker(pageId, elementId, verb, type, name, target, targetTy
 }
 
 // Eventlistener for Facebook events
-if(_opt.allowAutomaticTracking !== false){
+if (_opt.allowAutomaticTracking !== false) {
     FB.Event.subscribe('edge.create', function(targetUrl) {
         socialEventTracker('like', 'page', 'target', document.title, 'service', null, 'Facebook', targetUrl);
     });
@@ -275,66 +280,58 @@ if(_opt.allowAutomaticTracking !== false){
     });
 }
 
-// TODO: Complete documentation
-/**
-* A function for tracking events to html-forms.
-* @param {string} verb - An Activitystram 2.0 verb describing the tracked action/event. Default: 'like'
-* @param {string} type - The type of object the form represents (e.g content, email). Default: 'page'
-* @param {string} id - A unique identifier for the form. Default: null
-* @param {string} name - The display name for the object. Default: document.title
-* @param {string} target - A activity stream 2.0 reciving object. Default: 'target'
-* @param {string} targetType - Similar to type, but for the receiving object. Default: 'service'
-* @param {string} targetId - Similar to id, but for the receiving object. Default: null
-* @param {string} targetName - Similar to name but for the receiving object. Default: ''
-* @param {string} targetUrl - The URL of the target service. Default ''
-* @returns {object} Activities object.
-*/
-function socialEventTracker(pageId, elementId, verb, type, target, name, targetType, targetId, targetName){
+function socialEventTracker(pageId, elementId, verb, type, target, name, targetType, targetId, targetName) {
     verb = verb || 'like';
     target = target || 'target';
+
     var activities = [{
-        'object': {
+        object: {
             '@type': type || 'page',
             '@id': pageId + ':' + elementId || '',
-            'displayName': name || document.title,
-            'url': document.URL,
+            displayName: name || document.title,
+            url: document.URL
         }
-    },];
+    }];
 
     var targetObjData = {
         '@type': targetType || 'service',
-        'displayName': targetName || '',
-        '@id': targetId || null, // TODO: Should ID for social media be predefined by us? something like urn:facebook.com
+        displayName: targetName || '',
+        '@id': targetId || null // TODO: Should ID for social media be predefined by us? something like urn:facebook.com
     };
+
     var targetObject = {};
     targetObject[target] = targetObjData;
 
     activities.push(targetObject);
+
     var result = createTrackerProcessData(activities, verb);
+
     return activities;
 }
 
 // TODO: Complete documentation
 /**
 * A function for tracking play/pause and other state changes to video/sound etc.
-* @param {string} verb - The action performed as an ActivityStream 2.0 verb. Default: 'watch' Suggestions: watch, listen, complete, stop(?)
-* @param {string} type - The type of media that the user interacts with. Default: 'video'
-* @param {string} name - The name of the video/audi. Default: document.title
-* @param {string} mediaId - A unique identifier for the media object. Default: null
+* @param {string} [verb=watch] - The action performed as an ActivityStream 2.0 verb.
+* Suggestions: watch, listen, complete, stop(?)
+* @param {string} [type='video'] - The type of media that the user interacts with.
+* @param {string} [name=document.title] - The name of the video/audi.
+* @param {string} [mediaId=null] - A unique identifier for the media object.
 * @returns {object} Activities object.
 */
-function mediaStateTracker(verb, type, name, mediaId){
+function mediaStateTracker(verb, type, name, mediaId) {
     verb = verb || 'watch';
     var activities = [{
-        'object': {
+        object: {
             '@type': type || 'video',
-            'displayName': name || document.title,
+            displayName: name || document.title,
             '@id': pageId + ':' + mediaId || null,
-            'url': document.URL,
+            url: document.URL
         }
-    },];
+    }];
 
     var result = createTrackerProcessData(activities, verb);
+
     return activities;
 }
 
@@ -344,11 +341,12 @@ function mediaStateTracker(verb, type, name, mediaId){
 * @param {string} verb - A verb describing det action that will be tracked. E.g 'share'. Will return false if not set
 * @returns {object | bool} Activities object or false if no verb is set.
 */
-function generalEventTracker(verb, objectType, objectData, targetType, targetData){
+function generalEventTracker(verb, objectType, objectData, targetType, targetData) {
     verb = verb || '';
-    if(verb === ''){
+    if (verb === '') {
         return false;
     }
+
     var activities = [];
     objectType = objectType || 'object';
     targetType = targetType || 'target';
@@ -359,18 +357,22 @@ function generalEventTracker(verb, objectType, objectData, targetType, targetDat
     toObj[targetType] = targetData;
 
     activities = [fromObj, toObj];
+
     var result = createTrackerProcessData(activities, verb);
+
     return activities;
 }
 
 /**
 * A function that takes a pure Activitystream formated object and sends it with no valiadtion to server
-* @param {object} activity - A object following the ActivityStream 2.0 format. No default.
+* @param {object} activityObject - A object following the ActivityStream 2.0 format. No default.
 * @returns {bool} true on success, false if anything goes wrong. (client side only).
 */
-function sendActivityObject(activityObject){
+function sendActivityObject(activityObject) {
     activityQueue.push(activityObject);
+
     var result = processActivityQueue();
+
     return activityObject;
 
     // TODO: Make sure return is true || false
@@ -388,19 +390,19 @@ function DataTracker(_opt, activityObjectsArray, verb) {
         doNottrack:     _opt.doNotTrack || false,
         activities:     activityObjectsArray || [],
         verb:           verb,
-        context:        ['http://www.w3.org/ns/activitystreams',{'spt':'http://spt.no'}],
+        context:        ['http://www.w3.org/ns/activitystreams', {spt:'http://spt.no'}],
 
         createActor: function() {
-
             var actor = {};
 
             actor['@type'] = 'Person';
 
             var anonymousId = userObject.userId;
 
-            if(anonymousId){
+            if (anonymousId) {
                 actor['@id'] = anonymousId;
             }
+
             actor['spt:userAgent'] = navigator.userAgent;
             actor['spt:ip'] = ''; // TODO: Find a way to inject this on requesting this resource.
             actor['spt:screenSize'] = window.screen.width + 'x' + window.screen.height;
@@ -411,21 +413,19 @@ function DataTracker(_opt, activityObjectsArray, verb) {
         },
 
         createProvider: function() {
-
-        // FIXME: Go over this info. ID and URL might need to be fixed
-
+            // FIXME: Go over this info. ID and URL might need to be fixed
             var provider = {};
 
             provider['@type'] = 'Organization';
-            provider['@id'] = 'urn:spt.no:'+this.siteId;
-            //provider['spt:client'] = this.siteId;
-            provider['url'] = document.URL;
+            provider['@id'] = 'urn:spt.no:' + this.siteId;
+            // provider['spt:client'] = this.siteId;
+            provider.url = document.URL;
 
             // TODO: Determin where campaigns should go.
             /*var campaign = this.getCampaignMeta();
-            if(campaign !== null){
-                generator.campaign = campaign;
-            }*/
+             if(campaign !== null){
+             generator.campaign = campaign;
+             }*/
 
             return provider;
         },
@@ -434,7 +434,7 @@ function DataTracker(_opt, activityObjectsArray, verb) {
             this.activities.push(activityObject);
         },
 
-        getCampaignMeta: function(){
+        getCampaignMeta: function() {
             var sourceKey = ['utm_source', 'Data_source'];
             var mediumKey = ['utm_medium', 'Data_medium'];
             var nameKey = ['utm_campaign', 'Data_campaign'];
@@ -443,47 +443,46 @@ function DataTracker(_opt, activityObjectsArray, verb) {
             var returnValueFlag = false;
 
             var source = this.getParameterByArray(sourceKey);
-            if(source !== null){
+            if (source !== null) {
                 campaign.campaignSource = source;
                 returnValueFlag = true;
             }
 
             var medium = this.getParameterByArray(mediumKey);
-            if(medium !== null){
+            if (medium !== null) {
                 campaign.campaignMedium = medium;
                 returnValueFlag = true;
             }
 
             var name = this.getParameterByArray(nameKey);
-            if(name !== null){
+            if (name !== null) {
                 campaign.campaignName = name;
                 returnValueFlag = true;
             }
 
-            if(returnValueFlag){
+            if (returnValueFlag) {
                 return campaign;
             }
+
             return null;
         },
 
-        getParameterByArray: function(searchArray){
-
-            for(var i = 0; i < searchArray.length; i++){
-                if(getParameter(searchArray[i]) !== null){
+        getParameterByArray: function(searchArray) {
+            for (var i = 0; i < searchArray.length; i++) {
+                if (getParameter(searchArray[i]) !== null) {
                     return getParameter(searchArray[i]);
                 }
             }
+
             return null;
         },
         // TODO: Determine if browser language is something we should include and in what form.
-        getDeviceLanguage: function(){
-
+        getDeviceLanguage: function() {
             var userLanguage = 'NaN';
 
             if (navigator.userLanguage){
                 userLanguage = navigator.userLanguage;
-            }
-            else if (navigator.language){
+            } else if (navigator.language){
                 userLanguage = navigator.language;
             }
 
@@ -495,15 +494,20 @@ function DataTracker(_opt, activityObjectsArray, verb) {
 
             retVal['@context'] = this.context;
 
-            if(this.verb && this.verb !== undefined && this.verb !== null){
+            if (this.verb && this.verb !== undefined && this.verb !== null) {
                 retVal['@type'] = this.verb;
-            } else {return 'no verb found';}
-            if(this.published){
-                retVal['published'] = this.published;
-            } else {return 'no timestamp was found';}
+            } else {
+                return 'no verb found';
+            }
 
-            for(var i = 0; i < this.activities.length; i++){
-                for(var attrname in this.activities[i]){
+            if (this.published) {
+                retVal.published = this.published;
+            } else {
+                return 'no timestamp was found';
+            }
+
+            for (var i = 0; i < this.activities.length; i++) {
+                for (var attrname in this.activities[i]) {
                     if (this.activities[i].hasOwnProperty(attrname)) {
                         retVal[attrname] = this.activities[i][attrname];
                     }
@@ -514,30 +518,29 @@ function DataTracker(_opt, activityObjectsArray, verb) {
             retVal.actor = this.createActor();
             retVal.provider = this.createProvider();
 
-            //console.log(JSON.stringify(retVal));
+            // console.log(JSON.stringify(retVal));
 
             return JSON.stringify(retVal);
-
-        },
+        }
     };
 }
 
-"use strict";
+'use strict';
 
-function UserData (){
+function UserData() {
     return {
         userId:         undefined,
         key:            'DataTrackerUser',
         idServiceUrl:   'http://127.0.0.1:8003/api/v1/identify',
 
-        getUserId: function(){
+        getUserId: function() {
 
-            if(this.userId !== undefined){
+            if (this.userId !== undefined) {
                 return this.userId;
             }
 
             var cookieID = this.getUserIdFromCookie();
-            if(cookieID === false){
+            if (cookieID === false) {
                 // FIXME: Need correct format for in
                 this.userId = this.getUserIdFromService(/* cookie object */);
             }
@@ -546,21 +549,23 @@ function UserData (){
             return this.userId;
 
         },
-        getUserIdFromCookie: function(){
+        getUserIdFromCookie: function() {
             return decodeURIComponent(
                 document.cookie.replace(
-                    new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(this.key).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1"
+                    new RegExp(
+                        '(?:(?:^|.*;)\\s*' + encodeURIComponent(this.key).replace(/[\-\.\+\*]/g, '\\$&'
+                    ) + '\\s*\\=\\s*([^;]*).*$)|^.*$'), '$1'
                 )
             ) || false;
         },
-        getUserIdFromService: function(id){
-            sendData(id, this.idServiceUrl, function(response, data){
-                if(response.status === 200){
+        getUserIdFromService: function(id) {
+            sendData (id, this.idServiceUrl, function(response, data) {
+                if (response.status === 200) {
                     this.userId = data.anonymousId;
                 }
             });
         },
-        setUserIdInCookie: function(){
+        setUserIdInCookie: function() {
             document.cookie = this.key + '=' + this.userId;
         },
     };

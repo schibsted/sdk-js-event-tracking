@@ -1,19 +1,19 @@
-"use strict";
+'use strict';
 
-function UserData (){
+function UserData() {
     return {
         userId:         undefined,
         key:            'DataTrackerUser',
         idServiceUrl:   'http://127.0.0.1:8003/api/v1/identify',
 
-        getUserId: function(){
+        getUserId: function() {
 
-            if(this.userId !== undefined){
+            if (this.userId !== undefined) {
                 return this.userId;
             }
 
             var cookieID = this.getUserIdFromCookie();
-            if(cookieID === false){
+            if (cookieID === false) {
                 // FIXME: Need correct format for in
                 this.userId = this.getUserIdFromService(/* cookie object */);
             }
@@ -22,21 +22,23 @@ function UserData (){
             return this.userId;
 
         },
-        getUserIdFromCookie: function(){
+        getUserIdFromCookie: function() {
             return decodeURIComponent(
                 document.cookie.replace(
-                    new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(this.key).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1"
+                    new RegExp(
+                        '(?:(?:^|.*;)\\s*' + encodeURIComponent(this.key).replace(/[\-\.\+\*]/g, '\\$&'
+                    ) + '\\s*\\=\\s*([^;]*).*$)|^.*$'), '$1'
                 )
             ) || false;
         },
-        getUserIdFromService: function(id){
-            sendData(id, this.idServiceUrl, function(response, data){
-                if(response.status === 200){
+        getUserIdFromService: function(id) {
+            sendData (id, this.idServiceUrl, function(response, data) {
+                if (response.status === 200) {
                     this.userId = data.anonymousId;
                 }
             });
         },
-        setUserIdInCookie: function(){
+        setUserIdInCookie: function() {
             document.cookie = this.key + '=' + this.userId;
         },
     };
