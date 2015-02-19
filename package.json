@@ -22,5 +22,8 @@
     "phantomjs": "^1.9.13",
     "jscs": "^1.11.3",
     "jshint": "^2.6.0"
+  },
+  "scripts": {
+    "lint": "jshint . && jscs ."
   }
 }
