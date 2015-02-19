@@ -6,27 +6,30 @@ var activityQueue = activityQueue || [];
 var errorCount = errorCount || 0;
 var sendDataQueue = sendDataQueue || [];
 
-function createTrackerProcessData(activities, verb, callback){
+function createTrackerProcessData(activities, verb, callback) {
+    // FIXME: This does not have to be created on each run.
+    var tracker = new DataTracker(_opt, activities, verb);
 
-    var tracker = new DataTracker(_opt, activities, verb); // FIXME: This does not have to be created on each run.
     activityQueue.push(tracker.getActivity());
+
     return processActivityQueue(callback);
 }
-function processActivityQueue(callback){
 
+function processActivityQueue(callback) {
     var uri = _opt.trackingUrl || serverUri;
 
     var result = sendData(activityQueue, uri, callback);
     activityQueue = [];
 
-    if(errorCount >= 5){
+    if (errorCount >= 5) {
         // TODO: Report to server
         console.log('data was not sent in ' + errorCount + ' tries');
     }
+
     return result;
 }
-function sendData(data, uri, callback) {
 
+function sendData(data, uri, callback) {
     var async = _opt.sendDataAsync || true;
 
     sentDataQueue.push(data);
@@ -37,24 +40,22 @@ function sendData(data, uri, callback) {
 
     try {
         xhr.send(data);
-    }
-    catch(err){
+    } catch (err) {
         errorCount++;
     }
 
-    xhr.onreadystatechange = function(){
-        if(xhr.readyState===4){
-
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
             var sentData = sentDataQueue.shift();
 
-            if(xhr.status === 200) {
+            if (xhr.status === 200) {
                 errorCount = 0;
-            }
-            else {
+            } else {
                 activityQueue = activityQueue.concat(sentData);
                 errorCount++;
             }
-            if(callback !== undefined){
+
+            if (callback !== undefined) {
                 callback(xhr, sentData);
             }
         }
