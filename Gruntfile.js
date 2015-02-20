@@ -20,7 +20,7 @@ module.exports = function (grunt) {
         watch: {
             all: {
                 files: ['src/**/*.js', 'lib/**/*.js', 'test/**/*.js', 'config/*.js', 'tracker.js'],
-                tasks: ['webpack:webBuild', 'buster:unit' /*,'concat', 'jshint', 'buster:unit', 'jsdoc'*/]
+                tasks: ['webpack:webBuild', 'karma:unit:run' /*,'concat', 'jshint', 'buster:unit', 'jsdoc'*/]
             }
         },
         jsdoc: {
@@ -31,8 +31,11 @@ module.exports = function (grunt) {
                 }
             }
         },
-        buster: {
+        karma: {
             unit: {
+                configFile: 'karma.conf.js',
+                background: true,
+                singleRun: false
             }
         },
         webpack: {
@@ -74,7 +77,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-buster');
+    grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-jsdoc');
 
     // Default task.

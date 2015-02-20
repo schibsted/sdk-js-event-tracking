@@ -7,23 +7,24 @@
     "body-parser": "~1.0.1"
   },
   "devDependencies": {
-    "buster": "~0.7.8",
-    "buster-amd": "^0.3.1",
-    "buster-istanbul": "^0.1.10",
     "grunt": "~0.4.1",
-    "grunt-buster": "~0.3.1",
     "grunt-contrib-concat": "^0.5.0",
     "grunt-contrib-jshint": "^0.11.0",
-    "grunt-contrib-nodeunit": "^0.4.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-jsdoc": "^0.5.7",
     "grunt-shell": "^1.1.1",
     "grunt-webpack": "^1.0.8",
+    "grunt-karma": "^0.10.1",
     "jscs": "^1.11.3",
     "jshint": "^2.6.0",
     "phantomjs": "^1.9.13",
     "webpack": "^1.5.3",
-    "webpack-dev-server": "^1.7.0"
+    "webpack-dev-server": "^1.7.0",
+    "mocha": "^2.1.0",
+    "chai": "^2.0.0",
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-webpack": "^1.5.0"
   },
   "scripts": {
     "lint": "jshint . && jscs ."

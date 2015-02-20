@@ -1,23 +1,28 @@
-/*global buster, describe, it, before, Activity, Events*/
 'use strict';
 
-buster.spec.expose();
-
-var assert = buster.assert;
+var expect = require('chai').expect,
+    Activity = require('../lib/activity'),
+    Events = require('../lib/events');
 
 describe('Events', function() {
-    before(function() {
+    beforeEach(function() {
         this.activity = new Activity({
             clientId: 1337,
             siteId: 1337
         });
     });
 
+    it('should required Activity instance', function() {
+        expect(function() {
+            new Events();
+        }).to.Throw(Error, 'activity required');
+    });
+
     it('should be available on Activity instance', function() {
-        assert.isObject(this.activity.events);
+        expect(this.activity.events).to.be.an.instanceOf(Events);
     });
 
     it('should have a reference to the Activity instance', function() {
-        assert.same(this.activity, this.activity.events.activity);
+        expect(this.activity).to.eq(this.activity.events.activity);
     });
 });
