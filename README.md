@@ -106,7 +106,23 @@ opts = {
 
 `replies` - A object in the `result` with `@type` 'collection' and `items` property with a array of answers.
 
-#### Activity.Event.trackClick(elementId, name, targetType, targetId)
+#### Activity.Event.trackClick(elementId, displayName, targetType, targetId)
+
+##### Required parameters
+
+`elementId` - The ID of the clicked element.
+
+`displayName` - The name/title of the clicked element.
+
+`targetType` - The type of entity that is the target for the action (page, application, process, article)
+
+`targetId` - The ID of the target.
+
+##### Generated objects
+
+`object` - Where the event originated. In this case, the clicked element.
+
+`target` - The target of the action. Normally the current page or where a users ends up after the action.
 
 ##### Extra parameter suggestions
 
@@ -114,11 +130,23 @@ opts = {
 
 #### Activity.Event.trackSocial(elementId, networkName)
 
+##### Required parameters
+
+`elementId` - The ID of the button or link the user clicks to achieve a social action (e.g Facebook like button)
+
+`networkName` - The name of the social network. (Facebook, Twitter, Pintrest etc.)
+
+##### Generated objects
+
+`object` - The page/article/entity being shared/liked.
+
+`origin` - Where the event happened, such as a button or link.
+
+`target` - The target of the action. The socialmedia site receiving the action.
+
 ##### Extra parameter suggestions
 
-`displayName` To get a good textual representation.
-
-`url` The URL to the page.
+`displayName` To get a good textual representation. (for all objects)
 
 #### Activity.Event.trackMediaState(mediaId, mediaType)
 
