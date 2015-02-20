@@ -15,17 +15,16 @@ module.exports = function (grunt) {
             },
             lib: {
                 src: ['app/**/*.js', 'lib/**/*.js']
-            },
-
+            }
         },
         watch: {
             all: {
                 files: ['src/**/*.js', 'lib/**/*.js', 'test/**/*.js', 'config/*.js', 'tracker.js'],
-                tasks: ['webpack:webBuild', 'buster:unit'/*,'concat', 'jshint', 'buster:unit', 'jsdoc'*/]
+                tasks: ['webpack:webBuild', 'buster:unit' /*,'concat', 'jshint', 'buster:unit', 'jsdoc'*/]
             }
         },
-        jsdoc : {
-            dist : {
+        jsdoc: {
+            dist: {
                 src: ['src/*.js', 'lib/**/*.js', 'tracker.js'],
                 options: {
                     destination: 'doc'
@@ -39,11 +38,10 @@ module.exports = function (grunt) {
         webpack: {
             webBuild: {
                 // webpack options
-                entry: "./lib/activity.js",
+                entry: './lib/activity.js',
                 output: {
-                    //libraryTarget: "umd",
-                    path: "dist/",
-                    filename: "tracker.js",
+                    path: 'dist/',
+                    filename: 'tracker.js'
                 },
                 stats: {
                     // Configure the console output
@@ -51,21 +49,22 @@ module.exports = function (grunt) {
                     modules: true,
                     reasons: true
                 },
-                storeStatsTo: "webpack_stats",
-                failOnError: true,
-            },
+                storeStatsTo: 'webpack_stats',
+                failOnError: true
+            }
         },
         concat: {
             options: {
                 stripBanners: {
-                    line: true,
+                    line: true
                 }
             },
             dist: {
-                src: ['src/variables.js', 'src/events.js', 'src/dataTracker.js', 'src/users.js', 'src/sendData.js', 'src/utilities.js'],
-                dest: 'tracker.js',
-            },
-        },
+                src: ['src/variables.js', 'src/events.js', 'src/dataTracker.js',
+                      'src/users.js', 'src/sendData.js', 'src/utilities.js'],
+                dest: 'tracker.js'
+            }
+        }
     });
 
     // These plugins provide necessary tasks.
