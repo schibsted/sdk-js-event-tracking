@@ -24,6 +24,7 @@
         "istanbul-instrumenter-loader": "^0.1.2"
     },
     "scripts": {
+        "test": "jshint . && jscs . && ./node_modules/karma/bin/karma start karma.conf.js --single-run",
         "lint": "jshint . && jscs ."
     }
 }
