@@ -9,15 +9,16 @@ function UserData() {
         getUserId: function() {
 
             if (this.userId !== undefined) {
+                console.log('undefined user returned');
                 return this.userId;
             }
 
             var cookieID = this.getUserIdFromCookie();
             if (cookieID === false) {
                 // FIXME: Need correct format for in
-                this.userId = this.getUserIdFromService(/* cookie object */);
+                this.userId = this.getUserIdFromService();
             }
-            this.userId = this.getUserIdFromService();
+            this.userId = this.getUserIdFromService(/* cookie object */);
             this.setUserIdInCookie();
             return this.userId;
 
@@ -34,7 +35,9 @@ function UserData() {
         getUserIdFromService: function(id) {
             sendData (id, this.idServiceUrl, function(response, data) {
                 if (response.status === 200) {
+                    console.log(data);
                     this.userId = data.anonymousId;
+                    return data.anonymousId;
                 }
             });
         },

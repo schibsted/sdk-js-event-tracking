@@ -397,7 +397,7 @@ function DataTracker(_opt, activityObjectsArray, verb) {
 
             actor['@type'] = 'Person';
 
-            var anonymousId = userObject.userId;
+            var anonymousId = this.userObject.getUserId();
 
             if (anonymousId) {
                 actor['@id'] = anonymousId;
@@ -476,7 +476,6 @@ function DataTracker(_opt, activityObjectsArray, verb) {
 
             return null;
         },
-        // TODO: Determine if browser language is something we should include and in what form.
         getDeviceLanguage: function() {
             var userLanguage = 'NaN';
 
@@ -536,6 +535,7 @@ function UserData() {
         getUserId: function() {
 
             if (this.userId !== undefined) {
+                console.log('undefined user returned');
                 return this.userId;
             }
 
@@ -561,7 +561,9 @@ function UserData() {
         getUserIdFromService: function(id) {
             sendData (id, this.idServiceUrl, function(response, data) {
                 if (response.status === 200) {
+                    console.log(data);
                     this.userId = data.anonymousId;
+                    return data.anonymousId;
                 }
             });
         },

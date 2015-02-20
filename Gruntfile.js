@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         watch: {
             all: {
                 files: ['src/**/*.js', 'lib/**/*.js', 'test/**/*.js', 'config/*.js', 'tracker.js'],
-                tasks: ['concat', 'jshint', 'buster:unit', 'jsdoc']
+                tasks: ['webpack:webBuild'/*,'concat', 'jshint', 'buster:unit', 'jsdoc'*/]
             }
         },
         jsdoc : {
@@ -35,6 +35,25 @@ module.exports = function (grunt) {
         buster: {
             unit: {
             }
+        },
+        webpack: {
+            webBuild: {
+                // webpack options
+                entry: "./lib/main.js",
+                output: {
+                    //libraryTarget: "umd",
+                    path: "dist/",
+                    filename: "tracker.js",
+                },
+                stats: {
+                    // Configure the console output
+                    colors: false,
+                    modules: true,
+                    reasons: true
+                },
+                storeStatsTo: "webpack_stats",
+                failOnError: true,
+            },
         },
         concat: {
             options: {
@@ -50,6 +69,7 @@ module.exports = function (grunt) {
     });
 
     // These plugins provide necessary tasks.
+    grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');

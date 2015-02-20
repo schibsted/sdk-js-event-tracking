@@ -9,6 +9,7 @@ _opt.trackingUrl = 'http://127.0.0.1:8002/api/v1/track';
 _opt.language = 'no';
 _opt.allowAutomaticTracking = false;
 _opt.pageId = 'urn:test.no:objecttest01';
+_opt.sendDataAsync = false;
 
 function providerAsserts(d){
     // Provider asserts
