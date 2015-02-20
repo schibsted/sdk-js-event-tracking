@@ -99,5 +99,5 @@
 
     "disallowTrailingComma": true,
 
-    "excludeFiles": ["node_modules/**"]
+    "excludeFiles": ["node_modules/**", "dist/*", "coverage/**"]
 }
