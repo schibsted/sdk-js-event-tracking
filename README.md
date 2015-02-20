@@ -14,15 +14,15 @@
 
 This documentation is the target for the functionality of v1.
 
-    ## Activity(opts)
+## Activity(opts)
 
-    ```
-    opts = {
-        pageId: '',     // The Id of the current page/article
-        pageType: '',   // The type of page/article (page, article, application etc.)
-        clientId: '',   // The providers ID, supplied by SPT.
-    }
-    ```
+```
+opts = {
+    pageId: '',     // The Id of the current page/article
+    pageType: '',   // The type of page/article (page, article, application etc.)
+    clientId: '',   // The providers ID, supplied by SPT.
+}
+```
 
 ### Activity.Event(eventType)
 
@@ -34,7 +34,7 @@ This documentation is the target for the functionality of v1.
 
 ##### Generated objects
 
-`object` -
+`object` - Where the event originated.
 
 ##### Extra parameter suggestions
 
@@ -50,7 +50,9 @@ This documentation is the target for the functionality of v1.
 
 ##### Generated objects
 
-`object` -
+`object` - Where the event originated. In this case, the form.
+
+`result` - 
 
 ##### Extra parameter suggestions
 
