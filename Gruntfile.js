@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         watch: {
             all: {
                 files: ['src/**/*.js', 'lib/**/*.js', 'test/**/*.js', 'config/*.js', 'tracker.js'],
-                tasks: ['webpack:webBuild'/*,'concat', 'jshint', 'buster:unit', 'jsdoc'*/]
+                tasks: ['webpack:webBuild', 'buster:unit'/*,'concat', 'jshint', 'buster:unit', 'jsdoc'*/]
             }
         },
         jsdoc : {
