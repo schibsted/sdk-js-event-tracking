@@ -1,5 +1,5 @@
 {
-    "name": "node-api",
+    "name": "schibsted-event-tracking",
     "main": "server.js",
     "dependencies": {
         "express": "~4.0.0",
