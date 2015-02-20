@@ -150,6 +150,16 @@ opts = {
 
 #### Activity.Event.trackMediaState(mediaId, mediaType)
 
+##### Required parameters
+
+`mediaId` - The ID of the media entity.
+
+`mediaType` - The type of media (video, audio, album)
+
+##### Generated objects
+
+`object` - The media entity where a state change happened.
+
 ##### Extra parameter suggestions
 
 `displayName` To get a good textual representation.
@@ -160,11 +170,17 @@ opts = {
 
 ##### Required parameters
 
-`scrollDepth` - A value representing the relative scroll distance. Will be stored as a content parameter in the object.
+`scrollDepth` - A value representing the relative scroll distance. Will be stored as a content parameter in the target.
+
+##### Generated objects
+
+`object` - The page or entity where scroll happened.
+
+`target` - The scroll depth.
 
 ##### Extra parameter suggestions
 
-`displayName` - A human readable text for the scroll distance (e.g "Under header")
+`displayName` - A human readable text for the scroll distance (e.g "Under header")(for `target`)
 
 #### Activity.Event.trackExit(targetId, targetType)
 
@@ -174,16 +190,40 @@ opts = {
 
 `targetType` - The type of the target for the users exit (page, article, application)
 
+##### Generated objects
+
+`object` - The page or entity where exit happened.
+
+`target` - Target action for the exit, for example the next page.
+
 ##### Extra parameter suggestions
 
-'target.'
+`displayName` - A human readable text such as a title or description.
 
 #### Activity.Event.trackEvent(eventObjects)
 
-`eventObjects` Array of event objects.
+##### Required parameters
 
-#### Activity.Event.addParameter(obj, parameters)
+`eventObjects` Array of event objects. (object, target, origin etc). There is no need to supply actor, target, context etc, as this will be provided by the send() function.
 
-#### Activity.Event.addCumstomData(obj, parameters)
+#### Activity.Event.addProperty(obj, property, value)
+
+##### Required parameters
+
+`object` - The target object in the activity (object, target, result, origin etc).
+
+`property` - The property that should be added. Allowed properties: http://www.w3.org/TR/2015/WD-activitystreams-vocabulary-20150129/#properties '4. Properties'
+
+`value` - Preferably a string, but an objects will work as well. If a raw Activitystream object is inputed, it can compromise future compatibility.
+
+#### Activity.Event.addCumstomData(obj, data)
+
+##### Required parameters
+
+`object` - The target object in the activity (object, target, result, origin etc).
+
+`data` - An object. All data will be a sub-object of the property `spt:custom`. All property values in the `data` object should be prefixed with `spt:`
 
 #### Activity.Event.send()
+
+Will ship the built event objects to the Activity object to get providor and actor, before it gets sent to the server.
