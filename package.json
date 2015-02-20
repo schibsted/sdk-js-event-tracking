@@ -1,6 +1,6 @@
 {
     "name": "schibsted-event-tracking",
-    "main": "server.js",
+    "main": "lib/activity.js",
     "dependencies": {
         "express": "~4.0.0",
         "mongoose": "~3.6.13",
