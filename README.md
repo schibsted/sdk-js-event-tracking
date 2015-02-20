@@ -18,9 +18,9 @@ This documentation is the target for the functionality of v1.
 
 ```
 _opt = {
-    pageId: '',
-    pageType: '',
-    clientId: '',
+    pageId: '',     // The Id of the current page/article
+    pageType: '',   // The type of page/article (page, article, application etc.)
+    clientId: '',   // The providers ID, supplied by SPT.
 }
 ```
 
@@ -28,7 +28,17 @@ _opt = {
 
 #### Activity.Event.pageLoad(type, title)
 
+##### Extra parameter suggestions
+
+`content` store the content of the submitted form.
+
 #### Activity.Event.trackForm(formId, contentType, title, content)
+
+##### Extra parameter suggestions
+
+`content` store the content of the submitted form.
+
+`inReplyTo` a string or a object that links the this form submission to a some other entity.
 
 #### Activity.Event.trackComment(formId, commentId)
 
@@ -36,7 +46,7 @@ _opt = {
 
 `content` store the content of the comment.
 
-`inReplyTo` a string or a object that links the this comment to a page/article or another comment.
+`inReplyTo` a string or a object that links this comment to a page/article or another comment.
 
 #### Activity.Event.trackPoll(formId, question)
 
@@ -46,7 +56,13 @@ _opt = {
 
 `spt:answers` and array of answers given to the poll
 
-#### Activity.Event.trackClick()
+#### Activity.Event.trackClick(elementId, name, targetType, targetId)
+
+##### Extra parameter suggestions
+
+`displayName` To get a good textual representation. Can be used for both primary and secondary object.
+
+#### Activity.Event.trackSocial(elementId, networkName)
 
 #### Activity.Event.trackMediaState()
 
