@@ -1,3 +1,3 @@
 #!/bin/bash
 
-grunt watch
+grunt karma:unit:start watch
