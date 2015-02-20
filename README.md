@@ -52,25 +52,29 @@ opts = {
 
 `object` - Where the event originated. In this case, the form.
 
-`result` - 
+`result` - The result of the event. In this case, some new content from the form.
 
 ##### Extra parameter suggestions
 
 `displayName` - The title of the form in a human readable format.
 
-`content` - The content of the form as a object or a string.
-
-##### Extra parameter suggestions
-
 `content` store the content of the submitted form.
 
 `inReplyTo` a string or a object that links the this form submission to a some other entity.
+
+`url` A URL will be set automatically using document.URL, but if you are running a single page application or for some other reason want to change the URL, feel free to do so.
 
 #### Activity.Event.trackComment(formId)
 
 ##### Required parameters
 
 `formId` - The ID of the form element, must be unique per page.
+
+##### Generated objects
+
+`object` - Where the event originated. In this case, the form.
+
+`result` - The result of the event. In this case, a new comment.
 
 ##### Extra parameter suggestions
 
@@ -88,15 +92,19 @@ opts = {
 
 `formId` - The ID of the form element, must be unique per page.
 
+##### Generated objects
+
+`object` - Where the event originated. In this case, the form.
+
+`result` - The result of the event. In this case, a reply to the poll.
+
 ##### Extra parameter suggestions
 
 `question` - The question being asked, will be stored in displayName in primary object.
 
-##### Custom data suggestion
+`oneOf` - A object in the `object` with `@type` 'collection' and `items` property with a array of possible answers.
 
-`spt:options` and array of options to the poll
-
-`spt:answers` and array of answers given to the poll
+`replies` - A object in the `result` with `@type` 'collection' and `items` property with a array of answers.
 
 #### Activity.Event.trackClick(elementId, name, targetType, targetId)
 
