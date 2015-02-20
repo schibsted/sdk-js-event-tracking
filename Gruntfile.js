@@ -41,7 +41,8 @@ module.exports = function (grunt) {
                 entry: './lib/activity.js',
                 output: {
                     path: 'dist/',
-                    filename: 'tracker.js'
+                    filename: 'tracker.js',
+                    library: 'Activity'
                 },
                 stats: {
                     // Configure the console output
