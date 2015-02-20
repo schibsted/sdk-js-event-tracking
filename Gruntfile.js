@@ -39,7 +39,7 @@ module.exports = function (grunt) {
         webpack: {
             webBuild: {
                 // webpack options
-                entry: "./lib/main.js",
+                entry: "./lib/activity.js",
                 output: {
                     //libraryTarget: "umd",
                     path: "dist/",
