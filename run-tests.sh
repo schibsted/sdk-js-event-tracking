@@ -1,3 +1,3 @@
 #!/bin/bash
 
-grunt
+npm test
