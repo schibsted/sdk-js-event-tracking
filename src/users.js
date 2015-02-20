@@ -43,6 +43,6 @@ function UserData() {
         },
         setUserIdInCookie: function() {
             document.cookie = this.key + '=' + this.userId;
-        },
+        }
     };
 }
