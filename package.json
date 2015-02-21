@@ -21,7 +21,9 @@
         "karma-phantomjs-launcher": "^0.1.4",
         "karma-webpack": "^1.5.0",
         "karma-coverage": "^0.2.7",
-        "istanbul-instrumenter-loader": "^0.1.2"
+        "istanbul-instrumenter-loader": "^0.1.2",
+        "sinon": "^1.12.2",
+        "karma-sinon-chai": "^0.3.0"
     },
     "scripts": {
         "test": "jshint . && jscs . && ./node_modules/karma/bin/karma start karma.conf.js --single-run",
