@@ -1,32 +1,33 @@
 {
-    "name": "schibsted-event-tracking",
-    "main": "lib/activity.js",
-    "devDependencies": {
-        "grunt": "~0.4.1",
-        "grunt-contrib-concat": "^0.5.0",
-        "grunt-contrib-jshint": "^0.11.0",
-        "grunt-contrib-watch": "^0.6.1",
-        "grunt-jsdoc": "^0.5.7",
-        "grunt-shell": "^1.1.1",
-        "grunt-webpack": "^1.0.8",
-        "grunt-karma": "^0.10.1",
-        "jscs": "^1.11.3",
-        "jshint": "^2.6.0",
-        "phantomjs": "^1.9.13",
-        "webpack": "^1.5.3",
-        "webpack-dev-server": "^1.7.0",
-        "mocha": "^2.1.0",
-        "chai": "^2.0.0",
-        "karma-mocha": "^0.1.10",
-        "karma-phantomjs-launcher": "^0.1.4",
-        "karma-webpack": "^1.5.0",
-        "karma-coverage": "^0.2.7",
-        "istanbul-instrumenter-loader": "^0.1.2",
-        "sinon": "^1.12.2",
-        "karma-sinon-chai": "^0.3.0"
-    },
-    "scripts": {
-        "test": "jshint . && jscs . && ./node_modules/karma/bin/karma start karma.conf.js --single-run",
-        "lint": "jshint . && jscs ."
-    }
+  "name": "schibsted-event-tracking",
+  "main": "lib/activity.js",
+  "devDependencies": {
+    "chai": "^2.0.0",
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-jscs": "^1.5.0",
+    "grunt-jsdoc": "^0.5.7",
+    "grunt-karma": "^0.10.1",
+    "grunt-shell": "^1.1.1",
+    "grunt-webpack": "^1.0.8",
+    "istanbul-instrumenter-loader": "^0.1.2",
+    "jscs": "^1.11.3",
+    "jshint": "^2.6.0",
+    "karma-coverage": "^0.2.7",
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-sinon-chai": "^0.3.0",
+    "karma-webpack": "^1.5.0",
+    "mocha": "^2.1.0",
+    "phantomjs": "^1.9.13",
+    "sinon": "^1.12.2",
+    "webpack": "^1.5.3",
+    "webpack-dev-server": "^1.7.0"
+  },
+  "scripts": {
+    "test": "jshint . && jscs . && ./node_modules/karma/bin/karma start karma.conf.js --single-run",
+    "lint": "jshint . && jscs ."
+  }
 }

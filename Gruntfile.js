@@ -19,8 +19,15 @@ module.exports = function (grunt) {
         },
         watch: {
             all: {
-                files: ['src/**/*.js', 'lib/**/*.js', 'test/**/*.js', 'config/*.js', 'tracker.js'],
-                tasks: ['webpack:webBuild', 'karma:unit:run'] /*,'concat', 'jshint', 'buster:unit', 'jsdoc'*/
+                files: ['src/**/*.js', 'lib/**/*.js', 'test/**/*.js', 'config/*.js'],
+                tasks: ['webpack:webBuild', 'karma:unit:run', 'lint']
+            }
+        },
+        jscs: {
+            main: ['app/**/*.js', 'lib/**/*.js'],
+            options: {
+                config: ".jscsrc",
+                requireCurlyBraces: [ "if" ]
             }
         },
         jsdoc: {
@@ -79,11 +86,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks("grunt-jscs");
 
     // Default task.
     grunt.registerTask('default', ['concat', 'jshint', 'buster:unit', 'jsdoc']);
     grunt.registerTask('test', 'buster:unit');
     grunt.registerTask('check', ['watch']);
     grunt.registerTask('run', ['buster:unit']);
+    grunt.registerTask( "lint", [ "jshint", "jscs" ] );
 
 };
