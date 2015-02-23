@@ -23,6 +23,10 @@ describe('Browser transport', function() {
         this.sinon = sinon.sandbox.create();
     });
 
+    afterEach(function() {
+        this.sinon.restore();
+    });
+
     it('should require callback', function() {
         expect(function() {
             browserTransport('foo', 'bar');
@@ -56,7 +60,7 @@ describe('Browser transport', function() {
 
         var body = [{ test: 'bar' }];
 
-        browserTransport('http://test', body, sinon.spy());
+        browserTransport('http://test', body, this.sinon.spy());
 
         expect(requests).to.have.length(1);
         expect(requests[0].url).to.eq('http://test');
@@ -96,7 +100,9 @@ describe('Browser transport', function() {
             done();
         });
 
-        requests[0].respond(400);
+        for (var i = 0; i < requests.length; i++) {
+            requests[i].respond(400);
+        }
 
         xhr.restore();
     });
@@ -104,10 +110,29 @@ describe('Browser transport', function() {
     it('should return with error when failing to send data', function(done) {
         var xhr = sinon.useFakeXMLHttpRequest();
 
-        sinon.stub(xhr.prototype, 'send').throws();
+        this.sinon.stub(xhr.prototype, 'send').throws();
 
         browserTransport('http://test', [], function(err) {
             expect(err).to.be.ok;
+
+            done();
+        });
+    });
+
+    it('should retry five times when failing', function(done) {
+        var xhr = sinon.useFakeXMLHttpRequest();
+
+        var callCount = 0;
+
+        xhr.prototype.send = function() {
+            callCount += 1;
+
+            throw new Error('Fail');
+        };
+
+        browserTransport('http://test', [], function(err) {
+            expect(err).to.be.ok;
+            expect(callCount).to.eq(5);
 
             done();
         });
@@ -150,9 +175,5 @@ describe('Browser transport', function() {
         expect(function() {
             browserTransport('http://test', [], sinon.spy());
         }).to.Throw(Error, 'This browser does not support AJAX');
-    });
-
-    afterEach(function() {
-        this.sinon.restore();
     });
 });
