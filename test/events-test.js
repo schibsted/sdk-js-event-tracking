@@ -8,7 +8,7 @@ describe('Events', function() {
     beforeEach(function() {
         this.activity = new Activity({
             clientId: 1337,
-            siteId: 1337
+            pageId: 1337
         });
     });
 
