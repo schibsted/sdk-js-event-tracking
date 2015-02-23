@@ -19,5 +19,5 @@ describe('Activity', function() {
 
         expect(activity.pageId).to.eq(1);
         expect(activity.clientId).to.eq(2);
-    });
+    }); 
 });
