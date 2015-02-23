@@ -19,5 +19,18 @@ describe('Activity', function() {
 
         expect(activity.pageId).to.eq(1);
         expect(activity.clientId).to.eq(2);
-    }); 
+    });
+
+    it('should create a actor', function() {
+        var activity = new Activity({ pageId: 1, clientId: 2 });
+
+        var actor = activity.createActor();
+
+        expect(actor['@type']).to.eq('Person');
+        expect(actor['@id']).to.eq(1337);
+        expect(actor['spt:userAgent']).to.eq(navigator.userAgent);
+        expect(actor['spt:screenSize']).to.eq(window.screen.width + 'x' + window.screen.height);
+        expect(actor['spt:viewportSize']).to.match(/([0-9]{1,4})x([0-9]{1,4})/);
+        expect(actor['spt:acceptLanguage']).to.match(/([a-z|A-Z][a-z|A-Z])/);
+    });
 });
