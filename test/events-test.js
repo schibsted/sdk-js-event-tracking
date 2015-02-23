@@ -78,7 +78,7 @@ describe('Events', function() {
         expect(testJSON).to.eq(answerJSON);
 
         testJSON = JSON.stringify(retvar[1]);
-        var answerJSON = JSON.stringify({
+        answerJSON = JSON.stringify({
             result: {
                 '@type': 'Note',
                 '@id': '1337:form:1234'
@@ -242,7 +242,8 @@ describe('Events', function() {
     });
 
     it('should return true if a property is added to a object', function() {
-        var retvar = this.activity.events.trackSocial(1234, 'Facebook.com');
+        this.activity.events.trackSocial(1234, 'Facebook.com');
+
         var answerJSON = JSON.stringify({
             object: {
                 '@type': 'page',
@@ -290,7 +291,7 @@ describe('Events', function() {
     });
 
     it('should return true if a value is added to spt:custom', function() {
-        var retvar = this.activity.events.trackSocial(1234, 'Facebook.com');
+        this.activity.events.trackSocial(1234, 'Facebook.com');
         var answerJSON = JSON.stringify({
             object: {
                 '@type': 'page',

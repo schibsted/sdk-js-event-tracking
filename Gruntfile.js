@@ -27,7 +27,7 @@ module.exports = function (grunt) {
             main: ['app/**/*.js', 'lib/**/*.js'],
             options: {
                 config: '.jscsrc',
-                requireCurlyBraces: [ 'if' ]
+                requireCurlyBraces: ['if']
             }
         },
         jsdoc: {
@@ -93,6 +93,6 @@ module.exports = function (grunt) {
     grunt.registerTask('test', 'buster:unit');
     grunt.registerTask('check', ['watch']);
     grunt.registerTask('run', ['buster:unit']);
-    grunt.registerTask( 'lint', [ 'jshint', 'jscs' ] );
+    grunt.registerTask('lint', ['jshint', 'jscs']);
 
 };
