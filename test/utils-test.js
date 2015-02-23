@@ -51,7 +51,7 @@ describe('Utils', function() {
             var timesCalled = 0;
 
             Utils.retry(5, function(callback) {
-                timesCalled = timesCalled + 1;
+                timesCalled += 1;
 
                 callback('fail');
             }, function(err) {
@@ -66,7 +66,7 @@ describe('Utils', function() {
             var timesCalled = 0;
 
             Utils.retry(5, function(callback) {
-                timesCalled = timesCalled + 1;
+                timesCalled += 1;
 
                 if (timesCalled === 3) {
                     callback(null, 'success');
