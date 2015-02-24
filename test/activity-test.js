@@ -149,6 +149,14 @@ describe('Activity', function() {
                 done();
             });
         });
+
+        it('should not require callback', function() {
+            var activity = this.activity;
+
+            expect(function() {
+                activity.sendQueue();
+            }).to.not.Throw();
+        });
     });
 
     describe('send', function() {
@@ -200,6 +208,15 @@ describe('Activity', function() {
             });
         });
 
+        it('should not require callback', function() {
+            this.transportStub.yields('Fail');
+
+            var activity = this.activity;
+
+            expect(function() {
+                activity.send();
+            }).to.not.Throw();
+        });
     });
 
     describe('createActor', function() {
