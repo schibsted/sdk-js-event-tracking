@@ -92,7 +92,7 @@ describe('Activity', function() {
             this.sinon.restore();
         });
 
-        it('should return queue is empty', function(done) {
+        it('should return if queue is empty', function(done) {
             this.activity.sendQueue(function(err) {
                 expect(err).to.not.be.ok;
 
