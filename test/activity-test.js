@@ -11,37 +11,42 @@ var Activity = require('../lib/activity'),
 
 describe('Activity', function() {
     describe('constructor', function() {
+
         it('should require clientId and pageId', function() {
             expect(function() {
-                new Activity({ pageId: 1337 });
+                new Activity({ pageId: 1337, activityType: 'Read' });
             }).to.Throw(Error, 'clientId is required');
 
             expect(function() {
-                new Activity({ clientId: 1337 });
+                new Activity({ clientId: 1337, activityType: 'Read' });
             }).to.Throw(Error, 'pageId is required');
+
+            expect(function() {
+                new Activity({ clientId: 1337, pageId: 1337 })
+            }).to.Throw(Error, 'activityType is required');
         });
 
         it('should set clientId and pageId on activity object', function() {
-            var activity = new Activity({ pageId: 1, clientId: 2 });
+            var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
 
             expect(activity.pageId).to.eq(1);
             expect(activity.clientId).to.eq(2);
         });
 
         it('should have a default url', function() {
-            var activity = new Activity({ pageId: 1, clientId: 2 });
+            var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
 
             expect(activity.url).to.match(/^http:\/\//);
         });
 
         it('should be possible to override url', function() {
-            var activity = new Activity({ pageId: 1, clientId: 2, url: 'http://foo' });
+            var activity = new Activity({ pageId: 1, clientId: 2, url: 'http://foo', activityType: 'Read' });
 
             expect(activity.url).to.eq('http://foo');
         });
 
         it('should use browser transport by default', function() {
-            var activity = new Activity({ pageId: 1, clientId: 1 });
+            var activity = new Activity({ pageId: 1, clientId: 1, activityType: 'Read'  });
 
             expect(activity.transport).to.eq(browserTransport);
         });
@@ -52,7 +57,8 @@ describe('Activity', function() {
             var activity = new Activity({
                 pageId: 1,
                 clientId: 1,
-                transport: transport
+                transport: transport,
+                activityType: 'Read'
             });
 
             expect(activity.transport).to.eq(transport);
@@ -64,7 +70,7 @@ describe('Activity', function() {
             var object1 = { foo: 'bar' };
             var object2 = { bar: 'baz' };
 
-            var activity = new Activity({ pageId: 1, clientId: 2 });
+            var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read'  });
 
             activity.addToQueue(object1);
             activity.addToQueue(object2);
@@ -84,7 +90,8 @@ describe('Activity', function() {
                 pageId: 1,
                 clientId: 2,
                 transport: this.transportStub,
-                url: 'http://test'
+                url: 'http://test',
+                activityType: 'Read'
             });
         });
 
@@ -168,7 +175,8 @@ describe('Activity', function() {
                 pageId: 1,
                 clientId: 2,
                 transport: this.transportStub,
-                url: 'http://test'
+                url: 'http://test',
+                activityType: 'Read'
             });
         });
 
@@ -221,7 +229,7 @@ describe('Activity', function() {
 
     describe('createActor', function() {
         it('should create a actor', function() {
-            var activity = new Activity({ pageId: 1, clientId: 2 });
+            var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
 
             var actor = activity.createActor();
 
