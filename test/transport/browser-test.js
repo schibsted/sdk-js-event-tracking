@@ -67,6 +67,7 @@ describe('Browser transport', function() {
         expect(requests[0].method).to.eq('POST');
         expect(requests[0].async).to.be.true;
         expect(requests[0].requestBody).to.eq(JSON.stringify(body));
+        expect(requests[0].requestHeaders['Content-Type']).to.eq('application/json;charset=utf-8');
 
         xhr.restore();
     });
