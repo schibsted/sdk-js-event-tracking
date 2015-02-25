@@ -31,8 +31,7 @@ describe('Events', function() {
         var retvar = this.activity.events.trackPageLoad('test title');
         expect(retvar).to.be.a('object');
 
-        var testJSON = this.activity.events.activityObj;
-        testJSON = JSON.stringify(testJSON.object);
+        var testJSON = JSON.stringify(retvar.data.object);
         var answerJSON = JSON.stringify({
             '@type': 'page',
             '@id': 1337,
@@ -46,7 +45,7 @@ describe('Events', function() {
         var retvar = this.activity.events.trackForm(1234, 'note');
         expect(retvar).to.be.a('object');
 
-        var testJSON = this.activity.events.activityObj;
+        var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'page',
             '@id': 1337,
@@ -66,7 +65,7 @@ describe('Events', function() {
         var retvar = this.activity.events.trackComment(1234);
         expect(retvar).to.be.a('object');
 
-        var testJSON = this.activity.events.activityObj;
+        var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'page',
             '@id': 1337,
@@ -87,7 +86,7 @@ describe('Events', function() {
         var retvar = this.activity.events.trackPoll(1234);
         expect(retvar).to.be.a('object');
 
-        var testJSON = this.activity.events.activityObj;
+        var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'page',
             '@id': 1337,
@@ -108,7 +107,7 @@ describe('Events', function() {
         var retvar = this.activity.events.trackClick(1234, 'Test Button', 'article', 98765);
         expect(retvar).to.be.a('object');
 
-        var testJSON = this.activity.events.activityObj;
+        var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@id': '1337:element:1234',
             '@type': 'Link',
@@ -128,7 +127,7 @@ describe('Events', function() {
         var retvar = this.activity.events.trackSocial(1234, 'Facebook.com');
         expect(retvar).to.be.a('object');
 
-        var testJSON = this.activity.events.activityObj;
+        var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'page',
             '@id': 1337,
@@ -155,7 +154,7 @@ describe('Events', function() {
         var retvar = this.activity.events.trackMediaState(1234, 'video');
         expect(retvar).to.be.a('object');
 
-        var testJSON = this.activity.events.activityObj;
+        var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'page',
             '@id': 1337,
@@ -175,7 +174,7 @@ describe('Events', function() {
         var retvar = this.activity.events.trackScroll('25%');
         expect(retvar).to.be.a('object');
 
-        var testJSON = this.activity.events.activityObj;
+        var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'page',
             '@id': 1337,
@@ -196,7 +195,7 @@ describe('Events', function() {
         var retvar = this.activity.events.trackExit(1234, 'page');
         expect(retvar).to.be.a('object');
 
-        var testJSON = this.activity.events.activityObj;
+        var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'page',
             '@id': 1337,
@@ -212,93 +211,15 @@ describe('Events', function() {
         expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
     });
 
-    it('should update the object', function() {
-        this.activity.events.trackSocial(1234, 'Facebook.com');
-
+    it('should return standard values on add page standards', function() {
+        var retvar = this.activity.events.addPageStandards();
         var answerJSON = JSON.stringify({
             '@type': 'page',
             '@id': 1337,
             url: document.URL,
-            displayName: document.title,
-            foo: 'bar'
+            displayName: document.title
         });
-        this.activity.events.addProperty('primary', 'foo', 'bar');
-        var testJSON = this.activity.events.activityObj;
-        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
 
-        answerJSON = JSON.stringify({
-            '@id': '1337:element:1234',
-            '@type': 'Link',
-            foo: 'bar'
-        });
-        this.activity.events.addProperty('secondary', 'foo', 'bar');
-        var testJSON = this.activity.events.activityObj;
-        expect(JSON.stringify(testJSON.origin)).to.eq(answerJSON);
-
-        answerJSON = JSON.stringify({
-            '@id': 'urn:Facebook.com',
-            '@type': 'Service',
-            foo: 'bar'
-        });
-        this.activity.events.addProperty('tertiary', 'foo', 'bar');
-        var testJSON = this.activity.events.activityObj;
-        expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
-
-        expect(function() {
-            var ao = new Activity({
-                clientId: 1337,
-                pageId: 1337,
-                activityType: 'Read'
-            });
-            ao.events.addProperty('object', 'foo', 'bar');
-        }).to.Throw(Error, 'Object reference not valid');
-    });
-
-    it('should update the object when a value is added to spt:custom', function() {
-        this.activity.events.trackSocial(1234, 'Facebook.com');
-        var answerJSON = JSON.stringify({
-            '@type': 'page',
-            '@id': 1337,
-            url: document.URL,
-            displayName: document.title,
-            'spt:custom': {
-                foo: 'bar'
-            }
-        });
-        this.activity.events.addCustomData('primary', {foo:'bar'});
-        var testJSON = this.activity.events.activityObj;
-        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
-
-        answerJSON = JSON.stringify({
-            '@id': '1337:element:1234',
-            '@type': 'Link',
-            'spt:custom': {
-                foo: 'bar'
-            }
-        });
-        this.activity.events.addCustomData('secondary', {foo:'bar'});
-        var testJSON = this.activity.events.activityObj;
-        expect(JSON.stringify(testJSON.origin)).to.eq(answerJSON);
-
-        answerJSON = JSON.stringify({
-            '@id': 'urn:Facebook.com',
-            '@type': 'Service',
-            'spt:custom': {
-                foo: 'bar'
-            }
-        });
-        this.activity.events.addCustomData('tertiary', {foo:'bar'});
-        var testJSON = this.activity.events.activityObj;
-        expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
-
-        expect(function() {
-            var ao = new Activity({
-                clientId: 1337,
-                pageId: 1337,
-                activityType: 'Read'
-            });
-            ao.events.addCustomData('object', {foo:'bar', '@type': 'link'});
-        }).to.Throw(Error, 'Object reference not valid');
-
+        expect(JSON.stringify(retvar)).to.eq(answerJSON);
     });
 });

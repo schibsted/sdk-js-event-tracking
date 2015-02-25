@@ -241,4 +241,47 @@ describe('Activity', function() {
             expect(actor['spt:acceptLanguage']).to.match(/([a-z|A-Z][a-z|A-Z])/);
         });
     });
+
+    describe('Queue', function() {
+        it('should keep each single activity separate', function() {
+
+            var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
+
+            activity.events.trackPageLoad('Bacon ipsum').queue();
+            activity.events.trackPageLoad('Lorum ipsum').queue();
+            activity.events.trackPageLoad('Starwars ipsum').queue();
+
+            activity.events.trackPoll(1234).queue();
+            activity.events.trackPoll(2345).queue();
+            activity.events.trackPoll(3456).queue();
+
+            var activity2 = new Activity({ pageId: 3, clientId: 2, activityType: 'Watch' });
+
+            activity2.events.trackPageLoad('Bacon ipsum').queue();
+            var ev = activity2.events.trackPageLoad('Lorum ipsum');
+            var ev2 = activity2.events.trackPageLoad('Lorum ipsum').queue();
+
+            activity2.events.trackPoll(1234).queue();
+            activity2.events.trackPoll(2345).queue();
+            activity2.events.trackPoll(3456).queue();
+
+            ev.addCustomData('primary', { foo: 'bar' });
+            ev.queue();
+
+            expect(JSON.stringify(activity2.queue[0])).to.not.eq(JSON.stringify(activity.queue[0]));
+
+            expect(activity2.queue[0]['@type']).to.eq('Watch');
+            expect(activity.queue[0]['@type']).to.eq('Read');
+
+            expect(JSON.stringify(activity2.queue[1])).to.not.eq(JSON.stringify(activity.queue[1]));
+            expect(JSON.stringify(activity2.queue[2])).to.not.eq(JSON.stringify(activity.queue[2]));
+            expect(JSON.stringify(activity2.queue[3])).to.not.eq(JSON.stringify(activity.queue[3]));
+            expect(JSON.stringify(activity2.queue[4])).to.not.eq(JSON.stringify(activity.queue[4]));
+            expect(JSON.stringify(activity2.queue[5])).to.not.eq(JSON.stringify(activity.queue[5]));
+
+            expect(JSON.stringify(activity2.queue[1])).to.not.eq(JSON.stringify(activity2.queue[2]));
+
+
+        });
+    });
 });

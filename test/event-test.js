@@ -80,4 +80,88 @@ describe('Event', function() {
             }).to.not.Throw();
         });
     });
+
+    describe('addParameter', function() {
+        it('should update the object', function() {
+            var activity = { foo: 'bar' };
+            var data = {
+                object: {
+                    '@id': 1234
+                },
+                origin: {
+                    '@id': 1234
+                },
+                target: {
+                    '@id': 1234
+                }
+            };
+
+            var event = new Event(activity, data, ['object', 'origin', 'target']);
+
+            var answerJSON = JSON.stringify({
+                '@id': 1234,
+                foo: 'bar'
+            });
+            event.addProperty('primary', 'foo', 'bar');
+            var testJSON = event.data;
+            expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+
+            event.addProperty('secondary', 'foo', 'bar');
+            testJSON = event.data;
+            expect(JSON.stringify(testJSON.origin)).to.eq(answerJSON);
+
+            event.addProperty('tertiary', 'foo', 'bar');
+            testJSON = event.data;
+            expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
+
+            expect(function() {
+                var event = new Event(activity, data);
+                event.addProperty('object', 'foo', 'bar');
+            }).to.Throw(Error, 'Object reference not valid');
+
+        });
+    });
+
+    describe('addCustomData', function() {
+        it('should create spt:custom property with data', function() {
+            var activity = { foo: 'bar' };
+            var data = {
+                object: {
+                    '@id': 1234
+                },
+                origin: {
+                    '@id': 1234
+                },
+                target: {
+                    '@id': 1234
+                }
+            };
+
+            var event = new Event(activity, data, ['object', 'origin', 'target']);
+
+            var answerJSON = JSON.stringify({
+                '@id': 1234,
+                'spt:custom': {
+                    foo: 'bar'
+                }
+            });
+            event.addCustomData('primary', { foo: 'bar' });
+            var testJSON = event.data;
+            expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+
+            event.addCustomData('secondary', { foo: 'bar' });
+            testJSON = event.data;
+            expect(JSON.stringify(testJSON.origin)).to.eq(answerJSON);
+
+            event.addCustomData('tertiary', { foo: 'bar' });
+            testJSON = event.data;
+            expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
+
+            expect(function() {
+                var event = new Event(activity, data);
+                event.addCustomData('object', 'foo', 'bar');
+            }).to.Throw(Error, 'Object reference not valid');
+
+        });
+    });
 });
