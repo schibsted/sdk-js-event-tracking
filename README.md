@@ -114,7 +114,7 @@ opts = {
 
 `replies` - A object in the `result` with `@type` 'collection' and `items` property with a array of answers.
 
-#### Activity.Event.trackClick(elementId, displayName, targetType, targetId)
+#### Activity.Event.trackClick(elementId, displayName, targetType, targetId, activityType)
 
 ##### Required parameters
 
@@ -125,6 +125,8 @@ opts = {
 `targetType` - The type of entity that is the target for the action (page, application, process, article)
 
 `targetId` - The ID of the target.
+
+`activityType` - The type of activity that is being tracked. Will default to 'Accept'
 
 ##### Generated objects
 
