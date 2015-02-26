@@ -7,7 +7,6 @@
 'use strict';
 
 var Activity = require('../lib/activity'),
-    Utils = require('../lib/utils'),
     User = require('../lib/user'),
     browserTransport = require('../lib/transport/browser');
 
@@ -277,7 +276,7 @@ describe('Activity', function() {
 
             expect(provider['spt:test']).to.eq('foo');
             expect(provider.bar).to.eq('baz');
-        })
+        });
     });
 
     describe('Queue', function() {
