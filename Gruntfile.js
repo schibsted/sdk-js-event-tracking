@@ -82,7 +82,7 @@ module.exports = function (grunt) {
                 ],
                 resolve: {
                     alias: {
-                        'debug': './debug.prod.js'
+                        debug: './debug.prod.js'
                     }
                 },
                 storeStatsTo: 'webpack_stats',
