@@ -15,35 +15,44 @@ module.exports = function (grunt) {
             },
             lib: {
                 src: ['app/**/*.js', 'lib/**/*.js']
-            },
-
+            }
         },
         watch: {
             all: {
-                files: ['src/**/*.js', 'lib/**/*.js', 'test/**/*.js', 'config/*.js', 'tracker.js'],
-                tasks: ['webpack:webBuild'/*,'concat', 'jshint', 'buster:unit', 'jsdoc'*/]
+                files: ['src/**/*.js', 'lib/**/*.js', 'test/**/*.js', 'config/*.js'],
+                tasks: ['webpack:webBuild', 'lint', 'karma:unit:run']
             }
         },
-        jsdoc : {
-            dist : {
+        jscs: {
+            main: ['app/**/*.js', 'lib/**/*.js'],
+            options: {
+                config: '.jscsrc',
+                requireCurlyBraces: ['if']
+            }
+        },
+        jsdoc: {
+            dist: {
                 src: ['src/*.js', 'lib/**/*.js', 'tracker.js'],
                 options: {
                     destination: 'doc'
                 }
             }
         },
-        buster: {
+        karma: {
             unit: {
+                configFile: 'karma.conf.js',
+                background: true,
+                singleRun: false
             }
         },
         webpack: {
             webBuild: {
                 // webpack options
-                entry: "./lib/main.js",
+                entry: './lib/activity.js',
                 output: {
-                    //libraryTarget: "umd",
-                    path: "dist/",
-                    filename: "tracker.js",
+                    path: 'dist/',
+                    filename: 'tracker.js',
+                    library: 'Activity'
                 },
                 stats: {
                     // Configure the console output
@@ -51,21 +60,22 @@ module.exports = function (grunt) {
                     modules: true,
                     reasons: true
                 },
-                storeStatsTo: "webpack_stats",
-                failOnError: true,
-            },
+                storeStatsTo: 'webpack_stats',
+                failOnError: true
+            }
         },
         concat: {
             options: {
                 stripBanners: {
-                    line: true,
+                    line: true
                 }
             },
             dist: {
-                src: ['src/variables.js', 'src/events.js', 'src/dataTracker.js', 'src/users.js', 'src/sendData.js', 'src/utilities.js'],
-                dest: 'tracker.js',
-            },
-        },
+                src: ['src/variables.js', 'src/events.js', 'src/dataTracker.js',
+                      'src/users.js', 'src/sendData.js', 'src/utilities.js'],
+                dest: 'tracker.js'
+            }
+        }
     });
 
     // These plugins provide necessary tasks.
@@ -74,13 +84,15 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-buster');
+    grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-jscs');
 
     // Default task.
     grunt.registerTask('default', ['concat', 'jshint', 'buster:unit', 'jsdoc']);
     grunt.registerTask('test', 'buster:unit');
     grunt.registerTask('check', ['watch']);
     grunt.registerTask('run', ['buster:unit']);
+    grunt.registerTask('lint', ['jshint', 'jscs']);
 
 };

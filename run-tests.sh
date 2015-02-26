@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/env sh
 
-grunt
+npm test
