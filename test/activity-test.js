@@ -29,7 +29,6 @@ describe('Activity', function() {
             expect(function() {
                 new Activity({ clientId: 1337, activityType: 'Read' });
             }).to.Throw(Error, 'pageId is required');
-
         });
 
         it('should set clientId and pageId on activity object', function() {
@@ -266,7 +265,7 @@ describe('Activity', function() {
 
             activity2.events.trackPageLoad('Bacon ipsum', 'Watch').queue();
             var ev = activity2.events.trackPageLoad('Lorum ipsum');
-            var ev2 = activity2.events.trackPageLoad('Lorum ipsum').queue();
+            activity2.events.trackPageLoad('Lorum ipsum').queue();
 
             activity2.events.trackPoll(1234).queue();
             activity2.events.trackPoll(2345).queue();
@@ -287,8 +286,6 @@ describe('Activity', function() {
             expect(JSON.stringify(activity2.queue[5])).to.not.eq(JSON.stringify(activity.queue[5]));
 
             expect(JSON.stringify(activity2.queue[1])).to.not.eq(JSON.stringify(activity2.queue[2]));
-
-
         });
     });
 });
