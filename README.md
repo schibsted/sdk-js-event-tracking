@@ -18,9 +18,11 @@ This documentation is the target for the functionality of v1.
 
 ```
 opts = {
-    pageId: '',     // The Id of the current page/article
-    pageType: '',   // The type of page/article (page, article, application etc.)
-    clientId: '',   // The providers ID, supplied by SPT.
+    pageId: '',     // The Id of the current page/article (required)
+    clientId: '',   // The providers ID, supplied by SPT. (required)
+    pageType: '',   // The type of page where the Activity is created. Default 'Page'
+    url: '',        // The URL that data will be sent to.
+    transport: f()  // To specify custom transport function.
 }
 ```
 
