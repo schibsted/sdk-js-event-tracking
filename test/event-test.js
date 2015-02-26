@@ -132,7 +132,7 @@ describe('Event', function() {
                 var event = new Event(activity, data, ['object']);
 
                 event.addProperty('primary', 'chain1', 'foo').addProperty('primary', 'chain2', 'baz');
-            }).not.to.Throw();    
+            }).not.to.Throw();
         });
     });
 
