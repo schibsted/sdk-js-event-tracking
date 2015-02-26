@@ -120,6 +120,20 @@ describe('Event', function() {
             }).to.Throw(Error, 'Object reference not valid');
 
         });
+        it('should allow chaining', function() {
+            var activity = { foo: 'bar' };
+            var data = {
+                object: {
+                    '@id': 1234
+                }
+            };
+
+            expect(function() {
+                var event = new Event(activity, data, ['object']);
+
+                event.addProperty('primary', 'chain1', 'foo').addProperty('primary', 'chain2', 'baz');
+            }).not.to.Throw();    
+        });
     });
 
     describe('addCustomData', function() {
