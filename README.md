@@ -138,13 +138,15 @@ opts = {
 
 `displayName` To get a good textual representation. Can be used for both primary and secondary object.
 
-#### Activity.Event.trackSocial(elementId, networkName)
+#### Activity.Event.trackSocial(elementId, networkName, activityType)
 
 ##### Required parameters
 
 `elementId` - The ID of the button or link the user clicks to achieve a social action (e.g Facebook like button)
 
 `networkName` - The name of the social network. (Facebook, Twitter, Pintrest etc.)
+
+`activityType` - The type of activity that is being tracked. Will default to 'Like'
 
 ##### Generated objects
 
@@ -158,13 +160,15 @@ opts = {
 
 `displayName` To get a good textual representation. (for all objects)
 
-#### Activity.Event.trackMediaState(mediaId, mediaType)
+#### Activity.Event.trackMediaState(mediaId, mediaType, activityType)
 
 ##### Required parameters
 
 `mediaId` - The ID of the media entity.
 
 `mediaType` - The type of media (video, audio, album)
+
+`activityType` - The type of activity that is being tracked. Will default to 'Watch'
 
 ##### Generated objects
 
@@ -178,11 +182,13 @@ opts = {
 
 `url` The URL to the page.
 
-#### Activity.Event.trackScroll(scrollDepth)
+#### Activity.Event.trackScroll(scrollDepth, activityType)
 
 ##### Required parameters
 
 `scrollDepth` - A value representing the relative scroll distance. Will be stored as a content parameter in the target.
+
+`activityType` - The type of activity that is being tracked. Will default to 'Arrive'
 
 ##### Generated objects
 
@@ -194,13 +200,15 @@ opts = {
 
 `displayName` - A human readable text for the scroll distance (e.g "Under header")(for `target`)
 
-#### Activity.Event.trackExit(targetId, targetType)
+#### Activity.Event.trackExit(targetId, targetType, activityType)
 
 ##### Required parameters
 
 `targetId` - The ID of where the user goes next.
 
 `targetType` - The type of the target for the users exit (page, article, application)
+
+`activityType` - The type of activity that is being tracked. Will default to 'Leave'
 
 ##### Generated objects
 
@@ -211,12 +219,6 @@ opts = {
 ##### Extra parameter suggestions
 
 `displayName` - A human readable text such as a title or description.
-
-#### Activity.Event.trackEvent(eventObjects)
-
-##### Required parameters
-
-`eventObjects` Array of event objects. (object, target, origin etc). There is no need to supply actor, target, context etc, as this will be provided by the send() function.
 
 #### Activity.Event.addProperty(obj, property, value)
 
