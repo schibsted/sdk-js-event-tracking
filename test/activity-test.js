@@ -30,9 +30,6 @@ describe('Activity', function() {
                 new Activity({ clientId: 1337, activityType: 'Read' });
             }).to.Throw(Error, 'pageId is required');
 
-            expect(function() {
-                new Activity({ clientId: 1337, pageId: 1337 })
-            }).to.Throw(Error, 'activityType is required');
         });
 
         it('should set clientId and pageId on activity object', function() {
@@ -257,7 +254,7 @@ describe('Activity', function() {
 
             var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
 
-            activity.events.trackPageLoad('Bacon ipsum').queue();
+            activity.events.trackPageLoad('Bacon ipsum', 'Read').queue();
             activity.events.trackPageLoad('Lorum ipsum').queue();
             activity.events.trackPageLoad('Starwars ipsum').queue();
 
@@ -267,7 +264,7 @@ describe('Activity', function() {
 
             var activity2 = new Activity({ pageId: 3, clientId: 2, activityType: 'Watch' });
 
-            activity2.events.trackPageLoad('Bacon ipsum').queue();
+            activity2.events.trackPageLoad('Bacon ipsum', 'Watch').queue();
             var ev = activity2.events.trackPageLoad('Lorum ipsum');
             var ev2 = activity2.events.trackPageLoad('Lorum ipsum').queue();
 

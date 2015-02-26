@@ -26,15 +26,17 @@ opts = {
 
 ### Activity.Event(eventType)
 
-#### Activity.Event.pageLoad(title)
+#### Activity.Event.pageLoad(title, activityType)
 
 ##### Required parameters
 
 `title` - The title of the page. Will default to document.title
 
+`activityType` - The type of activity that is being tracked. Will default to 'Read'
+
 ##### Generated objects
 
-`object` - Where the event originated.
+`object` as `'primary'` - Where the event originated.
 
 ##### Extra parameter suggestions
 
@@ -50,9 +52,9 @@ opts = {
 
 ##### Generated objects
 
-`object` - Where the event originated. In this case, the form.
+`object` as `'primary'` - Where the event originated. In this case, the form.
 
-`result` - The result of the event. In this case, some new content from the form.
+`result` as `'secondary'` - The result of the event. In this case, some new content from the form.
 
 ##### Extra parameter suggestions
 
@@ -72,9 +74,9 @@ opts = {
 
 ##### Generated objects
 
-`object` - Where the event originated. In this case, the form.
+`object` as `'primary'` - Where the event originated. In this case, the form.
 
-`result` - The result of the event. In this case, a new comment.
+`result` as `'secondary'` - The result of the event. In this case, a new comment.
 
 ##### Extra parameter suggestions
 
@@ -94,9 +96,9 @@ opts = {
 
 ##### Generated objects
 
-`object` - Where the event originated. In this case, the form.
+`object` as `'primary'` - Where the event originated. In this case, the form.
 
-`result` - The result of the event. In this case, a reply to the poll.
+`result` as `'secondary'` - The result of the event. In this case, a reply to the poll.
 
 ##### Extra parameter suggestions
 
@@ -120,9 +122,9 @@ opts = {
 
 ##### Generated objects
 
-`object` - Where the event originated. In this case, the clicked element.
+`object` as `'primary'` - Where the event originated. In this case, the clicked element.
 
-`target` - The target of the action. Normally the current page or where a users ends up after the action.
+`target` as `'secondary'` - The target of the action. Normally the current page or where a users ends up after the action.
 
 ##### Extra parameter suggestions
 
@@ -138,11 +140,11 @@ opts = {
 
 ##### Generated objects
 
-`object` - The page/article/entity being shared/liked.
+`object` as `'primary'` - The page/article/entity being shared/liked.
 
-`origin` - Where the event happened, such as a button or link.
+`origin` as `'secondary'` - Where the event happened, such as a button or link.
 
-`target` - The target of the action. The socialmedia site receiving the action.
+`target` as `'tertiary'` - The target of the action. The socialmedia site receiving the action.
 
 ##### Extra parameter suggestions
 
@@ -158,7 +160,9 @@ opts = {
 
 ##### Generated objects
 
-`object` - The media entity where a state change happened.
+`object` as `'primary'` - The media entity where a state change happened.
+
+`origin` as `'secondary'` - The page where the event was generated.
 
 ##### Extra parameter suggestions
 
@@ -174,9 +178,9 @@ opts = {
 
 ##### Generated objects
 
-`object` - The page or entity where scroll happened.
+`object` as `'primary'` - The page or entity where scroll happened.
 
-`target` - The scroll depth.
+`target` as `'secondary'` - The scroll depth.
 
 ##### Extra parameter suggestions
 
@@ -192,9 +196,9 @@ opts = {
 
 ##### Generated objects
 
-`object` - The page or entity where exit happened.
+`object` as `'primary'` - The page or entity where exit happened.
 
-`target` - Target action for the exit, for example the next page.
+`target` as `'secondary'` - Target action for the exit, for example the next page.
 
 ##### Extra parameter suggestions
 
