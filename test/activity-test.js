@@ -7,6 +7,7 @@
 'use strict';
 
 var Activity = require('../lib/activity'),
+    Utils = require('../lib/utils'),
     User = require('../lib/user'),
     browserTransport = require('../lib/transport/browser');
 
@@ -20,7 +21,6 @@ describe('Activity', function() {
     });
 
     describe('constructor', function() {
-
         it('should require clientId and pageId', function() {
             expect(function() {
                 new Activity({ pageId: 1337, activityType: 'Read' });
@@ -246,6 +246,38 @@ describe('Activity', function() {
             expect(actor['spt:viewportSize']).to.match(/([0-9]{1,4})x([0-9]{1,4})/);
             expect(actor['spt:acceptLanguage']).to.match(/([a-z|A-Z][a-z|A-Z])/);
         });
+    });
+
+    describe('createScaffold', function() {
+        it('return scaffold object', function() {
+            var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
+
+            var scaffold = activity.createScaffold();
+
+            expect(scaffold['@context']).to.deep
+                .eq(['http://www.w3.org/ns/activitystreams', {spt:'http://spt.no'}]);
+            expect(scaffold.actor).to.deep.eq(activity.createActor());
+            expect(scaffold.provider).to.deep.eq(activity.createProvider());
+        });
+    });
+
+    describe('createProvider', function() {
+        it('should be possible to override provider options', function() {
+            var activity = new Activity({
+                pageId: 1,
+                clientId: 2,
+                activityType: 'Read',
+                provider: {
+                    'spt:test': 'foo',
+                    bar: 'baz'
+                }
+            });
+
+            var provider = activity.createProvider();
+
+            expect(provider['spt:test']).to.eq('foo');
+            expect(provider.bar).to.eq('baz');
+        })
     });
 
     describe('Queue', function() {
