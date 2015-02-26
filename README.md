@@ -23,6 +23,7 @@ opts = {
     pageType: '',   // The type of page where the Activity is created. Default 'Page'
     url: '',        // The URL that data will be sent to.
     transport: f()  // To specify custom transport function.
+    provider: {}    // Add custom provider data
 }
 ```
 
