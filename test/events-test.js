@@ -9,7 +9,8 @@ describe('Events', function() {
         this.activity = new Activity({
             clientId: 1337,
             pageId: 1337,
-            activityType: 'Read'
+            activityType: 'Read',
+            userId: 1337
         });
     });
 
@@ -37,6 +38,16 @@ describe('Events', function() {
             '@id': 1337,
             url: document.URL,
             displayName: 'test title'
+        });
+        expect(testJSON).to.eq(answerJSON);
+
+        retvar = this.activity.events.trackPageLoad();
+        testJSON = JSON.stringify(retvar.data.object);
+        answerJSON = JSON.stringify({
+            '@type': 'page',
+            '@id': 1337,
+            url: document.URL,
+            displayName: document.title
         });
         expect(testJSON).to.eq(answerJSON);
     });

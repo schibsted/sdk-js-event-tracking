@@ -7,9 +7,18 @@
 'use strict';
 
 var Activity = require('../lib/activity'),
+    User = require('../lib/user'),
     browserTransport = require('../lib/transport/browser');
 
 describe('Activity', function() {
+    before(function() {
+        sinon.stub(User.prototype, 'getUserId');
+    });
+
+    after(function() {
+        User.prototype.getUserId.restore();
+    });
+
     describe('constructor', function() {
 
         it('should require clientId and pageId', function() {
@@ -91,7 +100,8 @@ describe('Activity', function() {
                 clientId: 2,
                 transport: this.transportStub,
                 url: 'http://test',
-                activityType: 'Read'
+                activityType: 'Read',
+                userId: 1337
             });
         });
 
@@ -108,7 +118,7 @@ describe('Activity', function() {
         });
 
         it('should send all the items in the queue', function(done) {
-            var objects = [{ foo: 'bar '}];
+            var objects = [this.activity.createScaffold()];
 
             this.activity.addToQueue(objects[0]);
 
@@ -127,7 +137,7 @@ describe('Activity', function() {
         });
 
         it('should empty the queue after send succesfully', function(done) {
-            this.activity.addToQueue({ foo: 'bar' });
+            this.activity.addToQueue(this.activity.createScaffold());
 
             this.transportStub.yields();
 
@@ -141,7 +151,7 @@ describe('Activity', function() {
         });
 
         it('should keep the queue when failing to send', function(done) {
-            var queue = [{ foo: 'bar' }, { bar: 'baz' }];
+            var queue = [this.activity.createScaffold(), this.activity.createScaffold()];
 
             this.activity.addToQueue(queue[0]);
             this.activity.addToQueue(queue[1]);
@@ -176,7 +186,8 @@ describe('Activity', function() {
                 clientId: 2,
                 transport: this.transportStub,
                 url: 'http://test',
-                activityType: 'Read'
+                activityType: 'Read',
+                userId: 1337
             });
         });
 
@@ -185,7 +196,7 @@ describe('Activity', function() {
         });
 
         it('should send the item', function(done) {
-            var obj = { foo: 'bar' };
+            var obj = this.activity.createScaffold();
 
             this.transportStub.yields();
 
@@ -204,7 +215,7 @@ describe('Activity', function() {
 
             this.transportStub.yields('Fail');
 
-            var obj = { item: 'failed' };
+            var obj = this.activity.createScaffold();
             var activity = this.activity;
 
             this.activity.send(obj, function(err) {
@@ -222,7 +233,7 @@ describe('Activity', function() {
             var activity = this.activity;
 
             expect(function() {
-                activity.send();
+                activity.send(activity.createScaffold());
             }).to.not.Throw();
         });
     });
@@ -234,7 +245,6 @@ describe('Activity', function() {
             var actor = activity.createActor();
 
             expect(actor['@type']).to.eq('Person');
-            expect(actor['@id']).to.eq(1337);
             expect(actor['spt:userAgent']).to.eq(navigator.userAgent);
             expect(actor['spt:screenSize']).to.eq(window.screen.width + 'x' + window.screen.height);
             expect(actor['spt:viewportSize']).to.match(/([0-9]{1,4})x([0-9]{1,4})/);

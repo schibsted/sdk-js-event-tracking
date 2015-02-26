@@ -78,7 +78,7 @@ describe('Browser transport', function() {
 
         xhr.onCreate = function (req) { requests.push(req); };
 
-        browserTransport('http://test', [], function(err) {
+        browserTransport('http://test!!', [], function(err) {
             expect(err).to.be.not.ok;
 
             done();
@@ -118,6 +118,8 @@ describe('Browser transport', function() {
 
             done();
         });
+
+        xhr.restore();
     });
 
     it('should retry five times when failing', function(done) {
@@ -137,6 +139,8 @@ describe('Browser transport', function() {
 
             done();
         });
+
+        xhr.restore();
     });
 
     it('should use ActiveXObject when XMLHttpRequest is not available', function() {
