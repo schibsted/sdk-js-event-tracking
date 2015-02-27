@@ -8,11 +8,58 @@
 
 ## When developing:
 
-`./run-watch.sh`
+`grunt watch`
 
 # Documentation
 
-This documentation is the target for the functionality of v1.
+## Example usage
+
+### Snippet
+
+### Create and send an event
+
+```
+<head>
+    <script src="dist/tracker.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        // Set your options
+        var opt = {
+            clientId:   '1234asdf',
+            pageType:   'Article',
+            pageId:     '98798342'
+        }
+
+        // Create your activity. It needs your options as a parameter.
+        var activity = new Activity(opt);
+
+        // When you have your activity, you can track an event
+        activity.events.trackPageLoad('Test article', 'Read').send();
+
+    </script>
+</body>
+```
+### Queue events and send a batch send
+
+```
+// Set your options
+var opt = {
+    clientId:   '1234asdf',
+    pageType:   'Article',
+    pageId:     '98798342'
+}
+
+// Create your activity. It needs your options as a parameter.
+var activity = new Activity(opt);
+
+// Use .queue() to add events to the queue.
+activity.events.trackComment('843223', 'Post').queue();
+activity.events.trackPoll('843223', 'Post').queue();
+
+// And manually send the queue.
+activity.sendQueue();
+```
 
 ## Activity(opts)
 
