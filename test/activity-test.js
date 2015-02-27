@@ -20,7 +20,6 @@ describe('Activity', function() {
     });
 
     describe('constructor', function() {
-
         it('should require clientId and pageId', function() {
             expect(function() {
                 new Activity({ pageId: 1337, activityType: 'Read' });
@@ -29,10 +28,6 @@ describe('Activity', function() {
             expect(function() {
                 new Activity({ clientId: 1337, activityType: 'Read' });
             }).to.Throw(Error, 'pageId is required');
-
-            expect(function() {
-                new Activity({ clientId: 1337, pageId: 1337 });
-            }).to.Throw(Error, 'activityType is required');
         });
 
         it('should set clientId and pageId on activity object', function() {
@@ -252,12 +247,44 @@ describe('Activity', function() {
         });
     });
 
+    describe('createScaffold', function() {
+        it('return scaffold object', function() {
+            var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
+
+            var scaffold = activity.createScaffold();
+
+            expect(scaffold['@context']).to.deep
+                .eq(['http://www.w3.org/ns/activitystreams', {spt:'http://spt.no'}]);
+            expect(scaffold.actor).to.deep.eq(activity.createActor());
+            expect(scaffold.provider).to.deep.eq(activity.createProvider());
+        });
+    });
+
+    describe('createProvider', function() {
+        it('should be possible to override provider options', function() {
+            var activity = new Activity({
+                pageId: 1,
+                clientId: 2,
+                activityType: 'Read',
+                provider: {
+                    'spt:test': 'foo',
+                    bar: 'baz'
+                }
+            });
+
+            var provider = activity.createProvider();
+
+            expect(provider['spt:test']).to.eq('foo');
+            expect(provider.bar).to.eq('baz');
+        });
+    });
+
     describe('Queue', function() {
         it('should keep each single activity separate', function() {
 
             var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
 
-            activity.events.trackPageLoad('Bacon ipsum').queue();
+            activity.events.trackPageLoad('Bacon ipsum', 'Read').queue();
             activity.events.trackPageLoad('Lorum ipsum').queue();
             activity.events.trackPageLoad('Starwars ipsum').queue();
 
@@ -267,7 +294,7 @@ describe('Activity', function() {
 
             var activity2 = new Activity({ pageId: 3, clientId: 2, activityType: 'Watch' });
 
-            activity2.events.trackPageLoad('Bacon ipsum').queue();
+            activity2.events.trackPageLoad('Bacon ipsum', 'Watch').queue();
             var ev = activity2.events.trackPageLoad('Lorum ipsum');
             activity2.events.trackPageLoad('Lorum ipsum').queue();
 
