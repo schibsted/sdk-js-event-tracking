@@ -82,10 +82,4 @@ describe('Utils', function() {
             });
         });
     });
-
-    describe('retry', function() {
-        it('should return a valid uuid v4 string', function() {
-            expect(Utils.getUuidV4()).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
-        });
-    });
 });
