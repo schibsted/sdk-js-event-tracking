@@ -18,6 +18,7 @@
     "noarg": true,
     "bitwise": false,
     "unused": true,
+    "predef": [ "JSON" ],
     "globals": {
         "describe"   : false,
         "it"         : false,
