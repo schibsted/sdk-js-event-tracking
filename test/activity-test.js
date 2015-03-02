@@ -252,9 +252,15 @@ describe('Activity', function() {
             var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
 
             var scaffold = activity.createScaffold();
+            var contextExtra = {
+                spt:'http://spid.no',
+                'spt:sdkType': 'JS',
+                'spt:sdkVersion': '0.1.0'
+            };
 
             expect(scaffold['@context']).to.deep
-                .eq(['http://www.w3.org/ns/activitystreams', {spt:'http://spt.no'}]);
+                .eq(['http://www.w3.org/ns/activitystreams', contextExtra]);
+            expect(scaffold['@id']).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
             expect(scaffold.actor).to.deep.eq(activity.createActor());
             expect(scaffold.provider).to.deep.eq(activity.createProvider());
         });
