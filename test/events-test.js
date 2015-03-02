@@ -222,6 +222,23 @@ describe('Events', function() {
         expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
     });
 
+    it('should return a array with two objects on trackScroll', function() {
+        var retvar = this.activity.events.trackEngagementTime(3600);
+        expect(retvar).to.be.a('object');
+
+        var testJSON = retvar.data;
+        var answerJSON = JSON.stringify({
+            '@type': 'Page',
+            '@id': 1337,
+            url: document.URL,
+            displayName: document.title
+        });
+        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+
+        expect(JSON.stringify(testJSON.duration)).to.eq('3600');
+    });
+
+
     it('should return standard values on add page standards', function() {
         var retvar = this.activity.events.addPageStandards();
         var answerJSON = JSON.stringify({
