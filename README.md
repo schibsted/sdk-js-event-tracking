@@ -61,6 +61,27 @@ activity.events.trackPoll('843223', 'Post').queue();
 activity.sendQueue();
 ```
 
+### Add parameters and customData
+
+```
+// Set your options
+var opt = {
+    clientId:   '1234asdf',
+    pageType:   'Article',
+    pageId:     '98798342'
+}
+
+// Create your activity. It needs your options as a parameter.
+var activity = new Activity(opt);
+
+// Use .queue() to add events to the queue.
+activity.events.trackComment('843223', 'Post').addCustomData('primary', {words: 32, lines: 3}).send();
+activity.events.trackPoll('843223', 'Post').addProperty('secondary', 'displayName', 'Is this a question?').send();
+
+```
+
+`primary`, `secondary` and `tertiary` is used to tell which object you want to add data to. Each event function described below has specified the objects being generated and which reference the object coresponds with.
+
 ## Activity(opts)
 
 ```
