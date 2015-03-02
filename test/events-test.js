@@ -238,7 +238,6 @@ describe('Events', function() {
         expect(JSON.stringify(testJSON.duration)).to.eq('3600');
     });
 
-
     it('should return standard values on add page standards', function() {
         var retvar = this.activity.events.addPageStandards();
         var answerJSON = JSON.stringify({
