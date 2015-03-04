@@ -52,7 +52,8 @@ module.exports = function (grunt) {
                 output: {
                     path: 'dist/',
                     filename: 'tracker.js',
-                    library: 'Activity'
+                    library: 'Activity',
+                    libraryTarget: 'umd'
                 },
                 stats: {
                     // Configure the console output
@@ -68,7 +69,8 @@ module.exports = function (grunt) {
                 output: {
                     path: 'dist/',
                     filename: 'tracker.min.js',
-                    library: 'Activity'
+                    library: 'Activity',
+                    libraryTarget: 'umd'
                 },
                 stats: {
                     // Configure the console output
@@ -82,6 +84,7 @@ module.exports = function (grunt) {
                 ],
                 resolve: {
                     alias: {
+                        vars: './prod/vars',
                         debug: './debug.prod.js'
                     }
                 },
@@ -105,5 +108,6 @@ module.exports = function (grunt) {
     grunt.registerTask('test', 'karma:unit:run');
     grunt.registerTask('check', ['watch']);
     grunt.registerTask('lint', ['jshint', 'jscs']);
+    grunt.registerTask('build', ['webpack:prod', 'lint', 'jsdoc']);
 
 };
