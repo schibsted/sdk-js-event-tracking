@@ -249,4 +249,39 @@ describe('Events', function() {
 
         expect(JSON.stringify(retvar)).to.eq(answerJSON);
     });
+
+    it('should be able to take a custom event', function() {
+        var obj = {
+            object: {
+                foo: 'bar'
+            },
+            target: {
+                foo: 'baz'
+            }
+        };
+        var retvar = this.activity.events.trackCustomEvent(obj, 'Read');
+        expect(retvar).to.be.a('object');
+
+        expect(retvar.data.object).to.deep.equal(obj.object);
+        expect(retvar.data.target).to.deep.equal(obj.target);
+
+        expect(retvar.data['@type']).to.eq('Read');
+
+        var self = this;
+
+        expect(function() {
+            self.activity.events.trackCustomEvent();
+        }).to.Throw(Error, 'activityType and obj is required');
+
+        expect(function() {
+            self.activity.events.trackCustomEvent(obj);
+        }).to.Throw(Error, 'activityType and obj is required');
+
+        expect(function() {
+            self.activity.events.trackCustomEvent(undefined, 'Read');
+        }).to.Throw(Error, 'activityType and obj is required');
+
+        expect(retvar.objectOrder).to.deep.equal(['object', 'target']);
+
+    });
 });

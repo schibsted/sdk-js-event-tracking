@@ -307,6 +307,16 @@ opts = {
 
 `displayName` - A human readable text for the scroll distance (e.g "Under header")(for `target`)
 
+#### Activity.Events.trackCustomEvent(obj, activityType)
+
+A function for tracking any other events. Takes an object with Activitystream 2.0 compatible objects. Actor and header info will be added by the function.
+
+##### Required parameters
+
+`obj` - A object of Activitystream 2.0 objects (like object, target and origin).
+
+`activityType` - The type of activity that is being tracked. No default
+
 #### Activity.Event.addProperty(obj, property, value)
 
 ##### Required parameters
