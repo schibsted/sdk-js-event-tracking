@@ -97,7 +97,7 @@ opts = {
 
 ### Activity.Event(eventType)
 
-#### Activity.Event.pageLoad(title, activityType)
+#### Activity.Event.trackPageLoad(title, activityType)
 
 ##### Required parameters
 
