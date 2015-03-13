@@ -96,7 +96,8 @@ describe('Activity', function() {
                 transport: this.transportStub,
                 url: 'http://test',
                 activityType: 'Read',
-                userId: 1337
+                userId: 1337,
+                visitorId: 1337
             });
         });
 
@@ -182,7 +183,8 @@ describe('Activity', function() {
                 transport: this.transportStub,
                 url: 'http://test',
                 activityType: 'Read',
-                userId: 1337
+                userId: 1337,
+                visitorId: 1337
             });
         });
 

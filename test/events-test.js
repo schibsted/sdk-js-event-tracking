@@ -154,7 +154,7 @@ describe('Events', function() {
         expect(JSON.stringify(testJSON.origin)).to.eq(answerJSON);
 
         answerJSON = JSON.stringify({
-            '@id': 'urn:Facebook.com',
+            '@id': 'urn:facebook.com:like',
             '@type': 'Service'
         });
         expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
@@ -197,7 +197,7 @@ describe('Events', function() {
         answerJSON = JSON.stringify({
             '@type': 'Place',
             '@id': '1337:scroll:25%',
-            location: '25%'
+            'spt:depth': '25%'
         });
         expect(JSON.stringify(testJSON.result)).to.eq(answerJSON);
     });
@@ -222,7 +222,7 @@ describe('Events', function() {
         expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
     });
 
-    it('should return a array with two objects on trackScroll', function() {
+    it('should return a array with two objects on trackEngagement', function() {
         var retvar = this.activity.events.trackEngagementTime(3600);
         expect(retvar).to.be.a('object');
 
@@ -236,6 +236,38 @@ describe('Events', function() {
         expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
 
         expect(JSON.stringify(testJSON.duration)).to.eq('3600');
+    });
+
+    it('should return a array with two objects on trackVisibility', function() {
+        var retvar = this.activity.events.trackVisibility('testbox01', {start: 1426153788086, end: 1426153888086});
+        expect(retvar).to.be.a('object');
+
+        var testJSON = retvar.data;
+        var answerJSON = JSON.stringify({
+            '@type': 'Content',
+            '@id': '1337:element:testbox01',
+            startTime: 1426153788086,
+            endTime: 1426153888086
+        });
+        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+
+        retvar = this.activity.events.trackVisibility('testbox01', 1426153788086);
+        testJSON = retvar.data;
+        answerJSON = JSON.stringify({
+            '@type': 'Content',
+            '@id': '1337:element:testbox01',
+            startTime: 1426153788086
+        });
+        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+
+        retvar = this.activity.events.trackVisibility('testbox01', {start: 1426153788086});
+        testJSON = retvar.data;
+        answerJSON = JSON.stringify({
+            '@type': 'Content',
+            '@id': '1337:element:testbox01',
+            startTime: 1426153788086
+        });
+        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
     });
 
     it('should return standard values on add page standards', function() {

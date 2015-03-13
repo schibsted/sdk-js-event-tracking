@@ -271,6 +271,26 @@ opts = {
 
 `displayName` - A human readable text for the scroll distance (e.g "Under header")(for `target`)
 
+#### Activity.Events.trackVisibility(elementId, time, activityType)
+
+##### Required parameters
+
+`elementId` - The ID of the element that are tracked.
+
+`elementId` - Either a string with start time as a AS 2.0 compatible timestamp, or a object {start: <timestamp>, end: <timestamp}
+
+`activityType` - The type of activity that is being tracked. Will default to 'Arrive'
+
+##### Generated objects
+
+`origin` as `'primary'` - The page or entity where the element is located.
+
+`object` as `'secondary'` - The element that is tracket.
+
+##### Extra parameter suggestions
+
+`displayName` - A human readable text for the element.
+
 #### Activity.Events.trackExit(targetId, targetType, activityType)
 
 ##### Required parameters
