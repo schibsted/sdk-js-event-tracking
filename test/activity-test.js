@@ -249,8 +249,37 @@ describe('Activity', function() {
         });
     });
 
+    describe('getPageViewId', function() {
+        it('should return a pageViewId in UUID v4 format', function() {
+            var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
+
+            var pageViewId = activity.getPageViewId();
+
+            expect(pageViewId).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+        });
+    });
+
     describe('createScaffold', function() {
-        it('return scaffold object', function() {
+        it('return full scaffold object', function() {
+            var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
+
+            var scaffold = activity.createScaffold(true);
+            var contextExtra = {
+                spt:'http://spid.no',
+                'spt:sdkType': 'JS',
+                'spt:sdkVersion': '0.1.0'
+            };
+
+            expect(scaffold['@context']).to.deep
+                .eq(['http://www.w3.org/ns/activitystreams', contextExtra]);
+            expect(scaffold['@id']).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+            expect(scaffold.actor).to.deep.eq(activity.createActor());
+            expect(scaffold.provider).to.deep.eq(activity.createProvider());
+        });
+    });
+
+    describe('createScaffold', function() {
+        it('return full scaffold object', function() {
             var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
 
             var scaffold = activity.createScaffold();
@@ -263,7 +292,7 @@ describe('Activity', function() {
             expect(scaffold['@context']).to.deep
                 .eq(['http://www.w3.org/ns/activitystreams', contextExtra]);
             expect(scaffold['@id']).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
-            expect(scaffold.actor).to.deep.eq(activity.createActor());
+            expect(scaffold.actor).to.deep.eq(activity.createReducedActor());
             expect(scaffold.provider).to.deep.eq(activity.createProvider());
         });
     });
@@ -326,5 +355,51 @@ describe('Activity', function() {
 
             expect(JSON.stringify(activity2.queue[1])).to.not.eq(JSON.stringify(activity2.queue[2]));
         });
+    });
+
+    describe('refreshUserIds', function() {
+        beforeEach(function() {
+            this.sinon = sinon.sandbox.create();
+            this.transportStub = this.sinon.stub();
+
+            this.activity = new Activity({
+                pageId: 1,
+                clientId: 2,
+                transport: this.transportStub,
+                url: 'http://test',
+                activityType: 'Read',
+                userId: 1337,
+                visitorId: 1337
+            });
+        });
+
+        it('should unset the userIds and vistorIds', function() {
+
+            this.transportStub.yields();
+
+            this.activity.refreshUserIds();
+
+            expect(this.activity.visitorId).to.be.undefined;
+            expect(this.activity.userId).to.be.undefined;
+        });
+
+        it('should set a new userId if available', function() {
+            this.transportStub.yields();
+
+            this.activity.refreshUserIds('userId1337');
+
+            expect(this.activity.visitorId).to.be.undefined;
+            expect(this.activity.userId).to.eq('userId1337');
+        });
+
+        /*it('should request a new ID', function() {
+            this.transportStub.yields();
+
+            var stub = this.transportStub;
+
+            this.activity.refreshUserIds('userId1337');
+
+            expect(stub).to.have.been.called;
+        });*/
     });
 });
