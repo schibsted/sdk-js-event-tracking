@@ -22,6 +22,10 @@ module.exports = function (grunt) {
             all: {
                 files: ['lib/**/*.js', 'test/**/*.js', 'config/*.js'],
                 tasks: ['webpack:dev', 'lint', 'karma:unit:run']
+            },
+            auto: {
+                files: ['auto/**/*.js'],
+                tasks: ['auto']
             }
         },
         jscs: {
