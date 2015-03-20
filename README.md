@@ -95,6 +95,11 @@ opts = {
 }
 ```
 
+### Activity.refreshUserIds(userId)
+
+Used for login / logout events. When a user logs in, call this function with a user ID in the following format:
+`urn:<your domain>:user:<your userId>`. When the user logs back out, call the same function with `undefined`.
+
 ### Activity.Event(eventType)
 
 #### Activity.Event.trackPageLoad(title, activityType)
@@ -293,6 +298,8 @@ opts = {
 
 #### Activity.Events.trackExit(targetId, targetType, activityType)
 
+If no target is available, set targetId and targetType to undefined.
+
 ##### Required parameters
 
 `targetId` - The ID of where the user goes next.
@@ -315,7 +322,7 @@ opts = {
 
 ##### Required parameters
 
-`duration` - A integer representing the number of seconds that the engagement has lasted.
+`duration` - A integer representing the number of milliseconds that the engagement has lasted.
 
 `activityType` - The type of activity that is being tracked. Will default to 'View'
 
