@@ -316,4 +316,69 @@ describe('Events', function() {
         expect(retvar.objectOrder).to.deep.equal(['object', 'target']);
 
     });
+
+    it('should return an ID with urn prefix at getUrnIdWithPageType', function() {
+        var retvar = this.activity.events.getUrnIdWithPageType();
+        expect(retvar).to.eq('urn:localhost:page:1337');
+
+        retvar = this.activity.events.getUrnIdWithPageType(2345);
+        expect(retvar).to.eq('urn:localhost:page:2345');
+
+        retvar = this.activity.events.getUrnIdWithPageType('2345');
+        expect(retvar).to.eq('urn:localhost:page:2345');
+
+        retvar = this.activity.events.getUrnIdWithPageType('urn:localhost:page:2345');
+        expect(retvar).to.eq('urn:localhost:page:2345');
+
+        this.activity.pageId = 'urn:localhost:page:1337';
+        retvar = this.activity.events.getUrnIdWithPageType();
+        expect(retvar).to.eq('urn:localhost:page:1337');
+        this.activity.pageId = 1337;
+
+        retvar = this.activity.events.getUrnIdWithPageType(2345, 'Article');
+        expect(retvar).to.eq('urn:localhost:article:2345');
+    });
+
+    it('should return a domain from a URL on getDomainFromUrl', function() {
+
+        var urls = [
+            {
+                url: 'http://vg.no',
+                answer: 'vg.no'
+            },
+            {
+                url: 'http://vg.no/23423/test/foo/bar/2134',
+                answer: 'vg.no'
+            },
+            {
+                url: 'http://www.vg.no/23423/test/foo/bar/2134',
+                answer: 'vg.no'
+            },
+            {
+                url: 'http://127.0.0.1/23423/test/foo/bar/2134',
+                answer: '127.0.0.1'
+            },
+            {
+                url: 'http://127.0.0.1:80/23423/test/foo/bar/2134',
+                answer: '127.0.0.1'
+            },
+            {
+                url: 'http://pluss.vg.no/#!/23423/2131',
+                answer: 'pluss.vg.no'
+            },
+            {
+                url: 'https://finn.no/23423/test/foo/bar/2134',
+                answer: 'finn.no'
+            },
+            {
+                url: 'https://www.finn.no/23423/test/foo/bar/2134',
+                answer: 'finn.no'
+            }
+        ];
+
+        for (var i = 0; i < urls.length; i++) {
+            var retvar = this.activity.events.getDomainFromUrl(urls[i].url);
+            expect(retvar).to.eq(urls[i].answer);
+        }
+    });
 });
