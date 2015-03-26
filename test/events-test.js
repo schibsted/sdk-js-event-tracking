@@ -35,7 +35,7 @@ describe('Events', function() {
         var testJSON = JSON.stringify(retvar.data.object);
         var answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: 'test title'
         });
@@ -45,7 +45,7 @@ describe('Events', function() {
         testJSON = JSON.stringify(retvar.data.object);
         answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: document.title
         });
@@ -59,7 +59,7 @@ describe('Events', function() {
         var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: document.title
         });
@@ -67,7 +67,7 @@ describe('Events', function() {
 
         answerJSON = JSON.stringify({
             '@type': 'note',
-            '@id': '1337:form:1234'
+            '@id': 'urn:localhost:page:1337:form:1234'
         });
         expect(JSON.stringify(testJSON.result)).to.eq(answerJSON);
     });
@@ -79,7 +79,7 @@ describe('Events', function() {
         var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: document.title
         });
@@ -87,7 +87,7 @@ describe('Events', function() {
 
         answerJSON = JSON.stringify({
             '@type': 'Note',
-            '@id': '1337:form:1234'
+            '@id': 'urn:localhost:page:1337:form:1234'
         });
         expect(JSON.stringify(testJSON.result)).to.eq(answerJSON);
 
@@ -100,7 +100,7 @@ describe('Events', function() {
         var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: document.title
         });
@@ -108,7 +108,7 @@ describe('Events', function() {
 
         answerJSON = JSON.stringify({
             '@type': 'Question',
-            '@id': '1337:form:1234'
+            '@id': 'urn:localhost:page:1337:form:1234'
         });
         expect(JSON.stringify(testJSON.result)).to.eq(answerJSON);
 
@@ -120,14 +120,14 @@ describe('Events', function() {
 
         var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
-            '@id': '1337:element:1234',
+            '@id': 'urn:localhost:article:98765:element:1234',
             '@type': 'Link',
             displayName: 'Test Button'
         });
         expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
 
         answerJSON = JSON.stringify({
-            '@id': 98765,
+            '@id': 'urn:localhost:article:98765',
             '@type': 'article'
         });
         expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
@@ -141,20 +141,20 @@ describe('Events', function() {
         var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: document.title
         });
         expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
 
         answerJSON = JSON.stringify({
-            '@id': '1337:element:1234',
+            '@id': 'urn:localhost:page:1337:element:1234',
             '@type': 'Link'
         });
         expect(JSON.stringify(testJSON.origin)).to.eq(answerJSON);
 
         answerJSON = JSON.stringify({
-            '@id': 'urn:facebook.com:like',
+            '@id': 'urn:facebook.com:action:like',
             '@type': 'Service'
         });
         expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
@@ -168,7 +168,7 @@ describe('Events', function() {
         var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: document.title
         });
@@ -176,7 +176,7 @@ describe('Events', function() {
 
         answerJSON = JSON.stringify({
             '@type': 'video',
-            '@id': 1234
+            '@id': 'urn:localhost:page:1337:video:1234'
         });
         expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
     });
@@ -188,7 +188,7 @@ describe('Events', function() {
         var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: document.title
         });
@@ -196,7 +196,7 @@ describe('Events', function() {
 
         answerJSON = JSON.stringify({
             '@type': 'Place',
-            '@id': '1337:scroll:25%',
+            '@id': 'urn:localhost:page:1337:scroll:25%',
             'spt:depth': '25%'
         });
         expect(JSON.stringify(testJSON.result)).to.eq(answerJSON);
@@ -209,7 +209,7 @@ describe('Events', function() {
         var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: document.title
         });
@@ -217,7 +217,7 @@ describe('Events', function() {
 
         answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1234
+            '@id': 'urn:localhost:page:1234'
         });
         expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
     });
@@ -229,7 +229,7 @@ describe('Events', function() {
         var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: document.title
         });
@@ -245,7 +245,7 @@ describe('Events', function() {
         var testJSON = retvar.data;
         var answerJSON = JSON.stringify({
             '@type': 'Content',
-            '@id': '1337:element:testbox01',
+            '@id': 'urn:localhost:page:1337:element:testbox01',
             startTime: 1426153788086,
             endTime: 1426153888086
         });
@@ -255,7 +255,7 @@ describe('Events', function() {
         testJSON = retvar.data;
         answerJSON = JSON.stringify({
             '@type': 'Content',
-            '@id': '1337:element:testbox01',
+            '@id': 'urn:localhost:page:1337:element:testbox01',
             startTime: 1426153788086
         });
         expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
@@ -264,7 +264,7 @@ describe('Events', function() {
         testJSON = retvar.data;
         answerJSON = JSON.stringify({
             '@type': 'Content',
-            '@id': '1337:element:testbox01',
+            '@id': 'urn:localhost:page:1337:element:testbox01',
             startTime: 1426153788086
         });
         expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
@@ -274,7 +274,7 @@ describe('Events', function() {
         var retvar = this.activity.events.addPageStandards();
         var answerJSON = JSON.stringify({
             '@type': 'Page',
-            '@id': 1337,
+            '@id': 'urn:localhost:page:1337',
             url: document.URL,
             displayName: document.title
         });
