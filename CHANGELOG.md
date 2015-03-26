@@ -1,4 +1,7 @@
-* _2015-03-23_: Added user-test and did some cleaning and fixing before release (HEAD, tag: v0.2.0, origin/master, origin/HEAD, master) [magska] <a href="http://github.com///github.com/schibsted/sdk-js-event-tracking/commit/5474a5f44d0a6bbf594f6261da103b036498c5d0">view commit</a>
+* _2015-03-26_: tests and fixes for new id functions for events (HEAD, origin/master, origin/HEAD, master) [magska] <a href="http://github.com///github.com/schibsted/sdk-js-event-tracking/commit/e50e6d2fdd4a884f06bd58b1d900aa66b133fa48">view commit</a>
+* _2015-03-26_: Added functionality to make sure that IDs are in urn format [magska] <a href="http://github.com///github.com/schibsted/sdk-js-event-tracking/commit/1bcd47b33a1b26d6897584ebf95d189fc58b385c">view commit</a>
+* _2015-03-23_: added changelog script [magska] <a href="http://github.com///github.com/schibsted/sdk-js-event-tracking/commit/450206368ffb93b531bab2304018780fbd216a9d">view commit</a>
+* _2015-03-23_: Added user-test and did some cleaning and fixing before release (tag: v0.2.0) [magska] <a href="http://github.com///github.com/schibsted/sdk-js-event-tracking/commit/5474a5f44d0a6bbf594f6261da103b036498c5d0">view commit</a>
 * _2015-03-20_: Updated documentation [magska] <a href="http://github.com///github.com/schibsted/sdk-js-event-tracking/commit/7f201224ae489306beafd7e3a691d658e76fa0a8">view commit</a>
 * _2015-03-20_: Removed some console.log and trimmed gruntfile [magska] <a href="http://github.com///github.com/schibsted/sdk-js-event-tracking/commit/ef51893d15597926877030a43dfec49452fc0333">view commit</a>
 * _2015-03-20_: New build [magska] <a href="http://github.com///github.com/schibsted/sdk-js-event-tracking/commit/4ef3e8d62a4bd2ceea7fa2ae4552d181be4e0de7">view commit</a>
