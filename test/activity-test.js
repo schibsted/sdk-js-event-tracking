@@ -77,6 +77,7 @@ describe('Activity', function() {
                 activityType: 'Read',
                 respectDoNotTrack: true
             });
+            expect(activity.opts.respectDoNotTrack).to.eq(true);
         });
 
     });
