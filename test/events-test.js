@@ -1,4 +1,5 @@
 'use strict';
+/*globals sinon*/
 
 var expect = require('chai').expect,
     Activity = require('../lib/activity'),
@@ -6,12 +7,22 @@ var expect = require('chai').expect,
 
 describe('Events', function() {
     beforeEach(function() {
+
+        this.sinon = sinon.sandbox.create();
+        this.transportStub = this.sinon.stub();
+
         this.activity = new Activity({
-            clientId: 1337,
             pageId: 1337,
+            clientId: 1337,
+            transport: this.transportStub,
+            url: 'http://test',
             activityType: 'Read',
             userId: 1337
         });
+    });
+
+    afterEach(function() {
+        this.sinon.restore();
     });
 
     it('should required Activity instance', function() {

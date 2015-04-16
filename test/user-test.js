@@ -64,7 +64,8 @@ describe('User', function() {
                 userId: 'abcd1234',
                 sessionId: 'abcd2345',
                 visitorId: 'abcd3456',
-                environmentId: 'abcd4567'
+                environmentId: 'abcd4567',
+                cisCookiesSet: true
             }
         };
 
@@ -87,7 +88,8 @@ describe('User', function() {
                 userId: 'abcd1234',
                 sessionId: 'abcd2345',
                 visitorId: 'abcd3456',
-                environmentId: 'abcd4567'
+                environmentId: 'abcd4567',
+                cisCookiesSet: true
             }
         };
 
@@ -113,7 +115,8 @@ describe('User', function() {
                 userId: 'abcd1234',
                 sessionId: 'abcd2345',
                 visitorId: 'abcd3456',
-                environmentId: 'abcd4567'
+                environmentId: 'abcd4567',
+                cisCookiesSet: true
             }
         };
 
@@ -140,7 +143,8 @@ describe('User', function() {
                 sessionId: 'abcd2345',
                 visitorId: 'abcd3456',
                 environmentId: 'abcd4567',
-                environmentIdTemporary: true
+                environmentIdTemporary: true,
+                cisCookiesSet: true
             }
         };
 

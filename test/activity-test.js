@@ -12,7 +12,7 @@ var Activity = require('../lib/activity'),
 
 describe('Activity', function() {
     before(function() {
-        sinon.stub(User.prototype, 'getUserId');
+        this.stub = sinon.stub(User.prototype, 'getUserId');
     });
 
     after(function() {
@@ -34,7 +34,7 @@ describe('Activity', function() {
             var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
 
             expect(activity.pageId).to.eq(1);
-            expect(activity.clientId).to.eq(2);
+            expect(activity.clientId).to.eq('urn:spid.no:2');
         });
 
         it('should have a default url', function() {
@@ -46,7 +46,7 @@ describe('Activity', function() {
         it('should be possible to override url', function() {
             var activity = new Activity({ pageId: 1, clientId: 2, url: 'http://foo', activityType: 'Read' });
 
-            expect(activity.url).to.eq('http://foo');
+            expect(activity.url).to.eq('http://foo/urn:spid.no:2');
         });
 
         it('should use browser transport by default', function() {
@@ -66,6 +66,44 @@ describe('Activity', function() {
             });
 
             expect(activity.transport).to.eq(transport);
+        });
+
+        it('should take a bool for respectDoNotTrack', function() {
+            var activity = new Activity({
+                pageId: 1,
+                clientId: 1,
+                transport: this.transportStub,
+                url: 'http://test',
+                activityType: 'Read',
+                respectDoNotTrack: true
+            });
+        });
+
+    });
+
+    describe('initIds', function() {
+
+        it('should fetch Ids from user object', function() {
+            var err = null;
+            var data = {
+                userId: 'abcd1234',
+                sessionId: 'abcd2345',
+                visitorId: 'abcd3456',
+                envId: 'abcd4567',
+                cisCookiesSet: true
+            };
+            this.stub.yield(err, data);
+
+            var activity = new Activity({
+                pageId: 1,
+                clientId: 1,
+                activityType: 'Read'
+            });
+
+            activity.initIds(function(y) {
+                expect(y.userId).to.eq(data.userId);
+            });
+
         });
     });
 
@@ -126,7 +164,7 @@ describe('Activity', function() {
                 expect(err).to.not.be.ok;
 
                 expect(stub).to.be.called;
-                expect(stub).to.have.been.calledWith('http://test', objects);
+                expect(stub).to.have.been.calledWith('http://test/urn:spid.no:2', objects);
 
                 done();
             });
@@ -201,7 +239,7 @@ describe('Activity', function() {
 
             this.activity.send(obj, function(err) {
                 expect(err).to.not.be.ok;
-                expect(stub).to.have.been.calledWith('http://test', [obj]);
+                expect(stub).to.have.been.calledWith('http://test/urn:spid.no:2', [obj]);
 
                 done();
             });

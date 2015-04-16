@@ -3,3 +3,4 @@ coverage
 dist
 src
 doc
+karma.conf*

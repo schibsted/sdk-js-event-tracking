@@ -52,10 +52,67 @@ module.exports = function(config) {
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: true,
 
+        // BrowserStack config
+        browserStack: {
+            username: 'magnusskaalsveen1',
+            accessKey: 'BxcCDqansiyTWxNa2Xqs'
+        },
+
+        // Custom browser launchers
+        customLaunchers: {
+            bs_firefox_mac: {
+                base: 'BrowserStack',
+                browser: 'firefox',
+                browser_version: '21.0',
+                os: 'OS X',
+                os_version: 'Yosemite'
+            },
+            bs_chrome_win: {
+                base: 'BrowserStack',
+                browser: 'chrome',
+                browser_version: '41.0',
+                os: 'WINDOWS',
+                os_version: '8.1'
+            },
+            bs_safari_ios: {
+                base: 'BrowserStack',
+                device: 'iPhone 6',
+                os: 'ios',
+                os_version: '8.0'
+            },
+            bs_ie10_win8: {
+                base: 'BrowserStack',
+                browser: 'ie',
+                browser_version: '10.0',
+                os: 'WINDOWS',
+                os_version: '8'
+            },
+            bs_ie9_win7: {
+                base: 'BrowserStack',
+                browser: 'ie',
+                browser_version: '9',
+                os: 'WINDOWS',
+                os_version: '7'
+            },
+            bs_ie11_win81: {
+                base: 'BrowserStack',
+                browser: 'ie',
+                browser_version: '11.0',
+                os: 'WINDOWS',
+                os_version: '8.1'
+            }
+        },
+
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
         browsers: [
-            'PhantomJS'
+            'PhantomJS',
+            // 'bs_firefox_mac',
+            // 'bs_ie10_win8',
+            // 'bs_ie11_win81',
+            'bs_ie9_win7',
+            // 'bs_chrome_win',
+            'bs_safari_ios'
         ],
 
         // Continuous Integration mode
