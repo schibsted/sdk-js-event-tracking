@@ -130,9 +130,11 @@ Used for login / logout events. When a user logs in, call this function with a u
 
 ##### Generated objects
 
-`object` as `'primary'` - Where the event originated. In this case, the form.
+`object` as `'primary'` - The object of the Activity. In this case, the form.
 
 `result` as `'secondary'` - The result of the event. In this case, some new content from the form.
+
+`origin` as `'tertiary'` - Where the Activity originated (e.g the page)
 
 ##### Extra parameter suggestions
 
@@ -154,9 +156,11 @@ Used for login / logout events. When a user logs in, call this function with a u
 
 ##### Generated objects
 
-`object` as `'primary'` - Where the event originated. In this case, the form.
+`object` as `'primary'` - The object of the Activity. In this case, the form.
 
-`result` as `'secondary'` - The result of the event. In this case, a new comment.
+`result` as `'secondary'` - The result of the event. In this case, some new content from the form.
+
+`origin` as `'tertiary'` - Where the Activity originated (e.g the page)
 
 ##### Extra parameter suggestions
 
@@ -178,9 +182,11 @@ Used for login / logout events. When a user logs in, call this function with a u
 
 ##### Generated objects
 
-`object` as `'primary'` - Where the event originated. In this case, the form.
+`object` as `'primary'` - The object of the Activity. In this case, the form.
 
-`result` as `'secondary'` - The result of the event. In this case, a reply to the poll.
+`result` as `'secondary'` - The result of the event. In this case, some new content from the form.
+
+`origin` as `'tertiary'` - Where the Activity originated (e.g the page)
 
 ##### Extra parameter suggestions
 

@@ -74,13 +74,19 @@ describe('Events', function() {
             url: document.URL,
             displayName: document.title
         });
-        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+        expect(JSON.stringify(testJSON.origin)).to.eq(answerJSON);
 
         answerJSON = JSON.stringify({
             '@type': 'note',
             '@id': 'urn:localhost:page:1337:form:1234'
         });
         expect(JSON.stringify(testJSON.result)).to.eq(answerJSON);
+
+        answerJSON = JSON.stringify({
+            '@id': 'urn:localhost:page:1337:form:1234'
+        });
+        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+
     });
 
     it('should create activity with correct object on trackComment', function() {
@@ -94,13 +100,18 @@ describe('Events', function() {
             url: document.URL,
             displayName: document.title
         });
-        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+        expect(JSON.stringify(testJSON.origin)).to.eq(answerJSON);
 
         answerJSON = JSON.stringify({
             '@type': 'Note',
             '@id': 'urn:localhost:page:1337:form:1234'
         });
         expect(JSON.stringify(testJSON.result)).to.eq(answerJSON);
+
+        answerJSON = JSON.stringify({
+            '@id': 'urn:localhost:page:1337:form:1234'
+        });
+        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
 
     });
 
@@ -115,13 +126,18 @@ describe('Events', function() {
             url: document.URL,
             displayName: document.title
         });
-        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+        expect(JSON.stringify(testJSON.origin)).to.eq(answerJSON);
 
         answerJSON = JSON.stringify({
             '@type': 'Question',
             '@id': 'urn:localhost:page:1337:form:1234'
         });
         expect(JSON.stringify(testJSON.result)).to.eq(answerJSON);
+
+        answerJSON = JSON.stringify({
+            '@id': 'urn:localhost:page:1337:form:1234'
+        });
+        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
 
     });
 
