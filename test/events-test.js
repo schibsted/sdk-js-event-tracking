@@ -247,6 +247,18 @@ describe('Events', function() {
             '@id': 'urn:localhost:page:1234'
         });
         expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
+
+        retvar = this.activity.events.trackExit(1234);
+
+        answerJSON = JSON.stringify({});
+        testJSON = retvar.data;
+
+        expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
+
+        retvar = this.activity.events.trackExit();
+        answerJSON = JSON.stringify({});
+        testJSON = retvar.data;
+        expect(JSON.stringify(testJSON.target)).to.eq(answerJSON);
     });
 
     it('should return a array with two objects on trackEngagement', function() {
@@ -302,6 +314,28 @@ describe('Events', function() {
         var answerJSON = JSON.stringify({
             '@type': 'Page',
             '@id': 'urn:localhost:page:1337',
+            url: document.URL,
+            displayName: document.title
+        });
+
+        expect(JSON.stringify(retvar)).to.eq(answerJSON);
+    });
+
+    it('should not post-fix urn if urn allready set on addPageStandars', function() {
+
+        var testActivity = new Activity({
+            pageId: 'urn:example.com:page:1337',
+            clientId: 1337,
+            transport: this.transportStub,
+            url: 'http://test',
+            activityType: 'Read',
+            userId: 1337
+        });
+
+        var retvar = testActivity.events.addPageStandards();
+        var answerJSON = JSON.stringify({
+            '@type': 'Page',
+            '@id': 'urn:example.com:page:1337',
             url: document.URL,
             displayName: document.title
         });
