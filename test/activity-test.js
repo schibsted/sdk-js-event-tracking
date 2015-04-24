@@ -211,6 +211,71 @@ describe('Activity', function() {
         });
     });
 
+    describe('addUserId', function() {
+        beforeEach(function() {
+            this.sinon = sinon.sandbox.create();
+            this.transportStub = this.sinon.stub();
+
+            this.activity = new Activity({
+                pageId: 1,
+                clientId: 2,
+                transport: this.transportStub,
+                url: 'http://test',
+                activityType: 'Read',
+                userId: 1337
+            });
+        });
+
+        afterEach(function() {
+            this.sinon.restore();
+        });
+
+        it('should return silent if visitorId is undefined', function() {
+            assert.isUndefined(this.activity.addUserId({}));
+
+            this.activity.visitorId = undefined;
+            var object = {actor: {}};
+            this.activity.addUserId(object);
+
+            assert.isUndefined(this.activity.addUserId({}));
+
+            this.activity.visitorId = 'undefined';
+            object = {actor: {}};
+            this.activity.addUserId(object);
+
+            assert.isUndefined(this.activity.addUserId({}));
+        });
+
+        it('should not post-fix urn if urn already present', function() {
+            this.activity.visitorId = 'urn:spid.no:user:1234';
+            this.activity.envId = 'urn:spid.no:environment:1234';
+            this.activity.sessionId = 'urn:spid.no:session:1234';
+            this.activity.userId = 'urn:spid.no:person:1234';
+            var object = {actor: {}};
+            this.activity.addUserId(object);
+
+            expect(object.actor['@id']).to.eq('urn:spid.no:user:1234');
+            expect(object.actor['spt:environmentId']).to.eq('urn:spid.no:environment:1234');
+            expect(object.actor['spt:sessionId']).to.eq('urn:spid.no:session:1234');
+            expect(object.actor['spt:userId']).to.eq('urn:spid.no:person:1234');
+        });
+
+        it('should not return a user ID that has undefined present', function() {
+            this.activity.visitorId = 'urn:spid.no:user:1234';
+            this.activity.envId = 'urn:spid.no:environment:1234';
+            this.activity.sessionId = 'urn:spid.no:session:1234';
+            this.activity.userId = 'urn:spid.no:person:undefined';
+            var object = {actor: {}};
+            this.activity.addUserId(object);
+
+            expect(object.actor['@id']).to.eq('urn:spid.no:user:1234');
+            expect(object.actor['spt:environmentId']).to.eq('urn:spid.no:environment:1234');
+            expect(object.actor['spt:sessionId']).to.eq('urn:spid.no:session:1234');
+            assert.isUndefined(object.actor['spt:userId']);
+        });
+
+    });
+
     describe('send', function() {
         beforeEach(function() {
             this.sinon = sinon.sandbox.create();
@@ -271,6 +336,36 @@ describe('Activity', function() {
             expect(function() {
                 activity.send(activity.createScaffold());
             }).to.not.Throw();
+        });
+
+        it('should not send if allowTracking is false', function() {
+            this.activity.allowTracking = false;
+
+            var obj = this.activity.createScaffold();
+
+            this.transportStub.yields();
+
+            var stub = this.transportStub;
+
+            this.activity.send(obj, function(err) {
+                expect(err).to.not.be.ok;
+                expect(stub).to.have.been.callCount(0);
+            });
+        });
+
+        it('should wait if visitorId is not found', function() {
+            this.activity.visitorId = undefined;
+
+            var obj = this.activity.createScaffold();
+
+            this.transportStub.yields();
+
+            var stub = this.transportStub;
+
+            this.activity.send(obj, function(err) {
+                expect(err).to.not.be.ok;
+                expect(stub).to.have.been.callCount(0);
+            });
         });
     });
 
@@ -344,6 +439,9 @@ describe('Activity', function() {
                 activityType: 'Read',
                 provider: {
                     'spt:test': 'foo',
+                    herp: {
+                        derp: 'foo'
+                    },
                     bar: 'baz'
                 }
             });
@@ -396,6 +494,37 @@ describe('Activity', function() {
         });
     });
 
+    describe('get functions', function() {
+
+        beforeEach(function() {
+            this.sinon = sinon.sandbox.create();
+            this.transportStub = this.sinon.stub();
+
+            this.activity = new Activity({
+                pageId: 1,
+                clientId: 2,
+                transport: this.transportStub,
+                url: 'http://test',
+                activityType: 'Read',
+                userId: 1337,
+                visitorId: 1337
+            });
+        });
+
+        afterEach(function() {
+            this.sinon.restore();
+        });
+
+        it('should return the sessionId on getSessionId', function() {
+            this.activity.sessionId = 'urn:spid.no:session:123456';
+            expect(this.activity.getSessionId()).to.eq('urn:spid.no:session:123456');
+        });
+
+        it('should return the visitorId on getVisitorId', function() {
+            expect(this.activity.getVisitorId()).to.eq(1337);
+        });
+    });
+
     describe('refreshUserIds', function() {
         beforeEach(function() {
             this.sinon = sinon.sandbox.create();
@@ -410,6 +539,10 @@ describe('Activity', function() {
                 userId: 1337,
                 visitorId: 1337
             });
+        });
+
+        afterEach(function(){
+            this.sinon.restore();
         });
 
         it('should unset the userIds and vistorIds', function() {
@@ -431,14 +564,22 @@ describe('Activity', function() {
             expect(this.activity.userId).to.eq('userId1337');
         });
 
-        /*it('should request a new ID', function() {
+        it('should request a new ID', function() {
             this.transportStub.yields();
 
-            var stub = this.transportStub;
+            var stub = this.stub;
 
             this.activity.refreshUserIds('userId1337');
 
             expect(stub).to.have.been.called;
-        });*/
+        });
+
+        /*it('should throw an error if something is wrong', function() {
+            this.stub.yields(null, {idObj: {envId: 1234}});
+
+            expect(function() {
+                this.activity.refreshUserIds('userId1337');
+            }).to.throw('Could not fetch id');
+        })*/
     });
 });
