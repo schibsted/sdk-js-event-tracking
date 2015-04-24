@@ -307,6 +307,22 @@ describe('Events', function() {
             startTime: 1426153788086
         });
         expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+
+        retvar = this.activity.events.trackVisibility('testbox01', {end: 1426153788086});
+        testJSON = retvar.data;
+        answerJSON = JSON.stringify({
+            '@type': 'Content',
+            '@id': 'urn:localhost:page:1337:element:testbox01',
+            endTime: 1426153788086
+        });
+        expect(JSON.stringify(testJSON.object)).to.eq(answerJSON);
+
+        var self = this;
+
+        expect(function() {
+            self.activity.events.trackVisibility('testbox01');
+        }).to.throw('No time parameter was passed to this function');
+
     });
 
     it('should return standard values on add page standards', function() {
