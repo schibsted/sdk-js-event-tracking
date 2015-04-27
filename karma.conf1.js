@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = function(config) {
-    console.log(config);
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
@@ -55,8 +54,8 @@ module.exports = function(config) {
 
         // BrowserStack config
         browserStack: {
-            username: env.global.travisBsUser,
-            accessKey: env.global.travisBsAccessKey
+            username: process.env.travisBsUser,
+            accessKey: process.env.travisBsAccessKey
         },
 
         // Custom browser launchers
