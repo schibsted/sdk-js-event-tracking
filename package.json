@@ -43,7 +43,8 @@
     "node": "0.12.x"
   },
   "scripts": {
-    "test": "jshint . && jscs . && ./node_modules/karma/bin/karma start karma.conf1.js --single-run && ./node_modules/karma/bin/karma start karma.conf2.js --single-run",
+    "test": "jshint . && jscs . && ./node_modules/karma/bin/karma start karma.conf1.js --single-run",
+    "testlol": "jshint . && jscs . && ./node_modules/karma/bin/karma start karma.conf1.js --single-run && ./node_modules/karma/bin/karma start karma.conf2.js --single-run",
     "lint": "jshint . && jscs ."
   }
 }
