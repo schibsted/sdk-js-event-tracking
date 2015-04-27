@@ -54,8 +54,8 @@ module.exports = function(config) {
 
         // BrowserStack config
         browserStack: {
-            username: ENV['travisBsUser'],
-            accessKey: ENV['travisBsAccessKey']
+            username: ENV.travisBsUser,
+            accessKey: ENV.travisBsAccessKey
         },
 
         // Custom browser launchers
