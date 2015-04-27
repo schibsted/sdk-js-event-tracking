@@ -53,6 +53,10 @@ module.exports = function(config) {
         autoWatch: true,
 
         // BrowserStack config
+        browserStack: {
+            username: travisBsUser,
+            accessKey: travisBsAccessKey
+        },
 
         // Custom browser launchers
         customLaunchers: {
