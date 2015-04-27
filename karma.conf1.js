@@ -53,10 +53,6 @@ module.exports = function(config) {
         autoWatch: true,
 
         // BrowserStack config
-        browserStack: {
-            username: 'magnusskaalsveen1',
-            accessKey: 'BxcCDqansiyTWxNa2Xqs'
-        },
 
         // Custom browser launchers
         customLaunchers: {

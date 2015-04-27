@@ -321,7 +321,7 @@ describe('Events', function() {
 
         expect(function() {
             self.activity.events.trackVisibility('testbox01');
-        }).to.throw('No time parameter was passed to this function');
+        }).to.Throw(Error, 'No time parameter was passed to this function');
 
     });
 
