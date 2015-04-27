@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = function(config) {
+
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
@@ -57,7 +58,6 @@ module.exports = function(config) {
             username: process.env.travisBsUser,
             accessKey: process.env.travisBsAccessKey
         },
-
         // Custom browser launchers
         customLaunchers: {
             bs_firefox_mac: {
@@ -107,11 +107,10 @@ module.exports = function(config) {
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
         browsers: [
             'PhantomJS',
-            // 'bs_firefox_mac',
-            // 'bs_ie10_win8',
-            // 'bs_ie11_win81',
+            'bs_firefox_mac',
+            'bs_ie11_win81',
             'bs_ie9_win7',
-            // 'bs_chrome_win',
+            'bs_chrome_win',
             'bs_safari_ios'
         ],
 
