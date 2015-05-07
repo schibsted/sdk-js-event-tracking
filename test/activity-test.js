@@ -247,28 +247,42 @@ describe('Activity', function() {
         });
 
         it('should not post-fix urn if urn already present', function() {
-            this.activity.visitorId = 'urn:spid.no:user:1234';
+            this.activity.visitorId = 'urn:spid.no:person:1234';
             this.activity.envId = 'urn:spid.no:environment:1234';
             this.activity.sessionId = 'urn:spid.no:session:1234';
-            this.activity.userId = 'urn:spid.no:person:1234';
+            this.activity.userId = 'urn:spid.no:user:1234';
             var object = {actor: {}};
             this.activity.addUserId(object);
 
-            expect(object.actor['@id']).to.eq('urn:spid.no:user:1234');
+            expect(object.actor['@id']).to.eq('urn:spid.no:person:1234');
             expect(object.actor['spt:environmentId']).to.eq('urn:spid.no:environment:1234');
             expect(object.actor['spt:sessionId']).to.eq('urn:spid.no:session:1234');
-            expect(object.actor['spt:userId']).to.eq('urn:spid.no:person:1234');
+            expect(object.actor['spt:userId']).to.eq('urn:spid.no:user:1234');
+        });
+
+        it('should post-fix urn and domain if urn not present', function() {
+            this.activity.visitorId = '1234';
+            this.activity.envId = '1234';
+            this.activity.sessionId = '1234';
+            this.activity.userId = '1234';
+            var object = {actor: {}};
+            this.activity.addUserId(object);
+
+            expect(object.actor['@id']).to.eq('urn:spid.no:person:1234');
+            expect(object.actor['spt:environmentId']).to.eq('urn:spid.no:environment:1234');
+            expect(object.actor['spt:sessionId']).to.eq('urn:spid.no:session:1234');
+            expect(object.actor['spt:userId']).to.eq('urn:spid.no:user:1234');
         });
 
         it('should not return a user ID that has undefined present', function() {
-            this.activity.visitorId = 'urn:spid.no:user:1234';
+            this.activity.visitorId = 'urn:spid.no:person:1234';
             this.activity.envId = 'urn:spid.no:environment:1234';
             this.activity.sessionId = 'urn:spid.no:session:1234';
-            this.activity.userId = 'urn:spid.no:person:undefined';
+            this.activity.userId = 'urn:spid.no:user:undefined';
             var object = {actor: {}};
             this.activity.addUserId(object);
 
-            expect(object.actor['@id']).to.eq('urn:spid.no:user:1234');
+            expect(object.actor['@id']).to.eq('urn:spid.no:person:1234');
             expect(object.actor['spt:environmentId']).to.eq('urn:spid.no:environment:1234');
             expect(object.actor['spt:sessionId']).to.eq('urn:spid.no:session:1234');
             assert.isUndefined(object.actor['spt:userId']);
