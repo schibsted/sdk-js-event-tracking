@@ -1,4 +1,5 @@
-/*globals sinon, expect*/
+/* global expect */
+/* global sinon */
 
 'use strict';
 
@@ -116,7 +117,7 @@ describe('User', function() {
                 sessionId: 'abcd2345',
                 visitorId: 'abcd3456',
                 environmentId: 'abcd4567',
-                cisCookiesSet: true
+                cisCookieSet: true
             }
         };
 
@@ -144,7 +145,7 @@ describe('User', function() {
                 visitorId: 'abcd3456',
                 environmentId: 'abcd4567',
                 environmentIdTemporary: true,
-                cisCookiesSet: true
+                cisCookieSet: true
             }
         };
 
