@@ -8,7 +8,11 @@
 
 ## When developing:
 
+Use one shell for each of these commands
+
 `grunt watch`
+
+`./run-karma.sh`
 
 # Documentation
 
