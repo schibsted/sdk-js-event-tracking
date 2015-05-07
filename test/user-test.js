@@ -117,7 +117,7 @@ describe('User', function() {
                 sessionId: 'abcd2345',
                 visitorId: 'abcd3456',
                 environmentId: 'abcd4567',
-                cisCookieSet: true,
+                cisCookieSet: true
             }
         };
 
