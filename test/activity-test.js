@@ -34,7 +34,7 @@ describe('Activity', function() {
             var activity = new Activity({ pageId: 1, clientId: 2, activityType: 'Read' });
 
             expect(activity.pageId).to.eq(1);
-            expect(activity.clientId).to.eq('urn:spid.no:2');
+            expect(activity.clientId).to.eq('urn:schibsted.com:2');
         });
 
         it('should have a default url', function() {
@@ -46,7 +46,7 @@ describe('Activity', function() {
         it('should be possible to override url', function() {
             var activity = new Activity({ pageId: 1, clientId: 2, url: 'http://foo', activityType: 'Read' });
 
-            expect(activity.url).to.eq('http://foo/urn:spid.no:2');
+            expect(activity.url).to.eq('http://foo/urn:schibsted.com:2');
         });
 
         it('should use browser transport by default', function() {
@@ -165,7 +165,7 @@ describe('Activity', function() {
                 expect(err).to.not.be.ok;
 
                 expect(stub).to.be.called;
-                expect(stub).to.have.been.calledWith('http://test/urn:spid.no:2', objects);
+                expect(stub).to.have.been.calledWith('http://test/urn:schibsted.com:2', objects);
 
                 done();
             });
@@ -247,17 +247,17 @@ describe('Activity', function() {
         });
 
         it('should not post-fix urn if urn already present', function() {
-            this.activity.visitorId = 'urn:spid.no:person:1234';
-            this.activity.envId = 'urn:spid.no:environment:1234';
-            this.activity.sessionId = 'urn:spid.no:session:1234';
-            this.activity.userId = 'urn:spid.no:user:1234';
+            this.activity.visitorId = 'urn:schibsted.com:person:1234';
+            this.activity.envId = 'urn:schibsted.com:environment:1234';
+            this.activity.sessionId = 'urn:schibsted.com:session:1234';
+            this.activity.userId = 'urn:schibsted.com:user:1234';
             var object = {actor: {}};
             this.activity.addUserId(object);
 
-            expect(object.actor['@id']).to.eq('urn:spid.no:person:1234');
-            expect(object.actor['spt:environmentId']).to.eq('urn:spid.no:environment:1234');
-            expect(object.actor['spt:sessionId']).to.eq('urn:spid.no:session:1234');
-            expect(object.actor['spt:userId']).to.eq('urn:spid.no:user:1234');
+            expect(object.actor['@id']).to.eq('urn:schibsted.com:person:1234');
+            expect(object.actor['spt:environmentId']).to.eq('urn:schibsted.com:environment:1234');
+            expect(object.actor['spt:sessionId']).to.eq('urn:schibsted.com:session:1234');
+            expect(object.actor['spt:userId']).to.eq('urn:schibsted.com:user:1234');
         });
 
         it('should post-fix urn and domain if urn not present', function() {
@@ -268,23 +268,23 @@ describe('Activity', function() {
             var object = {actor: {}};
             this.activity.addUserId(object);
 
-            expect(object.actor['@id']).to.eq('urn:spid.no:person:1234');
-            expect(object.actor['spt:environmentId']).to.eq('urn:spid.no:environment:1234');
-            expect(object.actor['spt:sessionId']).to.eq('urn:spid.no:session:1234');
-            expect(object.actor['spt:userId']).to.eq('urn:spid.no:user:1234');
+            expect(object.actor['@id']).to.eq('urn:schibsted.com:person:1234');
+            expect(object.actor['spt:environmentId']).to.eq('urn:schibsted.com:environment:1234');
+            expect(object.actor['spt:sessionId']).to.eq('urn:schibsted.com:session:1234');
+            expect(object.actor['spt:userId']).to.eq('urn:schibsted.com:user:1234');
         });
 
         it('should not return a user ID that has undefined present', function() {
-            this.activity.visitorId = 'urn:spid.no:person:1234';
-            this.activity.envId = 'urn:spid.no:environment:1234';
-            this.activity.sessionId = 'urn:spid.no:session:1234';
-            this.activity.userId = 'urn:spid.no:user:undefined';
+            this.activity.visitorId = 'urn:schibsted.com:person:1234';
+            this.activity.envId = 'urn:schibsted.com:environment:1234';
+            this.activity.sessionId = 'urn:schibsted.com:session:1234';
+            this.activity.userId = 'urn:schibsted.com:user:undefined';
             var object = {actor: {}};
             this.activity.addUserId(object);
 
-            expect(object.actor['@id']).to.eq('urn:spid.no:person:1234');
-            expect(object.actor['spt:environmentId']).to.eq('urn:spid.no:environment:1234');
-            expect(object.actor['spt:sessionId']).to.eq('urn:spid.no:session:1234');
+            expect(object.actor['@id']).to.eq('urn:schibsted.com:person:1234');
+            expect(object.actor['spt:environmentId']).to.eq('urn:schibsted.com:environment:1234');
+            expect(object.actor['spt:sessionId']).to.eq('urn:schibsted.com:session:1234');
             assert.isUndefined(object.actor['spt:userId']);
         });
 
@@ -319,7 +319,7 @@ describe('Activity', function() {
 
             this.activity.send(obj, function(err) {
                 expect(err).to.not.be.ok;
-                expect(stub).to.have.been.calledWith('http://test/urn:spid.no:2', [obj]);
+                expect(stub).to.have.been.calledWith('http://test/urn:schibsted.com:2', [obj]);
 
                 done();
             });
@@ -413,7 +413,7 @@ describe('Activity', function() {
 
             var scaffold = activity.createScaffold(true);
             var contextExtra = {
-                spt:'http://spid.no',
+                spt:'http://schibsted.com',
                 'spt:sdkType': 'JS',
                 'spt:sdkVersion': '0.1.0'
             };
@@ -432,7 +432,7 @@ describe('Activity', function() {
 
             var scaffold = activity.createScaffold();
             var contextExtra = {
-                spt:'http://spid.no',
+                spt:'http://schibsted.com',
                 'spt:sdkType': 'JS',
                 'spt:sdkVersion': '0.1.0'
             };
@@ -530,8 +530,8 @@ describe('Activity', function() {
         });
 
         it('should return the sessionId on getSessionId', function() {
-            this.activity.sessionId = 'urn:spid.no:session:123456';
-            expect(this.activity.getSessionId()).to.eq('urn:spid.no:session:123456');
+            this.activity.sessionId = 'urn:schibsted.com:session:123456';
+            expect(this.activity.getSessionId()).to.eq('urn:schibsted.com:session:123456');
         });
 
         it('should return the visitorId on getVisitorId', function() {
