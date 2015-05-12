@@ -20,14 +20,15 @@ describe('Activity', function() {
     });
 
     describe('constructor', function() {
-        it('should require clientId and pageId', function() {
+        it('should require clientId, but not pageId', function() {
             expect(function() {
                 new Activity({ pageId: 1337, activityType: 'Read' });
             }).to.Throw(Error, 'clientId is required');
 
             expect(function() {
-                new Activity({ clientId: 1337, activityType: 'Read' });
-            }).to.Throw(Error, 'pageId is required');
+                var activity = new Activity({ clientId: 1337, activityType: 'Read' });
+				expect(activity.pageId).to.eq(document.location);
+            }).to.not.Throw(Error, 'pageId is required');
         });
 
         it('should set clientId and pageId on activity object', function() {
