@@ -70,15 +70,15 @@ module.exports = function(config) {
             bs_chrome_win: {
                 base: 'BrowserStack',
                 browser: 'chrome',
-                browser_version: '41.0',
+                browser_version: '39.0',
                 os: 'WINDOWS',
                 os_version: '8.1'
             },
             bs_safari_ios: {
                 base: 'BrowserStack',
-                device: 'iPhone 6',
+                device: 'iPhone 5S',
                 os: 'ios',
-                os_version: '8.0'
+                os_version: '7.0'
             },
             bs_ie10_win8: {
                 base: 'BrowserStack',
