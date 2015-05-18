@@ -74,11 +74,12 @@ module.exports = function(config) {
                 os: 'WINDOWS',
                 os_version: '8.1'
             },
-            bs_safari_ios: {
+            bs_safari_mac: {
                 base: 'BrowserStack',
-                device: 'iPhone 5S',
-                os: 'ios',
-                os_version: '7.0'
+                browser: 'safari',
+                browser_version: '7.0',
+                os: 'OS X',
+                os_version: 'Yosemite'
             },
             bs_ie10_win8: {
                 base: 'BrowserStack',
@@ -111,7 +112,7 @@ module.exports = function(config) {
             'bs_ie11_win81',
             'bs_ie9_win7',
             'bs_chrome_win',
-            'bs_safari_ios'
+            'bs_safari_mac'
         ],
 
         // Continuous Integration mode
