@@ -77,7 +77,7 @@ module.exports = function(config) {
             bs_safari_mac: {
                 base: 'BrowserStack',
                 browser: 'safari',
-                browser_version: '7.0',
+                browser_version: '8.0',
                 os: 'OS X',
                 os_version: 'Yosemite'
             },
