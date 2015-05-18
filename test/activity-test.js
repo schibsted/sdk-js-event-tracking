@@ -416,7 +416,7 @@ describe('Activity', function() {
             var contextExtra = {
                 spt:'http://schibsted.com',
                 'spt:sdkType': 'JS',
-                'spt:sdkVersion': '0.1.0'
+                'spt:sdkVersion': '0.3.0'
             };
 
             expect(scaffold['@context']).to.deep
@@ -435,7 +435,7 @@ describe('Activity', function() {
             var contextExtra = {
                 spt:'http://schibsted.com',
                 'spt:sdkType': 'JS',
-                'spt:sdkVersion': '0.1.0'
+                'spt:sdkVersion': '0.3.0'
             };
 
             expect(scaffold['@context']).to.deep
