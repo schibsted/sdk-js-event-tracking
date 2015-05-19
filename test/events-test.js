@@ -40,28 +40,31 @@ describe('Events', function() {
     });
 
     it('should create activity with correct object and a origin on trackPageLoad', function() {
-        var retvar = this.activity.events.trackPageLoad('test title');
-        expect(retvar).to.be.a('object');
-
-        var testJSON = JSON.stringify(retvar.data.object);
-        var answerJSON = JSON.stringify({
-            '@type': 'Page',
-            '@id': 'urn:localhost:page:1337',
-            url: document.URL,
-            displayName: 'test title'
-        });
-        expect(testJSON).to.eq(answerJSON);
-		expect(retvar.data.origin).to.not.equal(undefined);
-
-        retvar = this.activity.events.trackPageLoad();
-        testJSON = JSON.stringify(retvar.data.object);
-        answerJSON = JSON.stringify({
-            '@type': 'Page',
-            '@id': 'urn:localhost:page:1337',
-            url: document.URL,
-            displayName: document.title
-        });
-        expect(testJSON).to.eq(answerJSON);
+		var retvar = this.activity.events.trackPageLoad('test title');
+		expect(retvar).to.be.a('object');
+		
+		var testJSON = JSON.stringify(retvar.data.object);
+		var answerJSON = JSON.stringify({
+			'@type': 'Page',
+			'@id': 'urn:localhost:page:1337',
+			url: document.URL,
+			displayName: 'test title'
+		});
+		expect(testJSON).to.eq(answerJSON);
+		if (document.referrer) {
+			expect(retvar.data.origin).to.not.equal(undefined);
+			expect(retvar.data.origin.url).to.eq(document.referrer);
+		}
+		
+		retvar = this.activity.events.trackPageLoad();
+		testJSON = JSON.stringify(retvar.data.object);
+		answerJSON = JSON.stringify({
+			'@type': 'Page',
+			'@id': 'urn:localhost:page:1337',
+			url: document.URL,
+			displayName: document.title
+		});
+		expect(testJSON).to.eq(answerJSON);
     });
 
     it('should create activity with correct object on trackForm', function() {
