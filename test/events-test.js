@@ -42,7 +42,7 @@ describe('Events', function() {
     it('should create activity with correct object and a origin on trackPageLoad', function() {
 		var retvar = this.activity.events.trackPageLoad('test title');
 		expect(retvar).to.be.a('object');
-		
+
 		var testJSON = JSON.stringify(retvar.data.object);
 		var answerJSON = JSON.stringify({
 			'@type': 'Page',
@@ -55,7 +55,7 @@ describe('Events', function() {
 			expect(retvar.data.origin).to.not.equal(undefined);
 			expect(retvar.data.origin.url).to.eq(document.referrer);
 		}
-		
+
 		retvar = this.activity.events.trackPageLoad();
 		testJSON = JSON.stringify(retvar.data.object);
 		answerJSON = JSON.stringify({
