@@ -116,7 +116,9 @@ Used for login / logout events. When a user logs in, call this function with a u
 
 ##### Generated objects
 
-`object` as `'primary'` - Where the event originated.
+`object` as `'primary'` - The page that loaded.
+
+`origin` as `'secondary'` - The origin document, so the referrer are found here.
 
 ##### Extra parameter suggestions
 
