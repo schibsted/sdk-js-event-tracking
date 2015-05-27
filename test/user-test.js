@@ -165,5 +165,5 @@ describe('User', function() {
 });
 
 function resetSessionId() {
-	document.cookie = "_DataTrackerSession=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+	document.cookie = '_DataTrackerSession=; expires=Thu, 01 Jan 1970 00:00:00 UTC';
 }
