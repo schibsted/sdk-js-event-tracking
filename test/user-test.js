@@ -107,6 +107,9 @@ describe('User', function() {
     });
 
     it('should set IDs in the idObj 2', function(done) {
+
+		resetSessionId();
+
         var user = new User(this.activity);
 
         var stub = this.transportStub;
@@ -134,6 +137,7 @@ describe('User', function() {
     });
 
     it('should understand a temporary ID', function(done) {
+		resetSessionId();
         var user = new User(this.activity);
 
         var stub = this.transportStub;
@@ -159,3 +163,7 @@ describe('User', function() {
     });
 
 });
+
+function resetSessionId() {
+	document.cookie = "_DataTrackerSession=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+}
