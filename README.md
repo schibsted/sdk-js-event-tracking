@@ -1,383 +1,180 @@
-# sdk-js-event-tracking
+# Difference between JS-Snippet and JS-SDK
 
-## Get up and running:
+This repository combines both a tracking SDK (JS-SDK) and a tracking snippet. The SDK is the underlying library wit functionality to retrive IDs, create events and send events. But it doesn't do anything unless it is told to. If you are looking for the SDK documentation, please visit the [SDK documentation](https://github.com/schibsted/sdk-js-event-tracking/blob/master/SDK.md).
 
-`npm install`
+A tracking script (JS-Snippet) runs on top of the SDK, this script automatically tracks a set of events. This page is the documentation for the tracking script.
 
-`grunt`
+To see the events being produced by the snippet. Visit the [events page](https://github.com/schibsted/sdk-js-event-tracking/blob/master/EVENTS.md).
 
-## When developing:
+![SDK and Snippet figure](images/js-sdk-flow.001.png)
 
-Use one shell for each of these commands
+# Getting started
 
-`grunt watch`
+This is a three step guide to get started.
 
-`./run-karma.sh`
+1. Put the Snippet found [here](https://github.com/schibsted/sdk-js-event-tracking-contrib#getting-started) in your page.
+2. Provide values to the `pulse2opt` object as demonstrated [here](https://github.com/schibsted/sdk-js-event-tracking-contrib#example-of-recommended-implementation)
+3. Add any other [options](https://github.com/schibsted/sdk-js-event-tracking-contrib#optional-options) you need to the `pulse2opt` object.
 
-# Documentation
+# Snippet
 
-## Example usage
-
-### Snippet
-
-### Create and send an event
+To get started with automatic tracking, please insert the following snippet as close to `</body>` as possible.
 
 ```
-<head>
-    <script src="dist/tracker.js"></script>
-</head>
-<body>
-    <script type="text/javascript">
-        // Set your options
-        var opt = {
-            clientId:   '1234asdf',
-            pageType:   'Article',
-            pageId:     '98798342'
-        }
+<script type="text/javascript">
+var pulse2opt = {
+    clientId: /* your clientId (e.g VG, BT etc) */
+};
 
-        // Create your activity. It needs your options as a parameter.
-        var activity = new Activity(opt);
-
-        // When you have your activity, you can track an event
-        activity.events.trackPageLoad('Test article', 'Read').send();
-
-    </script>
-</body>
-```
-### Queue events and send a batch send
-
-```
-// Set your options
-var opt = {
-    clientId:   '1234asdf',
-    pageType:   'Article',
-    pageId:     '98798342'
-}
-
-// Create your activity. It needs your options as a parameter.
-var activity = new Activity(opt);
-
-// Use .queue() to add events to the queue.
-activity.events.trackComment('843223', 'Post').queue();
-activity.events.trackPoll('843223', 'Post').queue();
-
-// And manually send the queue.
-activity.sendQueue();
+(function(){
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.src="//d1nf1ogr7o23z7.cloudfront.net/autoTracker.min.js";
+    s.parentNode.insertBefore(g,s);
+})();
+</script>
 ```
 
-### Add parameters and customData
+If you use any third party libraries for module loading (such as requirejs) or a tag manager (such as tealium), please see the [alternative implementations page](https://github.com/schibsted/sdk-js-event-tracking-contrib/blob/master/IMPLEMENTATIONS.md).
+
+# Options
+
+Options can be set in the `pulse2opt` object in the tracking snippet.
+
+## Required options
+
+There are only two required options to be set in the `pulse2opt` object.
+
+`clientId` - a string representing your organization, such as `VG` or `BT`.
+
+`pageId` - a unique string for the current page/article/ad/view. If the current page/view doensn't have a pageId, leave it out, or provide a static string such as `'frontpage'`.
+
+## Recommended options
+
+You should add the recommended options listed below. userId is so we can link the event to a logged in user (if the user is logged in) and category (if applicable) which helps us better tag the page view event.
+
+`userId` - If the user has a userId (that is if the user is logged in), please provide this as an option. The user must have agreed to terms and condition
+
+Category - Category is not an option itself, but it should go in to the provider as demonstrated below. You may define a category and a subCategory.
+
+`provider` - This is where category and subCategory should go. You might also define as many key/value pairs as you want and input them in the provier to enrich your data. Please see the example below. The provider will be a part of the events that are sent from your site. It is the part of the event that defines where the events are coming from.
+
+### Example of recommended implementation
 
 ```
-// Set your options
-var opt = {
-    clientId:   '1234asdf',
-    pageType:   'Article',
-    pageId:     '98798342'
-}
+<script type="text/javascript">
+var pulse2opt = {
+    pageId: 908123112, 			// String or integer
+    clientId: 'Example', 		// String
+	userId: 987841231, 			// String or integer
+	provider: {					// Key/Value pairs. Keep keys in camel case
+		category: 'cars',
+		subCategory: 'ford',
+		yourKey: 'yourValue'
+	}
+};
 
-// Create your activity. It needs your options as a parameter.
-var activity = new Activity(opt);
-
-// Use .queue() to add events to the queue.
-activity.events.trackComment('843223', 'Post').addCustomData('primary', {words: 32, lines: 3}).send();
-activity.events.trackPoll('843223', 'Post').addProperty('secondary', 'displayName', 'Is this a question?').send();
-
+(function(){
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.src="//d1nf1ogr7o23z7.cloudfront.net/autoTracker.min.js";
+    s.parentNode.insertBefore(g,s);
+})();
+</script>
 ```
 
-`primary`, `secondary` and `tertiary` is used to tell which object you want to add data to. Each event function described below has specified the objects being generated and which reference the object coresponds with.
+## Optional options
 
-## Activity(opts)
+The following options can be set:
+
+`pageType` - The type of page ('Page', 'Article', 'Application', 'Community', 'Service'). Should always be a valid Activitystreams 2.0 object type. (http://www.w3.org/TR/2015/WD-activitystreams-vocabulary-20150129/)
+
+`respectDoNotTrack` - If you want the tracking script to respect users who have set the doNotTrack flag, please set this option to `true`. Otherwise, the doNotTrack flag will not be respected.
+
+`trackingFeatures` - This is for turning on/off tracking of different kinds of event tracking in the tracking code. There are several pre-defined properties:
 
 ```
-opts = {
-    pageId: '',     // The Id of the current page/article (required)
-    clientId: '',   // The providers ID, supplied by SPT. (required)
-    pageType: '',   // The type of page where the Activity is created. Default 'Page'
-    url: '',        // The URL that data will be sent to.
-    transport: f()  // To specify custom transport function.
-    provider: {}    // Add custom provider data
-}
+var pulse2opt = {
+	..
+	trackingFeatures: {
+		pageLoad: false,			// Default: true
+		hashChange: false,			// Default: true
+		pageUnload: false,			// Default: true
+		clickButton: false,			// Default: true
+		clickSubmit: false,			// Default: true
+		relativeScroll: false,		// Default: true
+		itemVisible: false,			// Default: true
+		facebook: false,			// Default: true
+		twitter: false,				// Default: true	
+	},
+	..
+};
 ```
 
-### Activity.refreshUserIds(userId)
+All parameters are true by default. If you want to turn off a tracking feature, this is the way to do so. The parameters should be pretty self explanatory. Maybe exept: `clickSubmit`, which is form, comment and poll tracking. And `itemVisible` which is tracking of elements leaving and entering the DOM.
 
-Used for login / logout events. When a user logs in, call this function with a user ID in the following format:
-`urn:<your domain>:user:<your userId>`. When the user logs back out, call the same function with `undefined`.
+`transport` - A object for transporting data from/to the identity service (CIS) and the data-collector. A default i provided from the SDK, so leave this one out unless you know what you are doing.
 
-### Activity.Event(eventType)
+`url` - If you want your data sent to an alternative data-collector instead of the SPT data-collector, specify the URL to you API end point here.
 
-#### Activity.Event.trackPageLoad(title, activityType)
+`userIdDomain` - Please provide this property with a string defining the origin of your userIds (domain). Otherwise, the tracking software will assume that any userIds you pass with the `loginEvent` function or as a `userId` option have originated from schibsted.com
 
-##### Required parameters
+`visitorId` - VisitorIds should normally be provided by CIS, but if you for some reason need to set your own (tests or such), you can use this option.
 
-`title` - The title of the page. Will default to document.title
+# Get/set functions.
 
-`activityType` - The type of activity that is being tracked. Will default to 'Read'
+All calls to get/set functions should be done after pageload is complete.
 
-##### Generated objects
+`AutoTrack.getPageViewId()` - returns the pageViewId for the page view.
 
-`object` as `'primary'` - The page that loaded.
+`AutoTrack.getSessionId()` - returns the sessionId for the visit. The session ID might need a bit longer than page load before it can be exposed due to AJAX-requests that are sent for this ID.
 
-`origin` as `'secondary'` - The origin document, so the referrer are found here.
+`AutoTrack.getVisitorId()` - returns the visitorId of the user. This ID is likely to stay the same across sessions. But will change if the user is logged in or out. The visitor ID might need a bit longer than page load before it can be exposed due to AJAX-requests that are sent for this ID.
 
-##### Extra parameter suggestions
+`AutoTrack.logoutEvent()` - If a logged in user logs out, this function should be called. It will trigger a request for a new set of IDs.
 
-`content` store the content of the submitted form.
+`AutoTrack.loginEvent(userId)` - If a logged out user logs in, this function should be called. It takes a `userId`, which is passed on to CIS as well as stored in a local cookie. The user must have accepted terms and conditions for the identity provider or any similar ToC where the user agrees to being tracked.
 
-#### Activity.Events.trackForm(formId, contentType, activityType)
+# Events that are tracked by default
 
-##### Required parameters
+The following events are tracked by default:
 
-`formId` - The ID of the form element, must be unique per page.
+Pageload
 
-`contentType` - The type of content generated by the form (note, spt:email, other? )
+scroll (25% intervals),
 
-`activityType` - The type of activity that is being tracked. Will default to 'Post'
+Facebook likes / removed likes - Your implementation of Facebook like button must be the current recommended implementation from Facebook.
 
-##### Generated objects
+Twitter sharing - Your implementation of Twitter share button must be the current recommended implementation from Twitter.
 
-`object` as `'primary'` - The object of the Activity. In this case, the form.
+PageUnload - Experimental
 
-`result` as `'secondary'` - The result of the event. In this case, some new content from the form.
+# Additional supported events
 
-`origin` as `'tertiary'` - Where the Activity originated (e.g the page)
+## Track Visibility
 
-##### Extra parameter suggestions
+If the class `track-visibility` is set on any element, an event will be produced whenever that element enters and exits the viewport.
 
-`displayName` - The title of the form in a human readable format.
+The element needs to have an `id` parameter set as well in order to provide identification of the element. The `id` parameter should be a unique string, but there are no other requirements than it's existence from the SDK.
 
-`content` store the content of the submitted form.
+## Track Click
 
-`inReplyTo` a string or a object that links the this form submission to a some other entity.
+If the class `track-click` is set on any element, an event will be produced whenever that element, or a child element is clicked.
 
-`url` A URL will be set automatically using document.URL, but if you are running a single page application or for some other reason want to change the URL, feel free to do so.
+The element needs to have an `id` parameter set as well in order to provide identification of the element. The `id` parameter should be a unique string, but there are no other requirements than it's existence from the SDK.
 
-#### Activity.Events.trackComment(formId, activityType)
+## Track Form
 
-##### Required parameters
+If the class `track-form` is set on any element, an event will be produced if the element produces an `onsubmit` event.
 
-`formId` - The ID of the form element, must be unique per page.
+The element needs to have an `id` parameter set as well in order to provide identification of the element. The `id` parameter should be a unique string, but there are no other requirements than it's existence from the SDK.
 
-`activityType` - The type of activity that is being tracked. Will default to 'Post'
+## Track Comment
 
-##### Generated objects
+If the class `track-comment` is set on any element, an event will be produced if the element produces an `onsubmit` event.
 
-`object` as `'primary'` - The object of the Activity. In this case, the form.
+The element needs to have an `id` parameter set as well in order to provide identification of the element. The `id` parameter should be a unique string, but there are no other requirements than it's existence from the SDK.
 
-`result` as `'secondary'` - The result of the event. In this case, some new content from the form.
+## Track Poll
 
-`origin` as `'tertiary'` - Where the Activity originated (e.g the page)
+If the class `track-poll` is set on any element, an event will be produced if the element produces an `onsubmit` event.
 
-##### Extra parameter suggestions
-
-`content` - store the content of the comment.
-
-`inReplyTo` - a string or a link object that links this comment to a page/article or another comment.
-
-##### Custom data suggestion
-
-`spt:commentId` - The ID of the comment being generated by the comment form
-
-#### Activity.Events.trackPoll(formId, activityType)
-
-##### Required parameters
-
-`formId` - The ID of the form element, must be unique per page.
-
-`activityType` - The type of activity that is being tracked. Will default to 'Post'
-
-##### Generated objects
-
-`object` as `'primary'` - The object of the Activity. In this case, the form.
-
-`result` as `'secondary'` - The result of the event. In this case, some new content from the form.
-
-`origin` as `'tertiary'` - Where the Activity originated (e.g the page)
-
-##### Extra parameter suggestions
-
-`question` - The question being asked, will be stored in displayName in primary object.
-
-`oneOf` - A object in the `object` with `@type` 'collection' and `items` property with a array of possible answers.
-
-`replies` - A object in the `result` with `@type` 'collection' and `items` property with a array of answers.
-
-#### Activity.Events.trackClick(elementId, displayName, targetType, targetId, activityType)
-
-##### Required parameters
-
-`elementId` - The ID of the clicked element.
-
-`displayName` - The name/title of the clicked element.
-
-`targetType` - The type of entity that is the target for the action (page, application, process, article)
-
-`targetId` - The ID of the target.
-
-`activityType` - The type of activity that is being tracked. Will default to 'Accept'
-
-##### Generated objects
-
-`object` as `'primary'` - Where the event originated. In this case, the clicked element.
-
-`target` as `'secondary'` - The target of the action. Normally the current page or where a users ends up after the action.
-
-##### Extra parameter suggestions
-
-`displayName` To get a good textual representation. Can be used for both primary and secondary object.
-
-#### Activity.Events.trackSocial(elementId, networkName, activityType)
-
-##### Required parameters
-
-`elementId` - The ID of the button or link the user clicks to achieve a social action (e.g Facebook like button)
-
-`networkName` - The name of the social network. (Facebook, Twitter, Pintrest etc.)
-
-`activityType` - The type of activity that is being tracked. Will default to 'Like'
-
-##### Generated objects
-
-`object` as `'primary'` - The page/article/entity being shared/liked.
-
-`origin` as `'secondary'` - Where the event happened, such as a button or link.
-
-`target` as `'tertiary'` - The target of the action. The socialmedia site receiving the action.
-
-##### Extra parameter suggestions
-
-`displayName` To get a good textual representation. (for all objects)
-
-#### Activity.Events.trackMediaState(mediaId, mediaType, activityType)
-
-##### Required parameters
-
-`mediaId` - The ID of the media entity.
-
-`mediaType` - The type of media (video, audio, album)
-
-`activityType` - The type of activity that is being tracked. Will default to 'Watch'
-
-##### Generated objects
-
-`object` as `'primary'` - The media entity where a state change happened.
-
-`origin` as `'secondary'` - The page where the event was generated.
-
-##### Extra parameter suggestions
-
-`displayName` To get a good textual representation.
-
-`url` The URL to the page.
-
-#### Activity.Events.trackScroll(scrollDepth, activityType)
-
-##### Required parameters
-
-`scrollDepth` - A value representing the relative scroll distance. Will be stored as a content parameter in the target.
-
-`activityType` - The type of activity that is being tracked. Will default to 'Arrive'
-
-##### Generated objects
-
-`object` as `'primary'` - The page or entity where scroll happened.
-
-`target` as `'secondary'` - The scroll depth.
-
-##### Extra parameter suggestions
-
-`displayName` - A human readable text for the scroll distance (e.g "Under header")(for `target`)
-
-#### Activity.Events.trackVisibility(elementId, time, activityType)
-
-##### Required parameters
-
-`elementId` - The ID of the element that are tracked.
-
-`elementId` - Either a string with start time as a AS 2.0 compatible timestamp, or a object {start: <timestamp>, end: <timestamp}
-
-`activityType` - The type of activity that is being tracked. Will default to 'Arrive'
-
-##### Generated objects
-
-`origin` as `'primary'` - The page or entity where the element is located.
-
-`object` as `'secondary'` - The element that is tracket.
-
-##### Extra parameter suggestions
-
-`displayName` - A human readable text for the element.
-
-#### Activity.Events.trackExit(targetId, targetType, activityType)
-
-If no target is available, set targetId and targetType to undefined.
-
-##### Required parameters
-
-`targetId` - The ID of where the user goes next.
-
-`targetType` - The type of the target for the users exit (page, article, application)
-
-`activityType` - The type of activity that is being tracked. Will default to 'Leave'
-
-##### Generated objects
-
-`object` as `'primary'` - The page or entity where exit happened.
-
-`target` as `'secondary'` - Target action for the exit, for example the next page.
-
-##### Extra parameter suggestions
-
-`displayName` - A human readable text such as a title or description.
-
-#### Activity.Events.trackEngagementTime(duration, activityType)
-
-##### Required parameters
-
-`duration` - A integer representing the number of milliseconds that the engagement has lasted.
-
-`activityType` - The type of activity that is being tracked. Will default to 'View'
-
-##### Generated objects
-
-`object` as `'primary'` - The page or entity the engagement is taking place.
-
-##### Extra parameter suggestions
-
-`displayName` - A human readable text for the scroll distance (e.g "Under header")(for `target`)
-
-#### Activity.Events.trackCustomEvent(obj, activityType)
-
-A function for tracking any other events. Takes an object with Activitystream 2.0 compatible objects. Actor and header info will be added by the function.
-
-##### Required parameters
-
-`obj` - A object of Activitystream 2.0 objects (like object, target and origin).
-
-`activityType` - The type of activity that is being tracked. No default
-
-#### Activity.Event.addProperty(obj, property, value)
-
-##### Required parameters
-
-`object` - The target object in the activity (object, target, result, origin etc).
-
-`property` - The property that should be added. Allowed properties: http://www.w3.org/TR/2015/WD-activitystreams-vocabulary-20150129/#properties '4. Properties'
-
-`value` - Preferably a string, but an objects will work as well. If a raw Activitystream object is inputed, it can compromise future compatibility.
-
-#### Activity.Event.addCumstomData(obj, data)
-
-##### Required parameters
-
-`object` - The target object in the activity (object, target, result, origin etc).
-
-`data` - An object. All data will be a sub-object of the property `spt:custom`. All property values in the `data` object should be prefixed with `spt:`
-
-#### Activity.Event.send()
-
-Will ship the built event objects to the Activity object to get providor and actor, before it gets sent to the server.
-
-#### Activity.Event.queue()
-
-Will add the created activity to a queue to be sent later.
+The element needs to have an `id` parameter set as well in order to provide identification of the element. The `id` parameter should be a unique string, but there are no other requirements than it's existence from the SDK.

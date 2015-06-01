@@ -4,3 +4,4 @@ doc/
 node_modules/
 tracker.js
 env_variables.sh
+reports/

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>My first test site</title>
+        <script type="text/javascript" src="sinon-1.14.1.js"></script>
+        <!--<script type="text/javascript" src="bower_components/sinon/lib/sinon.js"></script>
+        <script type="text/javascript" src="bower_components/sinon/lib/sinon/spy.js"></script>-->
+    </head>
+    <body>
+        <h1>Testsite 02</h1>
+        <script type="text/javascript">
+            var requests = [];
+            //var xhr = sinon.useFakeXMLHttpRequest();
+            var server = sinon.fakeServer.create();
+            var input = {
+                data: {
+                    userId: 'abcd1234',
+                    sessionId: 'abcd2345',
+                    visitorId: 'abcd3456',
+                    environmentId: 'abcd4567',
+                    cisCookieSet: true
+                }
+            };
+            
+             server.respondWith([200, {"Content-Type": "application/json; charset=utf-8}"}, JSON.stringify(input)]);
+            
+             server.autoRespond = true;
+             server.autoRespondAfter = 10;
+            
+            var myTransport = function(url, data, callback) {
+                console.log('using myTransport for transport');
+                var xmlhttp = new XMLHttpRequest();
+                url = "http://stage-identity.spid.se/api/v1/identify";
+                
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var myArr = JSON.parse(xmlhttp.responseText);
+                        console.log(myArr);
+                        callback(null, myArr)
+                    }
+                }
+                xmlhttp.open("POST", url, true);
+                xmlhttp.withCredentials = true;
+                xmlhttp.setRequestHeader("Content-type","application/json");
+                xmlhttp.send('{}');
+            };
+            
+            var _opt = {
+                pageId: '1234567',
+                clientId: 'testClient01',
+                noCisCookie: false,
+                url: 'http://127.0.0.1:8002/api/v1/track'
+            };
+
+            (function(){
+                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+                g.src="http://127.0.0.1:8080/dist/autoTracker.min.js";
+                s.parentNode.insertBefore(g,s);
+            })();
+
+        </script>
+    </body>
+</html>

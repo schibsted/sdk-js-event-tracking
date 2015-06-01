@@ -99,5 +99,5 @@
 
     "disallowTrailingComma": true,
 
-    "excludeFiles": ["node_modules/**", "dist/*", "coverage/**", "doc/**"]
+    "excludeFiles": ["node_modules/**", "dist/*", "coverage/**", "doc/**", "integrationtest/dev/sinon-1.14.1.js", "integrationtest/dev/require.js"]
 }
