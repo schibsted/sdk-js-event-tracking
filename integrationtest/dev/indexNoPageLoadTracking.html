@@ -7,9 +7,16 @@
 		<script type="text/javascript" src="sinonSetup.js"></script>
         <style>
 			body {
-				height: 3000px;
+				min-height: 3000px;
 			}
 			#test-click-element {
+				height: 100px;
+				width: 400px;
+				background-color: red;
+				color: white;
+			}
+			#test-scroll-element {
+				margin-top: 2000px;
 				height: 100px;
 				width: 400px;
 				background-color: red;
@@ -24,6 +31,10 @@
 			This should be tracked.
 		</div>
 		
+		<div id="test-scroll-element">
+			This should be tracked.
+		</div>
+		
         <script type="text/javascript">
 			
 			var pulse2opt = {
@@ -31,7 +42,9 @@
 				pageId: 1231231,
 				userId: 'urn:schibsted.com:user:123123',
 				trackingFeatures: {
-					pageLoad: false
+					pageLoad: false,
+					clickButton: true,
+					relativeScroll: true
 				}
             };
 
