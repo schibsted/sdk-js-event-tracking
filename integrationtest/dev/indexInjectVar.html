@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>My first test site</title>
+        <script type="text/javascript" src="sinon-1.14.1.js"></script>
+        <!--<script type="text/javascript" src="bower_components/sinon/lib/sinon.js"></script>
+        <script type="text/javascript" src="bower_components/sinon/lib/sinon/spy.js"></script>-->
+    </head>
+    <body>
+        <h1>Testsite 01</h1>
+        <script type="text/javascript">
+            (function() {
+		    var d = document, g = d.createElement('script'), f = d.createElement('script'), s = d.getElementsByTagName('script');
+		    g.src = "http://127.0.0.1:8080/dist/autoTracker.min.js";
+			f.type = "text/javascript";
+			f.innerHTML = "var _opt = {pageId: 123,clientId: 'leboncoin',userId: 123,provider: {category: 123,subCategory: 123}};";
+			s[s.length-1].parentNode.insertBefore(f, s[s.length-1]);
+		    s[0].parentNode.insertBefore(g, s[0]);
+		})();
+        </script>
+    </body>
+</html>
