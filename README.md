@@ -1,6 +1,6 @@
 # Difference between JS-Snippet and JS-SDK
 
-This repository combines both a tracking SDK (JS-SDK) and a tracking snippet. The SDK is the underlying library wit functionality to retrive IDs, create events and send events. But it doesn't do anything unless it is told to. If you are looking for the SDK documentation, please visit the [SDK documentation](https://github.com/schibsted/sdk-js-event-tracking/blob/master/SDK.md).
+This repository combines both a tracking SDK (JS-SDK) and a tracking snippet. The SDK is the underlying library with functionality to retrive IDs, create events and send events. But it doesn't do anything unless it is told to. If you are looking for the SDK documentation, please visit the [SDK documentation](https://github.com/schibsted/sdk-js-event-tracking/blob/master/SDK.md).
 
 A tracking script (JS-Snippet) runs on top of the SDK, this script automatically tracks a set of events. This page is the documentation for the tracking script.
 
@@ -46,8 +46,6 @@ There are only two required options to be set in the `pulse2opt` object.
 
 `clientId` - a string representing your organization, such as `VG` or `BT`.
 
-`pageId` - a unique string for the current page/article/ad/view. If the current page/view doensn't have a pageId, leave it out, or provide a static string such as `'frontpage'`.
-
 ## Recommended options
 
 You should add the recommended options listed below. userId is so we can link the event to a logged in user (if the user is logged in) and category (if applicable) which helps us better tag the page view event.
@@ -55,6 +53,8 @@ You should add the recommended options listed below. userId is so we can link th
 `userId` - If the user has a userId (that is if the user is logged in), please provide this as an option. The user must have agreed to terms and condition
 
 Category - Category is not an option itself, but it should go in to the provider as demonstrated below. You may define a category and a subCategory.
+
+`pageId` - a unique string for the current page/article/ad/view. If the current page/view doensn't have a pageId, leave it out, or provide a static string such as `'frontpage'`.
 
 `provider` - This is where category and subCategory should go. You might also define as many key/value pairs as you want and input them in the provier to enrich your data. Please see the example below. The provider will be a part of the events that are sent from your site. It is the part of the event that defines where the events are coming from.
 
@@ -92,18 +92,19 @@ The following options can be set:
 `trackingFeatures` - This is for turning on/off tracking of different kinds of event tracking in the tracking code. There are several pre-defined properties:
 
 ```
+// Default values
 var pulse2opt = {
 	..
 	trackingFeatures: {
-		pageLoad: false,			// Default: true
-		hashChange: false,			// Default: true
-		pageUnload: false,			// Default: true
-		clickButton: false,			// Default: true
-		clickSubmit: false,			// Default: true
-		relativeScroll: false,		// Default: true
-		itemVisible: false,			// Default: true
-		facebook: false,			// Default: true
-		twitter: false,				// Default: true	
+		pageLoad: true,
+		hashChange: false,
+		pageUnload: false,
+		clickButton: false,
+		clickSubmit: false,
+		relativeScroll: false,
+		itemVisible: false,
+		facebook: false,
+		twitter: false,	
 	},
 	..
 };
@@ -139,15 +140,23 @@ The following events are tracked by default:
 
 Pageload
 
-scroll (25% intervals),
-
-Facebook likes / removed likes - Your implementation of Facebook like button must be the current recommended implementation from Facebook.
-
-Twitter sharing - Your implementation of Twitter share button must be the current recommended implementation from Twitter.
-
-PageUnload - Experimental
-
 # Additional supported events
+
+## Scroll
+
+25% intervals.
+
+## Facebook likes / removed likes
+
+Your implementation of Facebook like button must be the current recommended implementation from Facebook.
+
+## Twitter sharing
+
+Your implementation of Twitter share button must be the current recommended implementation from Twitter.
+
+## PageUnload
+
+Experimental
 
 ## Track Visibility
 
