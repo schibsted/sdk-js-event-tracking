@@ -65,36 +65,36 @@ function trackingFunctions(features) {
 	if (features.pageLoad !== false) {
 		pageEvents.pageLoad(activity);
 	}
-	if (features.hashChange !== false) {
+	if (features.hashChange === true) {
 		pageEvents.hashChange(activity);
 	}
-	if (features.pageUnload !== false) {
+	if (features.pageUnload === true) {
 		pageEvents.pageUnload(activity);
 	}
 
     var click = require('./click');
-	if (features.clickButton !== false) {
+	if (features.clickButton === true) {
 		click.button(activity);
 	}
-	if (features.clickSubmit !== false) {
+	if (features.clickSubmit === true) {
 		click.submit(activity);
 	}
 
     var scrollT = require('./scroll');
-	if (features.relativeScroll !== false) {
+	if (features.relativeScroll === true) {
 		scrollT.trackScrollRelative(activity, 25);
 	}
-	if (features.itemVisible !== false) {
+	if (features.itemVisible === true) {
 		scrollT.trackScrollItems(activity);
 	}
 
     var social = require('./social');
-	if (features.facebook !== false) {
+	if (features.facebook === true) {
 		social.trackFacebookLikes(activity);
 		social.trackFacebookUnlikes(activity);
 		social.trackFacebookShares(activity);
 	}
-	if (features.twitter !== false) {
+	if (features.twitter === true) {
 		social.trackTwitterShares(activity);
 	}
 }
