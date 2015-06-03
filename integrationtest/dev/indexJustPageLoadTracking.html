@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>My first test site</title>
+        <script type="text/javascript" src="sinon-1.14.1.js"></script>
+		<script type="text/javascript" src="sinonSetup.js"></script>
+        <style>
+			body {
+				min-height: 3000px;
+			}
+			#test-click-element {
+				height: 100px;
+				width: 400px;
+				background-color: red;
+				color: white;
+			}
+			#test-scroll-element {
+				margin-top: 2000px;
+				height: 100px;
+				width: 400px;
+				background-color: red;
+				color: white;
+			}
+		</style>
+    </head>
+    <body>
+        <h1>Testsite 01</h1>
+		
+		<div id="test-click-element" class="track-click">
+			This should not be tracked.
+		</div>
+		
+		<div id="test-scroll-element">
+			This should not be tracked.
+		</div>
+		
+        <script type="text/javascript">
+			
+			var pulse2opt = {
+                clientId: 'testClient02',
+				pageId: 1231231,
+				userId: 'urn:schibsted.com:user:123123',
+            };
+
+            (function(){
+                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+                g.src="http://127.0.0.1:8080/dist/autoTracker.min.js";
+                s.parentNode.insertBefore(g,s);
+            })();
+        </script>
+    </body>
+</html>

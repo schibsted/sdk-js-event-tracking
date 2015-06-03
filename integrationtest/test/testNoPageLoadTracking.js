@@ -37,6 +37,32 @@ module.exports = {
 			chai.assert.include(requestBody[0].object['@id'], 'test-click-element');
 
         })
+
+        // This time, there should be no CIS cookie, and there should only be a pageload event.
+
+        .url('http://127.0.0.1:8080/integrationtest/dev/indexJustPageLoadTracking.html')
+        .waitForElementVisible('body', 1000)
+        .execute(function() {
+            return server.requests;
+        }, [''], function(res) {
+			this.assert.equal(res.value.length, 1);
+
+            var requestBody = JSON.parse(res.value[0].requestBody);
+			this.assert.equal(requestBody[0]['@type'], 'Read');
+
+        })
+        .pause(1000)
+		.click('body #test-click-element')
+        .urlHash('#testhash')
+		.pause(100)
+		.execute(function() {
+            return server.requests;
+        }, [''], function(res) {
+			this.assert.equal(res.value.length, 1);
+
+			var requestBody = JSON.parse(res.value[0].requestBody);
+			this.assert.equal(requestBody[0]['@type'], 'Read');
+        })
         .execute(function() {
             server.restore();
         }, [''])
