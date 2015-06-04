@@ -1,8 +1,13 @@
 'use strict';
 
+var types = [
+    'track-comment',
+    'track-poll',
+    'track-form'
+];
+
 module.exports.button = function(activity) {
     document.addEventListener('click', function(e) {
-        e = e || window.event;
         var target = e.target || e.srcElement;
 
         if (/.*track-click.*/.test(target.className)) {
@@ -16,29 +21,26 @@ module.exports.button = function(activity) {
 module.exports.submit = function(activity) {
 
     document.addEventListener('submit', function(e) {
-        var target = e.target || e.srcElement;
-        var result = searchTrackingClass(target);
+        var target = e.target || e.srcElement,
+            type;
 
-        if (result === null) {
+        // the target doesn't exist or has no id
+        if (!target || !target.id) {
             return;
-        } else if (!result.obj.id) {
-            return;
-        } else if (result.type === 'track-form') {
-            activity.events.trackForm(result.obj.id, 'Note', 'Post').send();
-        } else if (result.type === 'track-comment') {
-            activity.events.trackComment(result.obj.id, 'Post').send();
-        } else if (result.type === 'track-poll') {
-            activity.events.trackPoll(result.obj.id, 'Post').send();
         }
 
-        function searchTrackingClass(elem) {
-            if (elem.className.indexOf('track-comment') > -1) {
-                return {obj: elem, type: 'track-comment'};
-            } else if (elem.className.indexOf('track-poll') > -1) {
-                return {obj: elem, type: 'track-poll'};
-            } else {
-                return {obj: elem, type: 'track-form'};
-            }
+        // returns the types that are in the classname and returns the first item
+        type = types.filter(function (type) { return target.className.indexOf(type) > -1; })[0];
+
+        switch (type) {
+        case 'track-poll':
+            activity.events.trackPoll(target.id, 'Post').send();
+            break;
+        case 'track-comment':
+            activity.events.trackComment(target.id, 'Post').send();
+            break;
+        default:
+            activity.events.trackForm(target.id, 'Note', 'Post').send();
         }
     }, false);
 };
