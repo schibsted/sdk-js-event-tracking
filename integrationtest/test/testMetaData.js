@@ -25,7 +25,7 @@ module.exports = {
 			chai.assert.notInclude(requestBody[0].provider['@id'], 'testClient01');
 
             // Test for meta and OG here:
-            
+
             var metaData = requestBody[0].object['spt:meta'];
             var ogData = requestBody[0].object['spt:og'];
             console.log(requestBody[0].object);
