@@ -1,7 +1,7 @@
 {
   "name": "schibsted-event-tracking",
   "version": "0.3.0",
-  "main": "autotrack/track.js",
+  "main": "lib/activity.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:schibsted/sdk-js-event-tracking.git"
