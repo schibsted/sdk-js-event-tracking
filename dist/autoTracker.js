@@ -71,7 +71,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function initTracking(activityOpts) {
-		var throttle = activityOpts.throttle || 1;
+		var throttle = activityOpts.throttle || 0;
 		if (Math.random() < throttle) {
 			var Activity = __webpack_require__(1);
 			activity = new Activity(activityOpts);

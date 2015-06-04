@@ -15,7 +15,7 @@ try {
 }
 
 function initTracking(activityOpts) {
-	var throttle = activityOpts.throttle || 1;
+	var throttle = activityOpts.throttle || 0;
 	if (Math.random() < throttle) {
 		var Activity = require('../lib/activity');
 		activity = new Activity(activityOpts);
