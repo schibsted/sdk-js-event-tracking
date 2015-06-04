@@ -1,38 +1,49 @@
 'use strict';
 
-module.exports.pageLoad = function(activity) {
-    var pageload = activity.events.trackPageLoad();
-    appendPageMeta(pageload);
-    pageload.send();
+var generateMetaEvents = function generateMetaEvents(tags) {
+    var data = {
+            meta: {},
+            og: {}
+        },
+        metaTag,
+        name,
+        content,
+        property,
+        isOGTag;
 
-    function appendPageMeta(pageload) {
-        var metas = document.getElementsByTagName('meta');
-        var metaObject = {};
-        var ogObject = {};
-        var ogFlag = false;
-        var metaFlag = false;
+    for (var i = 0; i < tags.length; i++) {
+        metaTag = tags[i];
 
-        for (var i = 0; i < metas.length; i++) {
-            var meta = metas[i];
-            if (meta.getAttribute('name') && meta.getAttribute('content')) {
-                metaObject['spt:' + meta.getAttribute('name')] = decodeURI(meta.getAttribute('content'));
-                metaFlag = true;
-            } else if (meta.getAttribute('property') && meta.getAttribute('content')) {
-                var prop = meta.getAttribute('property');
-                if (prop.indexOf('og:') > -1) {
-                    ogObject['spt:' + prop] = decodeURI(meta.getAttribute('content'));
-                    ogFlag = true;
-                }
-            }
-        }
+        name    = metaTag.getAttribute('name');
+        content = metaTag.getAttribute('content');
+        property = metaTag.getAttribute('property');
 
-        if (ogFlag) {
-            pageload.addProperty('primary', 'spt:og', ogObject);
-        }
-        if (metaFlag) {
-            pageload.addProperty('primary', 'spt:meta', metaObject);
+        isOGTag =  property && property.indexOf('og:') > -1;
+
+        if (name && content) {
+            data.meta['spt:' + name] = decodeURI(content);
+        } else if (isOGTag) {
+            data.og['spt:' + property] = decodeURI(content);
         }
     }
+
+    return data;
+};
+
+module.exports.pageLoad = function(activity) {
+    var pageload = activity.events.trackPageLoad(),
+        metaTags = document.querySelectorAll('meta'),
+        data = generateMetaEvents(metaTags);
+
+    if (data.meta) {
+        pageload.addProperty('primary', 'spt:meta', data.meta);
+    }
+
+    if (data.og) {
+        pageload.addProperty('primary', 'spt:og', data.og);
+    }
+
+    pageload.send();
 };
 
 module.exports.hashChange = function(activity) {
