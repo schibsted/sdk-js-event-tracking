@@ -50,7 +50,7 @@ module.exports = function (grunt) {
             sdkDev: {
                 entry: './lib/activity.js',
                 output: {
-                    path: 'dist/',
+                    path: './dist/',
                     filename: 'tracker.js',
                     library: 'Activity',
                     libraryTarget: 'umd'
@@ -67,7 +67,7 @@ module.exports = function (grunt) {
             sdkProd: {
                 entry: './lib/activity.js',
                 output: {
-                    path: 'dist/',
+                    path: './dist/',
                     filename: 'tracker.min.js',
                     library: 'Activity',
                     libraryTarget: 'umd'
@@ -94,7 +94,7 @@ module.exports = function (grunt) {
             autoDev: {
                 entry: './autotracking/track.js',
                 output: {
-                    path: 'dist/',
+                    path: './dist/',
                     filename: 'autoTracker.js',
                     library: 'AutoTrack',
                     libraryTarget: 'umd'
@@ -111,7 +111,7 @@ module.exports = function (grunt) {
             autoProd: {
                 entry: './autotracking/track.js',
                 output: {
-                    path: 'dist/',
+                    path: './dist/',
                     filename: 'autoTracker.min.js',
                     library: 'AutoTrack',
                     libraryTarget: 'umd'
