@@ -8,16 +8,6 @@
 
 var browserTransport = require('../../lib/transport/browser');
 
-function mockActiveXObject() {
-    window.ActiveXObject.prototype = {
-        open: function() {},
-        setRequestHeader: function() {},
-        send: function() {}
-    };
-
-    sinon.mock(window.ActiveXObject.prototype);
-}
-
 describe('Browser transport', function() {
     beforeEach(function() {
         this.sinon = sinon.sandbox.create();
@@ -141,44 +131,5 @@ describe('Browser transport', function() {
         });
 
         xhr.restore();
-    });
-
-    it('should use ActiveXObject when XMLHttpRequest is not available', function() {
-        window.XMLHttpRequest = undefined;
-
-        window.ActiveXObject = sinon.spy();
-
-        mockActiveXObject();
-
-        browserTransport('http://test', [], sinon.spy());
-
-        expect(window.ActiveXObject.calledWith('MSXML2.XMLHTTP.6.0'))
-            .to.be.ok;
-
-        window.ActiveXObject = undefined;
-    });
-
-    it('should use ActiveXObject 3.0 when 6.0 is not available', function() {
-        window.XMLHttpRequest = undefined;
-
-        window.ActiveXObject = sinon.stub();
-        window.ActiveXObject.onFirstCall().throws();
-
-        mockActiveXObject();
-
-        browserTransport('http://test', [], sinon.spy());
-
-        expect(window.ActiveXObject.calledWith('MSXML2.XMLHTTP.3.0'))
-            .to.be.ok;
-
-        window.ActiveXObject = undefined;
-    });
-
-    it('should throw exception when no transport is available', function() {
-        window.XMLHttpRequest = undefined;
-
-        expect(function() {
-            browserTransport('http://test', [], sinon.spy());
-        }).to.Throw(Error, 'This browser does not support AJAX');
     });
 });
