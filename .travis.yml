@@ -12,6 +12,7 @@ deploy:
   provider: s3
   bucket: js-sdk-test-build
   skip_cleanup: true
+  local_dir: out
   cache_control: max-age=5,s-maxage=0,proxy-revalidate=0
   secret_access_key:
     secure: "gNz6K3UpW3TNshfLEvIBdzE/NHUPmzCQBayzN0wevu7UcYPOsgXZ61XPJ8R6FeqgbZE18iJJ9hOT1gEoyEZP+auyJsW38sIR23UZ96i+Xh7khMt5EuwGxCH7opXTm6Duvp5Ts7Rskxyg3phFKqimzIQmgeOVHP215YT0gfMGTtE="
