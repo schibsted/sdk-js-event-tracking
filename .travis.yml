@@ -17,3 +17,5 @@ deploy:
     secure: "gNz6K3UpW3TNshfLEvIBdzE/NHUPmzCQBayzN0wevu7UcYPOsgXZ61XPJ8R6FeqgbZE18iJJ9hOT1gEoyEZP+auyJsW38sIR23UZ96i+Xh7khMt5EuwGxCH7opXTm6Duvp5Ts7Rskxyg3phFKqimzIQmgeOVHP215YT0gfMGTtE="
   access_key_id:
     secure: "DscxMiOUejvY5FPwocuJCjnTlcir/DGtQLAnckCRVp5/oHc2lCfthVwSnHityUyMRuHhOJaORkDg9/rSAPPpB9jsiozjhUXl/SbVoWDTld86lHxXhr/KZk9aRvMIg5R2jqTg55pWasQvWvb65gBRPRNkMOdT5TszIffbeYCAxsc="
+  on:
+    branch: mask-dev
