@@ -4,6 +4,8 @@ var fs = require('fs'),
 	mkdirp = require('mkdirp'),
 	configPath = './configs/';
 
+console.log('Starting file build');
+
 fs.exists(configPath, function(exists) {
 	if (exists) {
 		getConfigFiles(configPath);
