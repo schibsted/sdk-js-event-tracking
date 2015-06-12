@@ -15,7 +15,13 @@ module.exports = function (grunt) {
                 src: 'Gruntfile.js'
             },
             lib: {
-                src: ['lib/**/*.js', 'test/**/*.js', 'autotracking/**/*.js', 'integrationtest/**/*.js']
+                src: [
+                    'lib/**/*.js',
+                    'test/**/*.js',
+                    'autotracking/**/*.js',
+                    'integrationtest/**/*.js',
+                    'buildscript/**/*.js'
+                ]
             }
         },
         watch: {
@@ -25,7 +31,7 @@ module.exports = function (grunt) {
             }
         },
         jscs: {
-            main: ['lib/**/*.js', 'autotracking/**/*.js'],
+            main: ['**/*.js', 'autotracking/**/*.js', 'buildscript/**/*.js'],
             options: {
                 config: '.jscsrc',
                 requireCurlyBraces: ['if']

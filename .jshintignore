@@ -6,3 +6,4 @@ doc
 karma.conf*
 integrationtest/dev/require.js
 integrationtest/dev/sinon-1.14.1.js
+out
