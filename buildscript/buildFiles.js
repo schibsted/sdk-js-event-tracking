@@ -1,7 +1,6 @@
 'use strict';
 
 var fs = require('fs'),
-	concat = require('concat-files'),
 	mkdirp = require('mkdirp'),
 	configPath = './configs/';
 
@@ -23,7 +22,7 @@ function getAllConfigFiles(fileNameArray) {
 		var fileName = configPath + fileNameArray.pop();
 		console.log('building: ' + fileName);
 		if (isValidFile(fileName)) {
-			doFileMerge(fileName)
+			doFileMerge(fileName);
 			return getAllConfigFiles(fileNameArray);
 		}
 	} else {
@@ -42,24 +41,13 @@ function isValidFile(fileName) {
 }
 
 function doFileMerge(fileName) {
-	
+
 	var buildFileName = './out/' + getBuildFileName(fileName);
 	var manifest = '/* SPT */';
-	
+
 	fs.writeFileSync(buildFileName, manifest);
 	fs.appendFileSync(buildFileName, readFile('./dist/autoTracker.min.js'));
-	fs.appendFileSync(buildFileName, 'var pulse2config = ' + readFile(fileName)) + ';';
-	
-	/*console.log('concat: ' + fileName);
-	return concat([
-		'./dist/autoTracker.min.js',
-		fileName
-	], './out/' + getBuildFileName(fileName), function(err) {
-		if (err) {
-			console.log(err);
-			return err;
-		}
-	});*/
+	fs.appendFileSync(buildFileName, 'var pulse2config = ' + readFile(fileName) + ';');
 }
 
 function tryToCreateOutFolder() {
@@ -69,7 +57,7 @@ function tryToCreateOutFolder() {
 		} else {
 			return true;
 		}
-	})
+	});
 }
 
 function getBuildFileName(fileName) {
