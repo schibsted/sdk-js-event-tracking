@@ -29,7 +29,7 @@ Build.prototype.getAllConfigFiles = function(fileNameArray) {
 		console.log('building: ' + fileName);
 
 		if (this.isValidFile(fileName)) {
-			this.doFileMerge(fileName);
+			this.doFileConcatenate(fileName);
 			return this.getAllConfigFiles(fileNameArray);
 		} else {
 			throw new Error ('Invalid file: ' + fileName);
@@ -47,7 +47,7 @@ Build.prototype.isValidFile = function(fileName) {
 	return true;
 };
 
-Build.prototype.doFileMerge = function(fileName) {
+Build.prototype.doFileConcatenate = function(fileName) {
 
 	var buildFileName = './out/' + this.getBuildFileName(fileName);
 	var manifest = '/* SPT */';

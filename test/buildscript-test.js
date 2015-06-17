@@ -165,41 +165,41 @@ var faultyConfigs = {
 describe('buildscript', function() {
 	describe('getAllConfigFiles', function() {
 		beforeEach(function() {
-			this.stub = sinon.stub(Build.prototype, 'doFileMerge');
-			this.stub2 = sinon.stub(Build.prototype, 'isValidFile');
+			this.doFileConcatenate = sinon.stub(Build.prototype, 'doFileConcatenate');
+			this.isValidFile = sinon.stub(Build.prototype, 'isValidFile');
 		});
 		afterEach(function() {
-			Build.prototype.doFileMerge.restore();
+			Build.prototype.doFileConcatenate.restore();
 			Build.prototype.isValidFile.restore();
 		});
 		it('should recurse through an array until nothing is left', function () {
 			var testArr = ['one', 'two', 'three'];
-			this.stub2.returns(true);
+			this.isValidFile.returns(true);
 
 			build.getAllConfigFiles(testArr);
 
-			expect(this.stub).to.have.been.calledThrice;
-			expect(this.stub2).to.have.been.calledThrice;
-			expect(this.stub).to.have.been.calledWith('./configs/one');
-			expect(this.stub).to.have.been.calledWith('./configs/two');
-			expect(this.stub).to.have.been.calledWith('./configs/three');
-			expect(this.stub2).to.have.been.calledWith('./configs/one');
-			expect(this.stub2).to.have.been.calledWith('./configs/two');
-			expect(this.stub2).to.have.been.calledWith('./configs/three');
+			expect(this.doFileConcatenate).to.have.been.calledThrice;
+			expect(this.isValidFile).to.have.been.calledThrice;
+			expect(this.doFileConcatenate).to.have.been.calledWith('./configs/one');
+			expect(this.doFileConcatenate).to.have.been.calledWith('./configs/two');
+			expect(this.doFileConcatenate).to.have.been.calledWith('./configs/three');
+			expect(this.isValidFile).to.have.been.calledWith('./configs/one');
+			expect(this.isValidFile).to.have.been.calledWith('./configs/two');
+			expect(this.isValidFile).to.have.been.calledWith('./configs/three');
 			expect(testArr.length).to.eq(0);
 
 		});
 		it('should throw error on invalid file', function() {
-			this.stub2.returns(false);
+			this.isValidFile.returns(false);
 			var testArr = ['one', 'two', 'three'];
 
 			expect(function() {
 				build.getAllConfigFiles(testArr);
 			}).to.throw(Error);
 
-			expect(this.stub2).to.have.been.calledOnce;
-			expect(this.stub).to.not.have.been.called;
-			expect(this.stub2).to.have.been.calledWith('./configs/three');
+			expect(this.isValidFile).to.have.been.calledOnce;
+			expect(this.doFileConcatenate).to.not.have.been.called;
+			expect(this.isValidFile).to.have.been.calledWith('./configs/three');
 			expect(testArr.length).to.eq(2);
 		});
 	});
@@ -247,51 +247,51 @@ describe('buildscript', function() {
 			this.stub.returns(okConfigs.bt);
 			expect(build.isValidFile('')).to.eq(true);
 		});
-		it('should throw when config is faulty', function() {
+		it('should throw error when config is faulty', function() {
 			this.stub.returns(faultyConfigs.blocket);
 			expect(function() {
 				build.isValidFile('');
-			}).to.throw(Error);
+			}).to.throw('Client ID should only be lowercase a-z');
 			this.stub.returns(faultyConfigs.generic);
 			expect(function() {
 				build.isValidFile('');
-			}).to.throw(Error);
+			}).to.throw('Throttle must be between 0 and 1');
 			this.stub.returns(faultyConfigs.finn);
 			expect(function() {
-				build.isValidFile('');
+				build.isValidFile('Throttle is undefined or not a number');
 			}).to.throw(Error);
 			this.stub.returns(faultyConfigs.vg);
 			expect(function() {
 				build.isValidFile('');
-			}).to.throw(Error);
+			}).to.throw('Config should be an array in');
 			this.stub.returns(faultyConfigs.bt);
 			expect(function() {
 				build.isValidFile('');
-			}).to.throw(Error);
+			}).to.throw('Throttle is undefined or not a number');
 			this.stub.returns(faultyConfigs.prisjakt);
 			expect(function() {
 				build.isValidFile('');
-			}).to.throw(Error);
+			}).to.throw('Client ID not valid');
 			this.stub.returns(faultyConfigs.lendo);
 			expect(function() {
 				build.isValidFile('');
-			}).to.throw(Error);
+			}).to.throw('There should be at lease one object in config');
 			this.stub.returns(faultyConfigs.lbc);
 			expect(function() {
 				build.isValidFile('');
-			}).to.throw(Error);
+			}).to.throw('data-collector is not a string');
 			this.stub.returns(faultyConfigs.aftonbladet);
 			expect(function() {
 				build.isValidFile('');
-			}).to.throw(Error);
+			}).to.throw('cis is not a string');
 			this.stub.returns(faultyConfigs.svd);
 			expect(function() {
 				build.isValidFile('');
-			}).to.throw(Error);
+			}).to.throw('data-collector is not a URL');
 			this.stub.returns(faultyConfigs.aftenposten);
 			expect(function() {
 				build.isValidFile('');
-			}).to.throw(Error);
+			}).to.throw('cis is not a URL');
 		});
 	});
 });

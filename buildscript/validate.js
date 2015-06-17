@@ -40,7 +40,7 @@ Validate.prototype.hasValidThrottles = function() {
 	for (var i = 0; i < configs.length; i++) {
 		var config = configs[i];
 		if (typeof config.throttle !== 'number'){
-			throw new Error('Throttle must be a number' + this.fileName);
+			throw new Error('Throttle is undefined or not a number' + this.fileName);
 		}
 		if (config.throttle > 1 || config.throttle < 0) {
 			throw new Error('Throttle must be between 0 and 1 ' + this.fileName);
