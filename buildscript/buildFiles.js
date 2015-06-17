@@ -23,20 +23,17 @@ Build.prototype.doBuild = function() {
 };
 
 Build.prototype.getAllConfigFiles = function(fileNameArray) {
-	if (fileNameArray.length > 0) {
-		var fileName = this.configPath + fileNameArray.pop();
-		console.log('building: ' + fileName);
-
-		if (this.isValidFile(fileName)) {
-			this.doFileConcatenate(fileName);
-			return this.getAllConfigFiles(fileNameArray);
-		} else {
-			throw new Error ('Invalid file: ' + fileName);
-		}
-
-	} else {
+	if (fileNameArray.length <= 0) {
 		return;
 	}
+	var fileName = this.configPath + fileNameArray.pop();
+	console.log('building: ' + fileName);
+
+	if (!this.isValidFile(fileName)) {
+		throw new Error ('Invalid file: ' + fileName);
+	}
+	this.doFileConcatenate(fileName);
+	return this.getAllConfigFiles(fileNameArray);
 };
 
 Build.prototype.isValidFile = function(fileName) {
