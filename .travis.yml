@@ -7,16 +7,4 @@ env:
   global:
   - secure: AbPfEY9MfxaC5l0bWaK6wFyhR+gQGhBEcplHcbpI+JenyGAOx7ZuVF1NP9EtrSpewUPYtTzBVhFeOE3Ri98WSmyMSytjlL8t3kjWfuQs/Igv87OGqduWYziKOFR32dQIq3jiWtJTUDFOdwXuzKVwNAygP2diydYAeo+1pBqUN0s=
   - secure: A40mQr7lL/gF+IYsSwLBee5qlEdhExdo1yYg6rYI0NTvdXDUqG+BPjhngznNA2y6ciItz5TkrDqxPo5udQLAdZBmdpgZYHw8Quui5WWxQadeyaFAByyX6dBGLAbj+dpGdWAgLCNGRG+5jEdi9zNinbFQRkpjjE42QC3MtpiGzZY=
-after_success: node buildscript/buildFiles.js
-deploy:
-  provider: s3
-  bucket: js-sdk-test-build
-  skip_cleanup: true
-  local_dir: out
-  cache_control: max-age=5,s-maxage=0,proxy-revalidate=0
-  secret_access_key:
-    secure: "gNz6K3UpW3TNshfLEvIBdzE/NHUPmzCQBayzN0wevu7UcYPOsgXZ61XPJ8R6FeqgbZE18iJJ9hOT1gEoyEZP+auyJsW38sIR23UZ96i+Xh7khMt5EuwGxCH7opXTm6Duvp5Ts7Rskxyg3phFKqimzIQmgeOVHP215YT0gfMGTtE="
-  access_key_id:
-    secure: "DscxMiOUejvY5FPwocuJCjnTlcir/DGtQLAnckCRVp5/oHc2lCfthVwSnHityUyMRuHhOJaORkDg9/rSAPPpB9jsiozjhUXl/SbVoWDTld86lHxXhr/KZk9aRvMIg5R2jqTg55pWasQvWvb65gBRPRNkMOdT5TszIffbeYCAxsc="
-  on:
-    branch: mask-dev
+after_success: node buildscript/buildFiles.js --build
