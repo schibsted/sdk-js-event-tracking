@@ -1,0 +1,297 @@
+/*jshint -W030, -W024 */
+/*
+ We can not just require sinon because of a bug (webpack/webpack/issues/177).
+ So we use the karma plugin sinon-chai to inject them as globals as a workaround
+ */
+/*globals sinon, expect*/
+'use strict';
+
+var Build = require('../buildscript/buildFiles');
+var build = new Build();
+
+var okConfigs = {
+	blocket: {
+		client: 'blocket',
+		config: [
+			{
+				throttle: 1,
+				dataCollector: 'https://collector.schibsted.io/api/v1/track',
+				cis: 'https://cis.schibsted.com/api/v1/identify'
+			}
+		]
+	},
+	generic: {
+		client: '',
+		config: [
+			{
+				throttle: 0.5,
+				dataCollector: 'https://collector.schibsted.io/api/v1/track',
+				cis: 'https://cis.schibsted.com/api/v1/identify'
+			}
+		]
+	},
+	finn: {
+		client: 'finn',
+		config: [
+			{
+				throttle: 1,
+				cis: 'https://cis.schibsted.com/api/v1/identify'
+			}
+		]
+	},
+	vg: {
+		client: 'vg',
+		config: [
+			{
+				throttle: 1,
+				dataCollector: 'https://collector.schibsted.io/api/v1/track'
+			}
+		]
+	},
+	bt: {
+		client: 'bt',
+		config: [
+			{
+				throttle: 0.1
+			},
+			{
+				throttle: 0.5,
+				dataCollector: 'https://collector.schibsted.io/api/v1/track',
+				cis: 'https://cis.schibsted.com/api/v1/identify'
+			}
+		]
+	}
+};
+
+var faultyConfigs = {
+	blocket: {
+		client: 'Blocket',
+		config: [
+			{
+				throttle: 1,
+				dataCollector: 'https://collector.schibsted.io/api/v1/track',
+				cis: 'https://cis.schibsted.com/api/v1/identify'
+			}
+		]
+	},
+	generic: {
+		client: '',
+		config: [
+			{
+				throttle: -0.5,
+				dataCollector: 'https://collector.schibsted.io/api/v1/track',
+				cis: 'https://cis.schibsted.com/api/v1/identify'
+			}
+		]
+	},
+	finn: {
+		client: 'finn',
+		config: [
+			{
+				trottle: 1,
+				cis: 'https://cis.schibsted.com/api/v1/identify'
+			}
+		]
+	},
+	vg: {
+		client: 'vg',
+		config: {
+			throttle: 1,
+			dataCollector: 'https://collector.schibsted.io/api/v1/track'
+		}
+	},
+	bt: {
+		client: 'bt',
+		config: [
+			{
+				throttle: 0.1
+			},
+			{
+				dataCollector: 'https://collector.schibsted.io/api/v1/track',
+				cis: 'https://cis.schibsted.com/api/v1/identify'
+			}
+		]
+	},
+	prisjakt: {
+		client: 1234123,
+		config: [
+			{
+				throttle: 1
+			}
+		]
+	},
+	lendo: {
+		client: 'lendo',
+		config: []
+	},
+	lbc: {
+		client: 'lbc',
+		config: [
+			{
+				throttle: 1,
+				dataCollector: true
+			}
+		]
+	},
+	svd: {
+		client: 'svd',
+		config: [
+			{
+				throttle: 1,
+				dataCollector: 'normal'
+			}
+		]
+	},
+	aftonbladet: {
+		client: 'aftonbladet',
+		config: [
+			{
+				throttle: 1,
+				cis: 123
+			}
+		]
+	},
+	aftenposten: {
+		client: 'aftenposten',
+		config: [
+			{
+				throttle: 1,
+				cis: 'cis.schibsted.com'
+			}
+		]
+	}
+};
+
+describe('buildscript', function() {
+	describe('getAllConfigFiles', function() {
+		beforeEach(function() {
+			this.stub = sinon.stub(Build.prototype, 'doFileMerge');
+			this.stub2 = sinon.stub(Build.prototype, 'isValidFile');
+		});
+		afterEach(function() {
+			Build.prototype.doFileMerge.restore();
+			Build.prototype.isValidFile.restore();
+		});
+		it('should recurse through an array until nothing is left', function () {
+			var testArr = ['one', 'two', 'three'];
+			this.stub2.returns(true);
+
+			build.getAllConfigFiles(testArr);
+
+			expect(this.stub).to.have.been.calledThrice;
+			expect(this.stub2).to.have.been.calledThrice;
+			expect(this.stub).to.have.been.calledWith('./configs/one');
+			expect(this.stub).to.have.been.calledWith('./configs/two');
+			expect(this.stub).to.have.been.calledWith('./configs/three');
+			expect(this.stub2).to.have.been.calledWith('./configs/one');
+			expect(this.stub2).to.have.been.calledWith('./configs/two');
+			expect(this.stub2).to.have.been.calledWith('./configs/three');
+			expect(testArr.length).to.eq(0);
+
+		});
+		it('should throw error on invalid file', function() {
+			this.stub2.returns(false);
+			var testArr = ['one', 'two', 'three'];
+
+			expect(function() {
+				build.getAllConfigFiles(testArr);
+			}).to.throw(Error);
+
+			expect(this.stub2).to.have.been.calledOnce;
+			expect(this.stub).to.not.have.been.called;
+			expect(this.stub2).to.have.been.calledWith('./configs/three');
+			expect(testArr.length).to.eq(2);
+		});
+	});
+	describe('getBuildFileName and getClientId', function() {
+		beforeEach(function() {
+			this.stub = sinon.stub(Build.prototype, 'readAndParseFile');
+		});
+		afterEach(function() {
+			Build.prototype.readAndParseFile.restore();
+		});
+		it('should return a camelcased filename', function() {
+			this.stub.returns(okConfigs.blocket);
+			var fileName = build.getBuildFileName('./configs/blocket.json');
+			expect(fileName).to.eq('autoTrackerBlocket.min.js');
+
+			this.stub.returns(okConfigs.generic);
+			fileName = build.getBuildFileName('./configs/generic.json');
+			expect(fileName).to.eq('autoTracker.min.js');
+		});
+	});
+	describe('capitalizeFirstLetter', function() {
+		it('should always be just uppercase first letter', function() {
+			expect(build.capitalizeFirstLetter('blocket')).to.eq('Blocket');
+			expect(build.capitalizeFirstLetter('Blocket')).to.eq('Blocket');
+			expect(build.capitalizeFirstLetter('BLOCKET')).to.eq('Blocket');
+			expect(build.capitalizeFirstLetter('bLOCKET')).to.eq('Blocket');
+		});
+	});
+	describe('isValidFile', function() {
+		beforeEach(function() {
+			this.stub = sinon.stub(Build.prototype, 'readAndParseFile');
+		});
+		afterEach(function() {
+			Build.prototype.readAndParseFile.restore();
+		});
+		it('should return true if no errors', function() {
+			this.stub.returns(okConfigs.blocket);
+			expect(build.isValidFile('')).to.eq(true);
+			this.stub.returns(okConfigs.generic);
+			expect(build.isValidFile('')).to.eq(true);
+			this.stub.returns(okConfigs.finn);
+			expect(build.isValidFile('')).to.eq(true);
+			this.stub.returns(okConfigs.vg);
+			expect(build.isValidFile('')).to.eq(true);
+			this.stub.returns(okConfigs.bt);
+			expect(build.isValidFile('')).to.eq(true);
+		});
+		it('should throw when config is faulty', function() {
+			this.stub.returns(faultyConfigs.blocket);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+			this.stub.returns(faultyConfigs.generic);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+			this.stub.returns(faultyConfigs.finn);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+			this.stub.returns(faultyConfigs.vg);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+			this.stub.returns(faultyConfigs.bt);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+			this.stub.returns(faultyConfigs.prisjakt);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+			this.stub.returns(faultyConfigs.lendo);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+			this.stub.returns(faultyConfigs.lbc);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+			this.stub.returns(faultyConfigs.aftonbladet);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+			this.stub.returns(faultyConfigs.svd);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+			this.stub.returns(faultyConfigs.aftenposten);
+			expect(function() {
+				build.isValidFile('');
+			}).to.throw(Error);
+		});
+	});
+});
