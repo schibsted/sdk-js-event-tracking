@@ -12,15 +12,14 @@ function Build() {
 }
 
 Build.prototype.doBuild = function() {
-	var self = this;
 	this.fs.exists(this.configPath, function(exists) {
 		if (exists) {
-			self.tryToCreateOutFolder();
-			self.getAllConfigFiles(this.fs.readdirSync(self.configPath));
+			this.tryToCreateOutFolder();
+			this.getAllConfigFiles(this.fs.readdirSync(this.configPath));
 		} else {
 			console.log('path not found');
 		}
-	});
+	}.bind(this));
 };
 
 Build.prototype.getAllConfigFiles = function(fileNameArray) {
