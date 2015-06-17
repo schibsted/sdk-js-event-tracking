@@ -51,6 +51,6 @@
   "scripts": {
     "test": "jshint . && jscs . && ./node_modules/karma/bin/karma start karma.conf1.js --single-run && grunt integration",
     "lint": "jshint . && jscs .",
-    "build": "node buildscript/buildFiles.js"
+    "build": "node buildscript/buildFiles.js --build"
   }
 }
