@@ -1,11 +1,22 @@
 /* */
 'use strict';
+var Type = require('type-of-is');
 
+/**
+ * Validate constructor
+ *
+ * @class
+ * @param {object} config
+ * @param {string} filename
+ */
 function Validate(config, filename) {
 	this.config = config;
 	this.fileName = filename;
 }
 
+/**
+ * Initiates validation
+ */
 Validate.prototype.validateConfig = function() {
 	this.hasValidClient();
 	this.hasValidConfigArray();
@@ -13,9 +24,12 @@ Validate.prototype.validateConfig = function() {
 	this.hasValidEndpoints();
 };
 
+/**
+ * Throws error if the client property in config is not a lowercase a-z string.
+ */
 Validate.prototype.hasValidClient = function() {
 	var client = this.config.client;
-	if (typeof client !== 'string') {
+	if (!Type.is(client, String)) {
 		throw new Error('Client ID not valid for ' + this.fileName);
 	}
 	if (!/^[a-z]+$/.test(client)) {
@@ -25,6 +39,9 @@ Validate.prototype.hasValidClient = function() {
 	}
 };
 
+/**
+ * Throws error if config property is not an array or has zero elements.
+ */
 Validate.prototype.hasValidConfigArray = function() {
 	var config = this.config.config;
 	if (!Array.isArray(config)) {
@@ -35,11 +52,14 @@ Validate.prototype.hasValidConfigArray = function() {
 	}
 };
 
+/**
+ * Throws error if config.throttle property is NaN or is not between 1 and 0
+ */
 Validate.prototype.hasValidThrottles = function() {
 	var configs = this.config.config;
 	var self = this;
 	configs.map(function(obj) {
-		if (typeof obj.throttle !== 'number'){
+		if (!Type.is(obj.throttle, Number)){
 			throw new Error('Throttle is undefined or not a number' + self.fileName);
 		}
 		if (obj.throttle > 1 || obj.throttle < 0) {
@@ -48,22 +68,25 @@ Validate.prototype.hasValidThrottles = function() {
 	});
 };
 
+/**
+ * Throws error if config.cis or config.datacollector is not a valid url as a string
+ */
 Validate.prototype.hasValidEndpoints = function() {
 	var configs = this.config.config;
 	var self = this;
 	configs.map(function(obj) {
-		if (typeof obj.dataCollector !== 'undefined') {
+		if (!Type.is(obj.dataCollector, undefined)) {
 			var dc = obj.dataCollector;
-			if (typeof dc !== 'string') {
+			if (!Type.is(dc, String)) {
 				throw new Error('data-collector is not a string ' + self.fileName);
 			}
 			if (!self.isValidUrl(dc)) {
 				throw new Error('data-collector is not a URL ' + self.fileName);
 			}
 		}
-		if (typeof obj.cis !== 'undefined') {
+		if (!Type.is(obj.cis, undefined)) {
 			var cis = obj.cis;
-			if (typeof cis !== 'string') {
+			if (!Type.is(cis, String)) {
 				throw new Error('cis is not a string ' + self.fileName);
 			}
 			if (!self.isValidUrl(cis)) {
@@ -73,6 +96,12 @@ Validate.prototype.hasValidEndpoints = function() {
 	});
 };
 
+/**
+ * Checks if a URL is valid
+ *
+ * @param {String} url
+ * @returns bool
+ */
 Validate.prototype.isValidUrl = function(url) {
 	// jscs:disable
 	var pattern = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
