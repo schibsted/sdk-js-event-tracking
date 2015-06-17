@@ -37,40 +37,40 @@ Validate.prototype.hasValidConfigArray = function() {
 
 Validate.prototype.hasValidThrottles = function() {
 	var configs = this.config.config;
-	for (var i = 0; i < configs.length; i++) {
-		var config = configs[i];
-		if (typeof config.throttle !== 'number'){
-			throw new Error('Throttle is undefined or not a number' + this.fileName);
+	var self = this;
+	configs.map(function(obj) {
+		if (typeof obj.throttle !== 'number'){
+			throw new Error('Throttle is undefined or not a number' + self.fileName);
 		}
-		if (config.throttle > 1 || config.throttle < 0) {
-			throw new Error('Throttle must be between 0 and 1 ' + this.fileName);
+		if (obj.throttle > 1 || obj.throttle < 0) {
+			throw new Error('Throttle must be between 0 and 1 ' + self.fileName);
 		}
-	}
+	});
 };
 
 Validate.prototype.hasValidEndpoints = function() {
 	var configs = this.config.config;
-	for (var i = 0; i < configs.length; i++) {
-		var config = configs[i];
-		if (typeof config.dataCollector !== 'undefined') {
-			var dc = config.dataCollector;
+	var self = this;
+	configs.map(function(obj) {
+		if (typeof obj.dataCollector !== 'undefined') {
+			var dc = obj.dataCollector;
 			if (typeof dc !== 'string') {
-				throw new Error('data-collector is not a string ' + this.fileName);
+				throw new Error('data-collector is not a string ' + self.fileName);
 			}
-			if (!this.isValidUrl(dc)) {
-				throw new Error('data-collector is not a URL ' + this.fileName);
+			if (!self.isValidUrl(dc)) {
+				throw new Error('data-collector is not a URL ' + self.fileName);
 			}
 		}
-		if (typeof config.cis !== 'undefined') {
-			var cis = config.cis;
+		if (typeof obj.cis !== 'undefined') {
+			var cis = obj.cis;
 			if (typeof cis !== 'string') {
-				throw new Error('cis is not a string ' + this.fileName);
+				throw new Error('cis is not a string ' + self.fileName);
 			}
-			if (!this.isValidUrl(cis)) {
-				throw new Error('cis is not a URL ' + this.fileName);
+			if (!self.isValidUrl(cis)) {
+				throw new Error('cis is not a URL ' + self.fileName);
 			}
 		}
-	}
+	});
 };
 
 Validate.prototype.isValidUrl = function(url) {
