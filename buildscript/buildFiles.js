@@ -5,12 +5,20 @@ var fs = require('fs'),
 	mkdirp = require('mkdirp'),
 	Validate = require('./validate');
 
+/**
+ * Build constructor
+ *
+ * @class
+ */
 function Build() {
 	this.configPath = './configs/';
 	this.fs = fs;
 	this.mkdirp = mkdirp;
 }
 
+/**
+ * Start build process
+ */
 Build.prototype.doBuild = function() {
 	this.fs.exists(this.configPath, function(exists) {
 		if (exists) {
@@ -22,6 +30,11 @@ Build.prototype.doBuild = function() {
 	}.bind(this));
 };
 
+/**
+ * Iterates through an array of config filenames and concatenates them with the tracking source
+ *
+ * @param {Array} fileNameArray
+ */
 Build.prototype.getAllConfigFiles = function(fileNameArray) {
 	if (fileNameArray.length <= 0) {
 		return;
@@ -36,6 +49,11 @@ Build.prototype.getAllConfigFiles = function(fileNameArray) {
 	return this.getAllConfigFiles(fileNameArray);
 };
 
+/**
+ * Checks if file is valid. Uses the Validate object for this
+ *
+ * @param {String} fileName
+ */
 Build.prototype.isValidFile = function(fileName) {
 	var data = this.readAndParseFile(fileName);
 	var validate = new Validate(data, fileName);
@@ -43,6 +61,11 @@ Build.prototype.isValidFile = function(fileName) {
 	return true;
 };
 
+/**
+ * Concatenates config, manifest and tracking source
+ *
+ * @param {String} fileName
+ */
 Build.prototype.doFileConcatenate = function(fileName) {
 
 	var buildFileName = './out/' + this.getBuildFileName(fileName);
@@ -53,6 +76,9 @@ Build.prototype.doFileConcatenate = function(fileName) {
 	this.fs.appendFileSync(buildFileName, 'var pulse2config = ' + this.readFile(fileName) + ';');
 };
 
+/**
+ * Attempts to create the output directoru
+ */
 Build.prototype.tryToCreateOutFolder = function() {
 	this.mkdirp('./out', function(err) {
 		if (err) {
@@ -61,25 +87,55 @@ Build.prototype.tryToCreateOutFolder = function() {
 	});
 };
 
+/**
+ * Handles naming of built files
+ *
+ * @param {String} fileName
+ * @returns filename for the build
+ */
 Build.prototype.getBuildFileName = function(fileName) {
 	return 'autoTracker' + this.getClientId(fileName) + '.min.js';
 };
 
+/**
+ * Gets client ID from config file
+ *
+ * @param {String} fileName
+ * @returns client name with capitalized first letter.
+ */
 Build.prototype.getClientId = function(fileName) {
 	var client = this.readAndParseFile(fileName).client;
 	return this.capitalizeFirstLetter(client);
 };
 
+/**
+ * Changes first letter to upper case and all other letters to lowe rcase
+ *
+ * @param {String} text
+ * @returns lower case string with first letter in upper case
+ */
 Build.prototype.capitalizeFirstLetter = function(text) {
 	text = text.toLowerCase();
     return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
+/**
+ * Reads a JSON file and parses it to an object
+ *
+ * @param {String} fileName
+ * @returns parsed JSON file
+ */
 Build.prototype.readAndParseFile = function(fileName) {
 	var data = this.readFile(fileName);
 	return JSON.parse(data);
 };
 
+/**
+ * Reads a file
+ *
+ * @param {String} fileName
+ * @returns the contet of the file
+ */
 Build.prototype.readFile = function(fileName) {
 	return this.fs.readFileSync(fileName, 'utf8');
 };
