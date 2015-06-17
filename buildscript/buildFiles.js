@@ -1,85 +1,113 @@
+/* global process */
 'use strict';
 
 var fs = require('fs'),
 	mkdirp = require('mkdirp'),
-	configPath = './configs/';
+	Validate = require('./validate');
 
-console.log('Starting file build');
-
-fs.exists(configPath, function(exists) {
-	if (exists) {
-		getConfigFiles(configPath);
-	} else {
-		console.log('path not found');
-	}
-});
-
-function getConfigFiles(configPath) {
-	tryToCreateOutFolder();
-	getAllConfigFiles(fs.readdirSync(configPath));
+function Build() {
+	this.configPath = './configs/';
+	this.fs = fs;
+	this.mkdirp = mkdirp;
 }
 
-function getAllConfigFiles(fileNameArray) {
-	if (fileNameArray.length > 0) {
-		var fileName = configPath + fileNameArray.pop();
-		console.log('building: ' + fileName);
-		if (isValidFile(fileName)) {
-			doFileMerge(fileName);
-			return getAllConfigFiles(fileNameArray);
+Build.prototype.doBuild = function() {
+	var self = this;
+	this.fs.exists(this.configPath, function(exists) {
+		if (exists) {
+			self.tryToCreateOutFolder();
+			self.getAllConfigFiles(this.fs.readdirSync(self.configPath));
+		} else {
+			console.log('path not found');
 		}
+	});
+};
+
+Build.prototype.getAllConfigFiles = function(fileNameArray) {
+	if (fileNameArray.length > 0) {
+		var fileName = this.configPath + fileNameArray.pop();
+		console.log('building: ' + fileName);
+
+		if (this.isValidFile(fileName)) {
+			this.doFileMerge(fileName);
+			return this.getAllConfigFiles(fileNameArray);
+		} else {
+			throw new Error ('Invalid file: ' + fileName);
+		}
+
 	} else {
 		return;
 	}
-}
+};
 
-function isValidFile(fileName) {
+Build.prototype.isValidFile = function(fileName) {
+	var data = this.readAndParseFile(fileName);
+	var validate = new Validate(data, fileName);
+	validate.validateConfig();
+	return true;
+};
 
-	var data = fs.readFileSync(fileName, 'utf8');
-	if (data) {
-		return true;
-	} else {
-		return false;
-	}
-}
+Build.prototype.doFileMerge = function(fileName) {
 
-function doFileMerge(fileName) {
-
-	var buildFileName = './out/' + getBuildFileName(fileName);
+	var buildFileName = './out/' + this.getBuildFileName(fileName);
 	var manifest = '/* SPT */';
 
-	fs.writeFileSync(buildFileName, manifest);
-	fs.appendFileSync(buildFileName, readFile('./dist/autoTracker.min.js'));
-	fs.appendFileSync(buildFileName, 'var pulse2config = ' + readFile(fileName) + ';');
-}
+	this.fs.writeFileSync(buildFileName, manifest);
+	this.fs.appendFileSync(buildFileName, this.readFile('./dist/autoTracker.min.js'));
+	this.fs.appendFileSync(buildFileName, 'var pulse2config = ' + this.readFile(fileName) + ';');
+};
 
-function tryToCreateOutFolder() {
-	mkdirp('./out', function(err) {
+Build.prototype.tryToCreateOutFolder = function() {
+	this.mkdirp('./out', function(err) {
 		if (err) {
-			return false;
-		} else {
-			return true;
+			throw new Error('Error creating output dir: ' + err);
 		}
 	});
-}
+};
 
-function getBuildFileName(fileName) {
-	return 'autoTracker' + getClientId(fileName) + '.min.js';
-}
+Build.prototype.getBuildFileName = function(fileName) {
+	return 'autoTracker' + this.getClientId(fileName) + '.min.js';
+};
 
-function getClientId(fileName) {
-	var client = readAndParseFile(fileName).client;
-	return capitalizeFirstLetter(client);
-}
+Build.prototype.getClientId = function(fileName) {
+	var client = this.readAndParseFile(fileName).client;
+	return this.capitalizeFirstLetter(client);
+};
 
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
+Build.prototype.capitalizeFirstLetter = function(text) {
+	text = text.toLowerCase();
+    return text.charAt(0).toUpperCase() + text.slice(1);
+};
 
-function readAndParseFile(fileName) {
-	var data = readFile(fileName);
+Build.prototype.readAndParseFile = function(fileName) {
+	var data = this.readFile(fileName);
 	return JSON.parse(data);
-}
+};
 
-function readFile(fileName) {
-	return fs.readFileSync(fileName, 'utf8');
+Build.prototype.readFile = function(fileName) {
+	return this.fs.readFileSync(fileName, 'utf8');
+};
+
+module.exports = Build;
+
+// Get commandline argument and start build
+
+process.argv.forEach(function (val, index) {
+	if (index > 1) {
+		switch (val) {
+			case '--build':
+				var build = new Build();
+				build.doBuild();
+				break;
+			case '--help':
+				console.log('use --build to build script');
+				break;
+			default:
+				console.log('No command given, run with --help for list of commands');
+		}
+	}
+});
+
+if (process.argv.length <= 2) {
+	console.log('No command given, run with --help for list of commands');
 }
