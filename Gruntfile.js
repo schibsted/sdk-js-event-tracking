@@ -26,7 +26,13 @@ module.exports = function (grunt) {
         },
         watch: {
             all: {
-                files: ['lib/**/*.js', 'test/**/*.js', 'autotracking/**/*.js', 'integrationtest/**/*.js'],
+                files: [
+                    'lib/**/*.js',
+                    'test/**/*.js',
+                    'autotracking/**/*.js',
+                    'integrationtest/**/*.js',
+                    'buildscript/**/*.js'
+                ],
                 tasks: ['devbuild', 'lint', 'karma:unit:run']
             }
         },
