@@ -1,6 +1,5 @@
-/* */
 'use strict';
-var Type = require('type-of-is');
+var assert = require('assert');
 
 /**
  * Validate constructor
@@ -29,9 +28,7 @@ Validate.prototype.validateConfig = function() {
  */
 Validate.prototype.hasValidClient = function() {
 	var client = this.config.client;
-	if (!Type.is(client, String)) {
-		throw new Error('Client ID not valid for ' + this.fileName);
-	}
+	assert(typeof client === 'string', 'Client ID not valid for ' + this.fileName);
 	if (!/^[a-z]+$/.test(client)) {
 		if (client !== '') {
 			throw new Error('Client ID should only be lowercase a-z ' + this.fileName);
@@ -44,12 +41,8 @@ Validate.prototype.hasValidClient = function() {
  */
 Validate.prototype.hasValidConfigArray = function() {
 	var config = this.config.config;
-	if (!Array.isArray(config)) {
-		throw new Error('Config should be an array in ' + this.fileName);
-	}
-	if (config.length < 1) {
-		throw new Error('There should be at lease one object in config ' + this.fileName);
-	}
+	assert(Array.isArray(config), 'Config should be an array in ' + this.fileName);
+	assert(config.length > 0, 'There should be at lease one object in config ' + this.fileName);
 };
 
 /**
@@ -59,12 +52,9 @@ Validate.prototype.hasValidThrottles = function() {
 	var configs = this.config.config;
 	var self = this;
 	configs.map(function(obj) {
-		if (!Type.is(obj.throttle, Number)){
-			throw new Error('Throttle is undefined or not a number' + self.fileName);
-		}
-		if (obj.throttle > 1 || obj.throttle < 0) {
-			throw new Error('Throttle must be between 0 and 1 ' + self.fileName);
-		}
+		var throttle = obj.throttle;
+		assert(typeof throttle === 'number', 'Throttle is undefined or not a number' + self.fileName);
+		assert(throttle <= 1 && throttle >= 0, 'Throttle must be between 0 and 1 ' + self.fileName);
 	});
 };
 
@@ -75,23 +65,15 @@ Validate.prototype.hasValidEndpoints = function() {
 	var configs = this.config.config;
 	var self = this;
 	configs.map(function(obj) {
-		if (!Type.is(obj.dataCollector, undefined)) {
+		if (obj.dataCollector) {
 			var dc = obj.dataCollector;
-			if (!Type.is(dc, String)) {
-				throw new Error('data-collector is not a string ' + self.fileName);
-			}
-			if (!self.isValidUrl(dc)) {
-				throw new Error('data-collector is not a URL ' + self.fileName);
-			}
+			assert(typeof dc === 'string', 'data-collector is not a string ' + self.fileName);
+			assert(self.isValidUrl(dc), 'data-collector is not a URL ' + self.fileName);
 		}
-		if (!Type.is(obj.cis, undefined)) {
+		if (obj.cis) {
 			var cis = obj.cis;
-			if (!Type.is(cis, String)) {
-				throw new Error('cis is not a string ' + self.fileName);
-			}
-			if (!self.isValidUrl(cis)) {
-				throw new Error('cis is not a URL ' + self.fileName);
-			}
+			assert(typeof cis === 'string', 'cis is not a string ' + self.fileName);
+			assert(self.isValidUrl(cis), 'cis is not a URL ' + self.fileName);
 		}
 	});
 };
