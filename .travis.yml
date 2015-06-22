@@ -7,3 +7,4 @@ env:
   global:
   - secure: AbPfEY9MfxaC5l0bWaK6wFyhR+gQGhBEcplHcbpI+JenyGAOx7ZuVF1NP9EtrSpewUPYtTzBVhFeOE3Ri98WSmyMSytjlL8t3kjWfuQs/Igv87OGqduWYziKOFR32dQIq3jiWtJTUDFOdwXuzKVwNAygP2diydYAeo+1pBqUN0s=
   - secure: A40mQr7lL/gF+IYsSwLBee5qlEdhExdo1yYg6rYI0NTvdXDUqG+BPjhngznNA2y6ciItz5TkrDqxPo5udQLAdZBmdpgZYHw8Quui5WWxQadeyaFAByyX6dBGLAbj+dpGdWAgLCNGRG+5jEdi9zNinbFQRkpjjE42QC3MtpiGzZY=
+after_success: node buildscript/buildFiles.js --build

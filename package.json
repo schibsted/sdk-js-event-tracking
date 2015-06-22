@@ -15,6 +15,8 @@
   },
   "devDependencies": {
     "chai": "^2.0.0",
+    "concat-files": "^0.1.0",
+    "fs": "0.0.2",
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "^0.11.0",
     "grunt-contrib-nodeunit": "^0.4.1",
@@ -36,10 +38,12 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-sinon-chai": "^0.3.0",
     "karma-webpack": "^1.5.0",
+    "mkdirp": "^0.5.1",
     "mocha": "^2.1.0",
     "nightwatch": "^0.6.5",
     "phantomjs": "^1.9.13",
     "sinon": "^1.12.2",
+    "type-of-is": "^3.4.0",
     "webpack-dev-server": "^1.7.0"
   },
   "engines": {
@@ -47,6 +51,7 @@
   },
   "scripts": {
     "test": "jshint . && jscs . && ./node_modules/karma/bin/karma start karma.conf1.js --single-run && grunt integration",
-    "lint": "jshint . && jscs ."
+    "lint": "jshint . && jscs .",
+    "build": "node buildscript/buildFiles.js --build"
   }
 }
