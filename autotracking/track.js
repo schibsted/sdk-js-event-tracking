@@ -44,7 +44,7 @@ module.exports.getVisitorId = function() {
 };
 
 module.exports.getSessionId = function() {
-    return activity.getSessionId();
+    return undefined;
 };
 
 module.exports.logoutEvent = function() {
