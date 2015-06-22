@@ -36,21 +36,7 @@ describe('buildscript', function() {
 			expect(this.isValidFile).to.have.been.calledWith('./configs/one');
 			expect(this.isValidFile).to.have.been.calledWith('./configs/two');
 			expect(this.isValidFile).to.have.been.calledWith('./configs/three');
-			expect(testArr.length).to.eq(0);
 
-		});
-		it('should throw error on invalid file', function() {
-			this.isValidFile.returns(false);
-			var testArr = ['one', 'two', 'three'];
-
-			expect(function() {
-				build.getAllConfigFiles(testArr);
-			}).to.throw(Error);
-
-			expect(this.isValidFile).to.have.been.calledOnce;
-			expect(this.doFileConcatenate).to.not.have.been.called;
-			expect(this.isValidFile).to.have.been.calledWith('./configs/three');
-			expect(testArr.length).to.eq(2);
 		});
 	});
 	describe('getBuildFileName and getClientId', function() {
@@ -85,17 +71,27 @@ describe('buildscript', function() {
 		afterEach(function() {
 			Build.prototype.readAndParseFile.restore();
 		});
-		it('should return true if no errors', function() {
+		it('should not throw if no errors', function() {
 			this.stub.returns(okConfigs.blocket);
-			expect(build.isValidFile('')).to.eq(true);
+			expect(function() {
+				build.isValidFile('');
+			}).to.not.throw();
 			this.stub.returns(okConfigs.generic);
-			expect(build.isValidFile('')).to.eq(true);
+			expect(function() {
+				build.isValidFile('');
+			}).to.not.throw();
 			this.stub.returns(okConfigs.finn);
-			expect(build.isValidFile('')).to.eq(true);
+			expect(function() {
+				build.isValidFile('');
+			}).to.not.throw();
 			this.stub.returns(okConfigs.vg);
-			expect(build.isValidFile('')).to.eq(true);
+			expect(function() {
+				build.isValidFile('');
+			}).to.not.throw();
 			this.stub.returns(okConfigs.bt);
-			expect(build.isValidFile('')).to.eq(true);
+			expect(function() {
+				build.isValidFile('');
+			}).to.not.throw();
 		});
 		it('should throw error when config is faulty', function() {
 			this.stub.returns(faultyConfigs.blocket);

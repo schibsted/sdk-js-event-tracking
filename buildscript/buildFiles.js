@@ -4,6 +4,7 @@
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 var Validate = require('./validate');
+var assert = require('assert');
 
 /**
  * Build constructor
@@ -36,17 +37,13 @@ Build.prototype.doBuild = function() {
  * @param {Array} fileNameArray
  */
 Build.prototype.getAllConfigFiles = function(fileNameArray) {
-	if (fileNameArray.length <= 0) {
-		return;
-	}
-	var fileName = this.configPath + fileNameArray.pop();
-	console.log('building: ' + fileName);
-
-	if (!this.isValidFile(fileName)) {
-		throw new Error ('Invalid file: ' + fileName);
-	}
-	this.doFileConcatenate(fileName);
-	return this.getAllConfigFiles(fileNameArray);
+	var self = this;
+	fileNameArray.map(function(file) {
+		var fileName = self.configPath + file;
+		self.isValidFile(fileName);
+		console.log('building: ' + fileName);
+		self.doFileConcatenate(fileName);
+	});
 };
 
 /**
@@ -58,7 +55,6 @@ Build.prototype.isValidFile = function(fileName) {
 	var data = this.readAndParseFile(fileName);
 	var validate = new Validate(data, fileName);
 	validate.validateConfig();
-	return true;
 };
 
 /**
@@ -81,9 +77,7 @@ Build.prototype.doFileConcatenate = function(fileName) {
  */
 Build.prototype.tryToCreateOutFolder = function() {
 	this.mkdirp('./out', function(err) {
-		if (err) {
-			throw new Error('Error creating output dir: ' + err);
-		}
+		assert(!err, 'Error creating output dir: ' + err);
 	});
 };
 
@@ -116,7 +110,7 @@ Build.prototype.getClientId = function(fileName) {
  */
 Build.prototype.capitalizeFirstLetter = function(text) {
 	text = text.toLowerCase();
-    return text.charAt(0).toUpperCase() + text.slice(1);
+	return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
 /**
