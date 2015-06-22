@@ -126,7 +126,7 @@ All calls to get/set functions should be done after pageload is complete.
 
 `AutoTrack.getPageViewId()` - returns the pageViewId for the page view.
 
-`AutoTrack.getSessionId()` - returns the sessionId for the visit. The session ID might need a bit longer than page load before it can be exposed due to AJAX-requests that are sent for this ID.
+`AutoTrack.getSessionId()` - Deprecated. Will return undefined.
 
 `AutoTrack.getVisitorId()` - returns the visitorId of the user. This ID is likely to stay the same across sessions. But will change if the user is logged in or out. The visitor ID might need a bit longer than page load before it can be exposed due to AJAX-requests that are sent for this ID.
 
