@@ -15,33 +15,17 @@ module.exports = function (grunt) {
                 src: 'Gruntfile.js'
             },
             lib: {
-                src: [
-                    'lib/**/*.js',
-                    'test/**/*.js',
-                    'autotracking/**/*.js',
-                    'integrationtest/**/*.js',
-                    'buildscript/**/*.js'
-                ]
+                src: ['lib/**/*.js', 'test/**/*.js', 'autotracking/**/*.js', 'integrationtest/**/*.js']
             }
         },
         watch: {
             all: {
-                files: [
-                    'lib/**/*.js',
-                    'test/**/*.js',
-                    'autotracking/**/*.js',
-                    'integrationtest/**/*.js',
-                    'buildscript/**/*.js'
-                ],
+                files: ['lib/**/*.js', 'test/**/*.js', 'autotracking/**/*.js', 'integrationtest/**/*.js'],
                 tasks: ['devbuild', 'lint', 'karma:unit:run']
             }
         },
         jscs: {
-            main: [
-                '**/*.js',
-                'autotracking/**/*.js',
-                'buildscript/**/*.js'
-            ],
+            main: ['lib/**/*.js', 'autotracking/**/*.js'],
             options: {
                 config: '.jscsrc',
                 requireCurlyBraces: ['if']
@@ -49,10 +33,7 @@ module.exports = function (grunt) {
         },
         jsdoc: {
             dist: {
-                src: [
-                    'lib/**/*.js',
-                    'autotracking/**/*.js'
-                ],
+                src: ['lib/**/*.js', 'autotracking/**/*.js'],
                 options: {
                     destination: 'doc'
                 }
