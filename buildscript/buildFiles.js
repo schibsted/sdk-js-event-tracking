@@ -1,9 +1,9 @@
 /* global process */
 'use strict';
 
-var fs = require('fs'),
-	mkdirp = require('mkdirp'),
-	Validate = require('./validate');
+var fs = require('fs');
+var mkdirp = require('mkdirp');
+var Validate = require('./validate');
 
 /**
  * Build constructor
