@@ -34,7 +34,7 @@ describe('User', function() {
         expect(user.transport).to.eq(this.transportStub);
 
         sinon.stub(User.prototype, 'getUserId');
-        sinon.stub(User.prototype, 'getUserIdFromService');
+        sinon.stub(User.prototype, 'getIdsFromService');
 
         var act = new Activity({
             pageId: 1,
@@ -51,7 +51,7 @@ describe('User', function() {
         expect(user2.transport).to.eq(browserTransport);
 
         User.prototype.getUserId.restore();
-        User.prototype.getUserIdFromService.restore();
+        User.prototype.getIdsFromService.restore();
     });
 
     it('should send given data to CIS', function(done) {
@@ -63,7 +63,6 @@ describe('User', function() {
         var input = {
             data: {
                 userId: 'abcd1234',
-                sessionId: 'abcd2345',
                 visitorId: 'abcd3456',
                 environmentId: 'abcd4567',
                 cisCookieSet: true
@@ -72,7 +71,7 @@ describe('User', function() {
 
         stub.yields(JSON.stringify(input));
 
-        user.getUserIdFromService(ids, function() {
+        user.getIdsFromService(ids, function() {
             expect(stub).to.have.been.calledWith('http://test', ids);
             done();
         });
@@ -87,7 +86,6 @@ describe('User', function() {
         var input = {
             data: {
                 userId: 'abcd1234',
-                sessionId: 'abcd2345',
                 visitorId: 'abcd3456',
                 environmentId: 'abcd4567',
                 cisCookieSet: true
@@ -96,10 +94,8 @@ describe('User', function() {
 
         stub.yields(null, {response: JSON.stringify(input)});
 
-        user.getUserIdFromService(ids, function(err, idObj) {
+        user.getIdsFromService(ids, function(err, idObj) {
 
-            expect(idObj.userId).to.eq('abcd1234');
-            expect(idObj.sessionId).to.eq('abcd2345');
             expect(idObj.visitorId).to.eq('abcd3456');
             expect(idObj.environmentId).to.eq('abcd4567');
             done();
@@ -108,7 +104,7 @@ describe('User', function() {
 
     it('should set IDs in the idObj 2', function(done) {
 
-		resetSessionId();
+		resetEnvId();
 
         var user = new User(this.activity);
 
@@ -117,7 +113,6 @@ describe('User', function() {
         var input = {
             data: {
                 userId: 'abcd1234',
-                sessionId: 'abcd2345',
                 visitorId: 'abcd3456',
                 environmentId: 'abcd4567',
                 cisCookieSet: true
@@ -128,8 +123,6 @@ describe('User', function() {
 
         user.getUserId(function(err, idObj) {
 
-            expect(idObj.userId).to.eq('abcd1234');
-            expect(idObj.sessionId).to.eq('abcd2345');
             expect(idObj.visitorId).to.eq('abcd3456');
             expect(idObj.envId).to.eq('abcd4567');
             done();
@@ -137,15 +130,14 @@ describe('User', function() {
     });
 
     it('should understand a temporary ID', function(done) {
-		resetSessionId();
+		resetEnvId();
         var user = new User(this.activity);
 
         var stub = this.transportStub;
 
         var input = {
             data: {
-                userId: 'abcd1234',
-                sessionId: 'abcd2345',
+                userId: 'abcdefgh',
                 visitorId: 'abcd3456',
                 environmentId: 'abcd4567',
                 environmentIdTemporary: true,
@@ -164,6 +156,6 @@ describe('User', function() {
 
 });
 
-function resetSessionId() {
-	document.cookie = '_DataTrackerSession=; expires=Thu, 01 Jan 1970 00:00:00 UTC';
+function resetEnvId() {
+	document.cookie = '_DataTrackerEnv=; expires=Thu, 01 Jan 1970 00:00:00 UTC';
 }
