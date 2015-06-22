@@ -37,7 +37,11 @@ module.exports = function (grunt) {
             }
         },
         jscs: {
-            main: ['**/*.js', 'autotracking/**/*.js', 'buildscript/**/*.js'],
+            main: [
+                '**/*.js',
+                'autotracking/**/*.js',
+                'buildscript/**/*.js'
+            ],
             options: {
                 config: '.jscsrc',
                 requireCurlyBraces: ['if']
@@ -45,7 +49,10 @@ module.exports = function (grunt) {
         },
         jsdoc: {
             dist: {
-                src: ['lib/**/*.js', 'autotracking/**/*.js'],
+                src: [
+                    'lib/**/*.js',
+                    'autotracking/**/*.js'
+                ],
                 options: {
                     destination: 'doc'
                 }
