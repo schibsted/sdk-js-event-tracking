@@ -44,7 +44,7 @@ module.exports.getVisitorId = function() {
 };
 
 module.exports.getSessionId = function() {
-    console.log('Deprecated: getSessionId');
+	console.log('Deprecated: getSessionId');
 	return;
 };
 
