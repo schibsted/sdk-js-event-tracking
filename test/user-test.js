@@ -129,31 +129,6 @@ describe('User', function() {
         });
     });
 
-    it('should understand a temporary ID', function(done) {
-		resetEnvId();
-        var user = new User(this.activity);
-
-        var stub = this.transportStub;
-
-        var input = {
-            data: {
-                userId: 'abcdefgh',
-                visitorId: 'abcd3456',
-                environmentId: 'abcd4567',
-                environmentIdTemporary: true,
-                cisCookieSet: true
-            }
-        };
-
-        stub.yields(null, {response: JSON.stringify(input)});
-
-        user.getUserId(function(err, idObj) {
-
-            expect(idObj.temporaryId).to.eq(true);
-            done();
-        });
-    });
-
 });
 
 function resetEnvId() {
