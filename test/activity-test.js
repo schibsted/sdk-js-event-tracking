@@ -250,42 +250,36 @@ describe('Activity', function() {
         it('should not post-fix urn if urn already present', function() {
             this.activity.visitorId = 'urn:schibsted.com:person:1234';
             this.activity.envId = 'urn:schibsted.com:environment:1234';
-            this.activity.sessionId = 'urn:schibsted.com:session:1234';
             this.activity.userId = 'urn:schibsted.com:user:1234';
             var object = {actor: {}};
             this.activity.addUserId(object);
 
             expect(object.actor['@id']).to.eq('urn:schibsted.com:person:1234');
             expect(object.actor['spt:environmentId']).to.eq('urn:schibsted.com:environment:1234');
-            expect(object.actor['spt:sessionId']).to.eq('urn:schibsted.com:session:1234');
             expect(object.actor['spt:userId']).to.eq('urn:schibsted.com:user:1234');
         });
 
         it('should post-fix urn and domain if urn not present', function() {
             this.activity.visitorId = '1234';
             this.activity.envId = '1234';
-            this.activity.sessionId = '1234';
             this.activity.userId = '1234';
             var object = {actor: {}};
             this.activity.addUserId(object);
 
             expect(object.actor['@id']).to.eq('urn:schibsted.com:person:1234');
             expect(object.actor['spt:environmentId']).to.eq('urn:schibsted.com:environment:1234');
-            expect(object.actor['spt:sessionId']).to.eq('urn:schibsted.com:session:1234');
             expect(object.actor['spt:userId']).to.eq('urn:schibsted.com:user:1234');
         });
 
         it('should not return a user ID that has undefined present', function() {
             this.activity.visitorId = 'urn:schibsted.com:person:1234';
             this.activity.envId = 'urn:schibsted.com:environment:1234';
-            this.activity.sessionId = 'urn:schibsted.com:session:1234';
             this.activity.userId = 'urn:schibsted.com:user:undefined';
             var object = {actor: {}};
             this.activity.addUserId(object);
 
             expect(object.actor['@id']).to.eq('urn:schibsted.com:person:1234');
             expect(object.actor['spt:environmentId']).to.eq('urn:schibsted.com:environment:1234');
-            expect(object.actor['spt:sessionId']).to.eq('urn:schibsted.com:session:1234');
             assert.isUndefined(object.actor['spt:userId']);
         });
 
@@ -530,9 +524,9 @@ describe('Activity', function() {
             this.sinon.restore();
         });
 
-        it('should return the sessionId on getSessionId', function() {
+        it('should return undefined on getSessionId', function() {
             this.activity.sessionId = 'urn:schibsted.com:session:123456';
-            expect(this.activity.getSessionId()).to.eq('urn:schibsted.com:session:123456');
+            expect(this.activity.getSessionId()).to.be.undefined;
         });
 
         it('should return the visitorId on getVisitorId', function() {

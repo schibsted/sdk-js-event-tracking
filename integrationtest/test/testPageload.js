@@ -15,29 +15,26 @@ module.exports = {
         .pause(3000)
         .getCookies(function callback(result) {
 
-			this.assert.equal(result.value.length, 4);
+			this.assert.equal(result.value.length, 2);
 
 			var count = 0;
 
-			for (var j = 0; j < result.value.length; j++) {
-				if (result.value[j].name === '_DataTrackerSession') {
-					chai.assert.match(result.value[j].value, uuidv4pattern);
-					count += 1;
-				} else if (result.value[j].name === '_DataTrackerEnv') {
-					chai.assert.isDefined(result.value[1].value, 'Environment ID was defined in cookie');
-					count += 3;
-				} else if (result.value[j].name === '_DataTrackerVisitor') {
-					chai.assert.match(result.value[j].value, uuidv4pattern);
-					count += 9;
-				} else if (result.value[j].name === '_DataTrackerUser') {
-					this.assert.equal(result.value[j].value, 'undefined');
-					count += 27;
-				} else {
-					this.assert.equal(false, 'This should never be fired');
-				}
+            for (var j = 0; j < result.value.length; j++) {
+                switch (result.value[j].name) {
+                    case '_DataTrackerEnv':
+                        chai.assert.isDefined(result.value[1].value, 'Environment ID was defined in cookie');
+                        count += 3;
+                        break;
+                    case '_DataTrackerVisitor':
+                        chai.assert.match(result.value[j].value, uuidv4pattern);
+                        count += 9;
+                        break;
+                    default:
+                        this.assert.equal(false, 'This should never be fired');
+                }
 			}
 
-			this.assert.equal((1 + 3 + 9 + 27), count);
+			this.assert.equal((3 + 9), count);
         })
         .execute(function() {
             AutoTrack.loginEvent('urn:lol.no:user:234232342');

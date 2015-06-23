@@ -36,6 +36,18 @@ module.exports = {
 
 		.refresh()
 		.waitForElementVisible('body', 1000)
+		.setCookie({
+			name: '_DataTrackerSession',
+			value: '1234',
+			path: '/integrationtest/dev/',
+			expiry: (Date.now() / 1000) * 3600
+		})
+		.setCookie({
+			name: '_DataTrackerUser',
+			value: '1234',
+			path: '/integrationtest/dev/',
+			expiry: (Date.now() / 1000) * 3600
+		})
 		.execute(function() {
 			return server.requests;
 		}, [''], function(res) {
@@ -48,9 +60,15 @@ module.exports = {
 
 		// Refreshing the page without cookies should create request to CIS.
 
-		.deleteCookie('_DataTrackerSession')
+		.deleteCookie('_DataTrackerEnv')
 		.refresh()
 		.waitForElementVisible('body', 1000)
+
+		// Check that environment and session cookies are deleted
+
+		.getCookies(function callback(result) {
+            this.assert.equal(result.value.length, 2);
+        })
 		.execute(function() {
 			return server.requests;
 		}, [''], function(res) {
