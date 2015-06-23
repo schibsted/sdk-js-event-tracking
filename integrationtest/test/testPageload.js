@@ -19,16 +19,19 @@ module.exports = {
 
 			var count = 0;
 
-			for (var j = 0; j < result.value.length; j++) {
-				if (result.value[j].name === '_DataTrackerEnv') {
-					chai.assert.isDefined(result.value[1].value, 'Environment ID was defined in cookie');
-					count += 3;
-				} else if (result.value[j].name === '_DataTrackerVisitor') {
-					chai.assert.match(result.value[j].value, uuidv4pattern);
-					count += 9;
-				} else {
-					this.assert.equal(false, 'This should never be fired');
-				}
+            for (var j = 0; j < result.value.length; j++) {
+                switch (result.value[j].name) {
+                    case '_DataTrackerEnv':
+                        chai.assert.isDefined(result.value[1].value, 'Environment ID was defined in cookie');
+                        count += 3;
+                        break;
+                    case '_DataTrackerVisitor':
+                        chai.assert.match(result.value[j].value, uuidv4pattern);
+                        count += 9;
+                        break;
+                    default:
+                        this.assert.equal(false, 'This should never be fired');
+                }
 			}
 
 			this.assert.equal((3 + 9), count);

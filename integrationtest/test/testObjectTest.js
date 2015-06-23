@@ -67,7 +67,6 @@ module.exports = {
 		// Check that environment and session cookies are deleted
 
 		.getCookies(function callback(result) {
-			console.log(result.value);
             this.assert.equal(result.value.length, 2);
         })
 		.execute(function() {
