@@ -112,7 +112,7 @@ describe('Browser transport', function() {
         xhr.restore();
     });
 
-    it('should retry five times when failing', function(done) {
+    it('should retry three times when failing', function(done) {
         var xhr = sinon.useFakeXMLHttpRequest();
 
         var callCount = 0;
@@ -125,7 +125,7 @@ describe('Browser transport', function() {
 
         browserTransport('http://test', [], function(err) {
             expect(err).to.be.ok;
-            expect(callCount).to.eq(5);
+            expect(callCount).to.eq(3);
 
             done();
         });

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>My first test site</title>
+        <script type="text/javascript" src="../sinon-1.14.1.js"></script>
+		<script type="text/javascript" src="../sinonSetup.js"></script>
+    </head>
+    <body>
+        <h1>Testsite 01</h1>
+        <script type="text/javascript">
+			
+			// Server responds with 404
+			server.respondWith([404, {}, ""]);
+			
+            var _opt = {
+                pageId: '1234567',
+                clientId: 'testClient01',
+                noCisCookie: false,
+                url: 'http://127.0.0.1:8002/api/v1/track'
+            };
+
+            (function(){
+                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+                g.src="http://127.0.0.1:8080/dist/autoTracker.min.js";
+                s.parentNode.insertBefore(g,s);
+            })();
+        </script>
+    </body>
+</html>
