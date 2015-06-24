@@ -6,3 +6,4 @@ tracker.js
 env_variables.sh
 reports/
 dist/
+dist/autoTracker.js
