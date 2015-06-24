@@ -21,7 +21,6 @@ module.exports = {
 			}.bind(this));
         })
 		.getCookies(function callback(result) {
-            console.log(result.value);
             this.assert.equal(result.value.length, 0);
         })
         .deleteCookies()
