@@ -68,7 +68,6 @@ module.exports = {
 
 		.getCookies(function callback(result) {
             this.assert.equal(result.value.length, 1);
-			console.log(result.value[0]);
         })
 		.execute(function() {
 			return server.requests;
