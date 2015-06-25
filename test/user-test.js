@@ -129,6 +129,36 @@ describe('User', function() {
         });
     });
 
+    it('should return IDs or delete cookies', function() {
+       var getCookie = this.sinon.stub(User.prototype, 'getCookie');
+       var deleteCookie = this.sinon.stub(User.prototype, 'deleteCookie');
+       getCookie.returns('abcd,1234');
+       var user = new User(this.activity);
+       var targetObj = {
+           environmentId: 'abcd',
+           visitorId: '1234'
+       };
+
+       var retObj = user.getIdsFromCookie();
+
+       expect(retObj).to.deep.eq(targetObj);
+
+       getCookie.returns('abcd,undefined');
+       retObj = user.getIdsFromCookie();
+       expect(deleteCookie).to.have.been.calledWith('_pulse2data');
+
+       getCookie.returns('abcd');
+       retObj = user.getIdsFromCookie();
+       expect(deleteCookie).to.have.been.calledWith('_pulse2data');
+
+       getCookie.returns('abcd,1234,xcvb');
+       retObj = user.getIdsFromCookie();
+       expect(deleteCookie).to.have.been.calledWith('_pulse2data');
+
+       User.prototype.getCookie.restore();
+       User.prototype.deleteCookie.restore();
+    });
+
 });
 
 function resetEnvId() {
