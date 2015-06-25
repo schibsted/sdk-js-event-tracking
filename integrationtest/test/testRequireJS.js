@@ -29,34 +29,9 @@ module.exports = {
 			this.assert.equal(res.value, 'abcd3456');
 		})
 		.getCookies(function callback(result) {
-			this.assert.equal(result.value.length, 2);
-
-			var nameArray = [
-				'_DataTrackerEnv',
-				'_DataTrackerVisitor'
-			];
-
-			var valueArray = [
-				'abcd4567',
-				'abcd3456'
-			];
-
-			var count = 0;
-
-			while (nameArray.length > 0) {
-				var needleName = nameArray.pop();
-				var needleValue = valueArray.pop();
-				var haystackArray = result.value;
-
-				for (var j = 0; j < haystackArray.length; j++) {
-					if (haystackArray[j].name === needleName) {
-						this.assert.equal(haystackArray[j].value, needleValue);
-						count++;
-					}
-				}
-			}
-
-			this.assert.equal(result.value.length, count);
+			this.assert.equal(result.value.length, 1);
+			this.assert.equal(result.value[0].name, '_pulse2data');
+			this.assert.equal(result.value[0].value, 'abcd4567,abcd3456');
 
         })
 		.click('body #test-click-element')
