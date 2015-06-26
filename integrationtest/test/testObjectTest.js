@@ -60,14 +60,14 @@ module.exports = {
 
 		// Refreshing the page without cookies should create request to CIS.
 
-		.deleteCookie('_DataTrackerEnv')
+		.deleteCookie('_pulse2data')
 		.refresh()
 		.waitForElementVisible('body', 1000)
 
 		// Check that environment and session cookies are deleted
 
 		.getCookies(function callback(result) {
-            this.assert.equal(result.value.length, 2);
+            this.assert.equal(result.value.length, 1);
         })
 		.execute(function() {
 			return server.requests;

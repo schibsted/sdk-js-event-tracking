@@ -1,5 +1,5 @@
 'use strict';
-/*globals sinon*/
+/* global sinon */
 
 var expect = require('chai').expect,
     Activity = require('../lib/activity'),
